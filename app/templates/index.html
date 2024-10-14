@@ -1,11 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <p>Hello, World!</p>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block style %}
+<style>
+    body {
+            background-color: #F1F3C2;
+            font-family: "Zen Maru Gothic", serif;
+            font-weight: 500;
+            font-style: normal;
+        }
+</style>
+{% endblock %}
+{% block content %}
+    <h1>Hello, World!</h1>
+{% endblock %}

@@ -1,0 +1,2 @@
+FLASK_APP=mypillbox.py
+FLASK_DEBUG=1

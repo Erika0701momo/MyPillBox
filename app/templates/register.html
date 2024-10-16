@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新規登録 - MyPillBox</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body class="d-flex align-items-center py-4">
+<main class="form-signin w-100 m-auto">
+    <form action="" method="post" class="p-4 p-md-5 border rounded-3 bg-body-tertiary" novalidate>
+    {{ form.hidden_tag() }}
+        <div class="form-floating mb-3">
+            {{ form.username(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
+            {{ form.username.label }}
+            {% for error in form.username.errors %}
+            <div class="invalid-feedback">
+              {{ error }}
+            </div>
+            {% endfor %}
+        </div>
+        <div class="form-floating mb-3">
+            {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
+            {{ form.email.label }}
+            {% for error in form.email.errors %}
+            <div class="invalid-feedback">
+              {{ error }}
+            </div>
+            {% endfor %}
+        </div>
+        <div class="form-floating mb-3">
+            {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "")) }}
+            {{ form.password.label }}
+            {% for error in form.password.errors %}
+              <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+        {{ form.submit(class="w-100 btn btn-lg btn-custom") }}
+        <hr class="my-4">
+        <small class="text-body-secondary">新規登録していない場合は、<a href="{{ url_for('register') }}">こちら</a>から登録してください</small>
+    </form>
+</main>
+<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+</body>
+</html>

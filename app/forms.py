@@ -1,6 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired, Email, EqualTo, Length
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, BooleanField
+from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
+import sqlalchemy as sa
+from app import db
+from app.models import User
 
 
 class LoginForm(FlaskForm):
@@ -15,3 +18,37 @@ class LoginForm(FlaskForm):
         "パスワード", validators=[DataRequired(message="パスワードは必須入力です")]
     )
     submit = SubmitField("ログイン")
+
+
+class RegisterForm(FlaskForm):
+    username = StringField(
+        "ユーザー名",
+        validators=[DataRequired(message="ユーザー名は必須入力です"), Length(max=64)],
+    )
+    email = StringField(
+        "メールアドレス",
+        validators=[
+            DataRequired(message="メールアドレスは必須入力です"),
+            Length(max=120),
+        ],
+    )
+    password = PasswordField(
+        "パスワード",
+        validators=[DataRequired(message="パスワードは必須入力です"), Length(max=60)],
+    )
+    password2 = PasswordField(
+        "パスワード(確認用)",
+        validators=[
+            DataRequired(message="パスワード(確認用)は必須入力です"),
+            EqualTo("password", "パスワードが一致しません"),
+            Length(max=60),
+        ],
+    )
+    submit = SubmitField("新規登録")
+
+    def validate_email(self, email):
+        user = db.session.scalar(sa.select(User).where(User.email == email.data))
+        if user is not None:
+            raise ValidationError(
+                "既に登録済みのメールアドレスです 違うアドレスを入力してください"
+            )

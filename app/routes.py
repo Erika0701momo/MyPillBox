@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
-from app.forms import LoginForm, RegisterForm
+from app.forms import LoginForm, RegisterForm, EditUsernameForm
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 from app.models import User
@@ -26,7 +26,6 @@ def login():
             flash("メールアドレスまたはパスワードが違います")
             return redirect(url_for("login"))
         login_user(user)
-        flash("ログインしました！")
         # ログイン前にアクセスしたページがあればそこへ遷移
         next_page = request.args.get("next")
         if not next_page or urlsplit(next_page).netloc != "":
@@ -55,3 +54,22 @@ def register():
         flash("アカウントを登録しました！ログインしましょう")
         return redirect(url_for("login"))
     return render_template("register.html", form=form)
+
+
+@app.route("/edit_username", methods=["GET", "POST"])
+@login_required
+def edit_username():
+    form = EditUsernameForm()
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        db.session.commit()
+        flash("ユーザー名を変更しました")
+        return redirect(url_for("edit_username"))
+    elif request.method == "GET":
+        form.username.data = current_user.username
+    return render_template("edit_username.html", title="ユーザー名の変更", form=form)
+
+@app.route("/delete_account", methods=["GET", "POST"])
+@login_required
+def delete_account():
+    

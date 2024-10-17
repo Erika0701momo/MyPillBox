@@ -1,0 +1,24 @@
+{% extends "base.html"%}
+
+{% block content %}
+    <h2 class="mb-3">ユーザー名の変更</h2>
+            <form action="" method="post" class="row" novalidate>
+                <div class="row">
+                    <div class="col-12 col-lg-6 mb-4">
+                    {{ form.hidden_tag() }}
+                    {{ form.username.label }}
+                    {{ form.username(class="form-control" + (" is-invalid" if form.username.errors else "")) }}
+                    {% for error in form.username.errors %}
+                    <div class="invalid-feedback">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-9 col-lg-2">
+                    {{ form.submit(class="btn btn-custom w-100") }}
+                    </div>
+                </div>
+            </form>
+{% endblock %}

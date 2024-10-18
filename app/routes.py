@@ -16,7 +16,7 @@ def index():
     query = (
         sa.select(sa.func.count(Medicine.id))
         .join(Medicine.user)
-        .where(Medicine.user_id == current_user.id, Medicine.is_active == True)
+        .where(Medicine.user == current_user, Medicine.is_active == True)
     )
     medicine_kinds = db.session.scalar(query)
     return render_template("index.html", title="ホーム", medicine_kinds=medicine_kinds)

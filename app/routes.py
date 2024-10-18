@@ -22,6 +22,9 @@ def index():
     return render_template("index.html", title="ホーム", medicine_kinds=medicine_kinds)
 
 
+# q = sa.select(sa.func.count(Medicine.id)).join(Medicine.user).where(Medicine.user == u, Medicine.is_active==True)
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     # ログインしている場合はインデックスへリダイレクト

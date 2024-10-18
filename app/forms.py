@@ -71,3 +71,7 @@ class EditUsernameForm(FlaskForm):
         ],
     )
     submit = SubmitField("変更")
+
+
+class DeleteAccountForm(FlaskForm):
+    submit = SubmitField("削除する")

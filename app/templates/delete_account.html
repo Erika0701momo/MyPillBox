@@ -1,22 +1,24 @@
 {% extends "base.html" %}
-
 {% block content %}
-    <h2 class="mb-3">アカウント削除</h2>
-    <div class="alert alert-danger mb-3" role="alert">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
-            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-        </svg>
+  <h2 class="mb-3">アカウント削除</h2>
+  <div class="alert alert-danger mb-3" role="alert">
+    <svg xmlns="http://www.w3.org/2000/svg"
+         width="16"
+         height="16"
+         fill="currentColor"
+         class="bi bi-exclamation-triangle-fill"
+         viewBox="0 0 16 16">
+      <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+    </svg>
     アカウントを削除すると、記録してきたお薬の情報などがすべて削除されます。よろしいですか？
-    </div>
-    <form action="" method="post">
+  </div>
+  <form action="" method="post">
     {{ form.hidden_tag() }}
-        <div class="row">
-            <div class="col-5 col-lg-2">
-                {{ form.submit(class="btn btn-danger w-100") }}
-            </div>
-            <div class="col-5 col-lg-2">
-                <a href="{{ url_for('index') }}" class="btn btn-secondary w-100">キャンセル</a>
-            </div>
-        </div>
-    </form>
-{% endblock %}
+    <div class="row">
+      <div class="col-5 col-lg-2">{{ form.submit(class="btn btn-danger w-100") }}</div>
+      <div class="col-5 col-lg-2">
+        <a href="{{ url_for('index') }}" class="btn btn-secondary w-100">キャンセル</a>
+      </div>
+    </div>
+  </form>
+{% endblock content %}

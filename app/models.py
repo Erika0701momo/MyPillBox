@@ -12,6 +12,7 @@ from hashlib import md5
 # お薬服用単位をenum(定数)で定義
 class TakingUnit(enum.Enum):
     tablet = "錠"
+    capsule = "カプセル"
     package = "包"
     mg = "mg"
     drop = "滴"

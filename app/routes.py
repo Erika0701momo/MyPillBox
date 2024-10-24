@@ -1,6 +1,12 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
-from app.forms import LoginForm, RegisterForm, EditUsernameForm, DeleteAccountForm
+from app.forms import (
+    LoginForm,
+    RegisterForm,
+    EditUsernameForm,
+    DeleteAccountForm,
+    CreateMedicineFrom,
+)
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 import sqlalchemy.orm as so
@@ -93,3 +99,18 @@ def delete_account():
         flash("アカウントが削除されました。ご利用ありがとうございました。")
         return redirect(url_for("login"))
     return render_template("delete_account.html", form=form)
+
+
+@app.route("/medicines", methods=["GET", "POST"])
+@login_required
+def medicines():
+    return render_template("medicines.html")
+
+
+@app.route("/create_medicine", methods=["GET", "POST"])
+@login_required
+def create_medicine():
+    form = CreateMedicineFrom()
+    if form.validate_on_submit():
+        flash("Success")
+    return render_template("create_medicine.html", form=form)

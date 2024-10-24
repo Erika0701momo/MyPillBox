@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2 class="mb-3">お薬登録</h2>
+  <small class="d-block mb-2"><span class="red">※</span>は必須入力です</small>
+  <form action="" method="post" novalidate>
+    <div class="row">
+      <div class="col-12 col-lg-7 mb-3">
+        {{ form.hidden_tag() }}
+        <span class="red">※</span>{{ form.name.label }}
+        {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else "") ) }}
+        {% for error in form.name.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12 col-lg-7 mb-3">
+        <span class="red">※</span>{{ form.taking_start_date.label }}
+        {{ form.taking_start_date(class="form-control" + (" is-invalid" if form.taking_start_date.errors else "") ) }}
+        {% for error in form.taking_start_date.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12 col-lg-7 mb-3">
+        <span class="red">※</span>{{ form.dose_per_day.label }}
+        {{ form.dose_per_day(class="form-control" + (" is-invalid" if form.dose_per_day.errors else "") ) }}
+        {% for error in form.dose_per_day.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-5 col-lg-2">{{ form.submit(class="btn btn-custom w-100") }}</div>
+    </div>
+  </form>
+{% endblock content %}

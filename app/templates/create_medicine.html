@@ -16,9 +16,56 @@
         {% for error in form.taking_start_date.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
       </div>
       <div class="col-12 col-lg-7 mb-3">
-        <span class="red">※</span>{{ form.dose_per_day.label }}
+        {{ form.dose_per_day.label }}
         {{ form.dose_per_day(class="form-control" + (" is-invalid" if form.dose_per_day.errors else "") ) }}
         {% for error in form.dose_per_day.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12 col-lg-7 mb-3">
+        <span class="red">※</span>{{ form.taking_unit.label }}
+        {{ form.taking_unit(class="form-select" + (" is-invalid" if form.taking_unit.errors else "") ) }}
+        {% for error in form.taking_unit.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12 col-lg-7 mb-3">
+        {{ form.memo.label }}
+        {{ form.memo(class="form-control" + (" is-invalid" if form.memo.errors else "") ) }}
+        {% for error in form.memo.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12 col-lg-7 mb-3">
+        {{ form.rating.label }}
+        {{ form.rating(class="form-control" + (" is-invalid" if form.rating.errors else "") ) }}
+        <br>
+        <img src="{{ url_for('static', filename='images/star_on.png') }}"
+             id="1"
+             class="star medicine-star my-2"
+             onclick="medicineStarRate(this)"
+             alt="star">
+        <img src="{{ url_for('static', filename='images/star_on.png') }}"
+             id="2"
+             class="star medicine-star my-2"
+             onclick="medicineStarRate(this)"
+             alt="star">
+        <img src="{{ url_for('static', filename='images/star_on.png') }}"
+             id="3"
+             class="star medicine-star my-2"
+             onclick="medicineStarRate(this)"
+             alt="star">
+        <img src="{{ url_for('static', filename='images/star_on.png') }}"
+             id="4"
+             class="star medicine-star my-2"
+             onclick="medicineStarRate(this)"
+             alt="star">
+        <img src="{{ url_for('static', filename='images/star_on.png') }}"
+             id="5"
+             class="star medicine-star my-2"
+             onclick="medicineStarRate(this)"
+             alt="star">
+        {% for error in form.rating.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12 col-lg-7 mb-3 form-check form-switch">
+        {{ form.is_active.label }}
+        <br>
+        {{ form.is_active(class="form-check-input" + (" is-invalid" if form.memo.errors else "") ) }}
+        {% for error in form.is_active.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
       </div>
     </div>
     <div class="row">
@@ -26,3 +73,20 @@
     </div>
   </form>
 {% endblock content %}
+{% block script %}
+  <script>
+  function medicineStarRate(e) {
+    const stars = document.querySelectorAll(".star");
+    const rating = document.querySelector("#rating");
+
+    for (s of stars) {
+      if (parseInt(s.id) <= parseInt(e.id)) {
+        s.classList.add("rating-checked");
+      } else if (parseInt(s.id) > parseInt(e.id)) {
+        s.classList.remove("rating-checked");
+      }
+    }
+    rating.value = e.id;
+  }
+  </script>
+{% endblock script %}

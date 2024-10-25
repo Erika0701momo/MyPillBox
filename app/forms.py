@@ -13,17 +13,31 @@ from wtforms import (
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
 import sqlalchemy as sa
 from app import db
-from app.models import User
+from app.models import User, TakingUnit
+import re
 
 
+# FloatFieldのデフォルトエラーメッセージを上書き、全角数字判定
 class MyFloatField(FloatField):
     def process_formdata(self, valuelist):
-        if valuelist:
-            try:
-                self.data = float(valuelist[0])
-            except ValueError:
-                self.data = None
-                raise ValueError(self.gettext("半角数字で入力してください"))
+        # 入力が空の場合は何もしない
+        if not valuelist or not valuelist[0].strip():
+            self.data = None
+            return
+
+        input_value = valuelist[0]
+
+        # 全角数字を含むかどうかチェック
+        if re.search(r"[０-９．]", input_value):
+            self.data = None
+            raise ValidationError(self.gettext("半角数字で入力してください"))
+
+        # 半角数字のチェック
+        try:
+            self.data = float(input_value)
+        except ValueError:
+            self.data = None
+            raise ValidationError(self.gettext("半角数字で入力してください"))
 
 
 class LoginForm(FlaskForm):
@@ -108,22 +122,24 @@ class CreateMedicineFrom(FlaskForm):
         format="%Y-%m-%d",
         validators=[DataRequired(message="服用開始日は必須入力です")],
     )
-    dose_per_day = MyFloatField("1日に服用する量", render_kw={"placeholder": "例:1 "})
-    # taking_unit = SelectField(
-    #     "服用単位", validators=[DataRequired(message="服用単位は必須入力です")]
-    # )
-    # memo = TextAreaField(
-    #     "診察メモ",
-    #     render_kw={
-    #         "placeholder": "このお薬がなぜ処方されたかや、医師からのアドバイスなどを書いてください"
-    #     },
-    # )
-    # rating = HiddenField("お薬の評価")
-    # is_active = BooleanField("現在服用中(服用中ならチェックを付けてください)")
+    dose_per_day = MyFloatField(
+        "1日に服用する量",
+        render_kw={"placeholder": "例:1　(2.5のように小数点の記入も可能です)"},
+    )
+    taking_unit = SelectField(
+        "服用単位",
+        choices=[(unit.name, unit.value) for unit in TakingUnit],
+        validators=[DataRequired(message="服用単位は必須入力です")],
+    )
+    memo = TextAreaField(
+        "診察メモ",
+        render_kw={
+            "placeholder": "このお薬がなぜ処方されたかや、医師からのアドバイス、注意点などを書いてみましょう",
+            "rows": "4",
+        },
+    )
+    rating = HiddenField("お薬の評価")
+    is_active = BooleanField(
+        "現在服用中(服用中ならチェックを付けてください)", render_kw={"role": "switch"}
+    )
     submit = SubmitField("登録")
-
-    def validate_dose_per_day(self, dose_per_day):
-        try:
-            float(dose_per_day.data)
-        except:
-            raise ValidationError("半角数字で入力してください")

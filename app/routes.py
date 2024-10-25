@@ -112,5 +112,18 @@ def medicines():
 def create_medicine():
     form = CreateMedicineFrom()
     if form.validate_on_submit():
-        flash("Success")
+        medicine = Medicine(
+            name=form.name.data,
+            taking_start_date=form.taking_start_date.data,
+            dose_per_day=form.dose_per_day.data,
+            memo=form.memo.data,
+            rating=int(form.rating.data),
+            is_active=form.is_active.data,
+            taking_unit=TakingUnit[form.taking_unit.data],
+            user=current_user,
+        )
+        db.session.add(medicine)
+        db.session.commit()
+        flash(f"お薬「{medicine.name}」を登録しました")
+        return redirect(url_for("medicines"))
     return render_template("create_medicine.html", form=form)

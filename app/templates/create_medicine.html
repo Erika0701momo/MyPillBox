@@ -27,12 +27,11 @@
       </div>
       <div class="col-12 col-lg-7 mb-3">
         {{ form.memo.label }}
-        {{ form.memo(class="form-control" + (" is-invalid" if form.memo.errors else "") ) }}
-        {% for error in form.memo.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+        {{ form.memo(class="form-control") }}
       </div>
       <div class="col-12 col-lg-7 mb-3">
         {{ form.rating.label }}
-        {{ form.rating(class="form-control" + (" is-invalid" if form.rating.errors else "") ) }}
+        {{ form.rating(class="form-control") }}
         <br>
         <img src="{{ url_for('static', filename='images/star_on.png') }}"
              id="1"
@@ -59,13 +58,10 @@
              class="star medicine-star my-2"
              onclick="medicineStarRate(this)"
              alt="star">
-        {% for error in form.rating.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
       </div>
-      <div class="col-12 col-lg-7 mb-3 form-check form-switch">
+      <div class="col-12 col-lg-7 mb-3">
         {{ form.is_active.label }}
-        <br>
-        {{ form.is_active(class="form-check-input" + (" is-invalid" if form.memo.errors else "") ) }}
-        {% for error in form.is_active.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+        <div class="form-check form-switch my-3 mx-2">{{ form.is_active(class="form-check-input") }}</div>
       </div>
     </div>
     <div class="row">

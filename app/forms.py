@@ -138,8 +138,9 @@ class CreateMedicineFrom(FlaskForm):
             "rows": "4",
         },
     )
-    rating = HiddenField("お薬の評価")
+    rating = HiddenField("お薬の評価", render_kw={"value": 0})
     is_active = BooleanField(
-        "現在服用中(服用中ならチェックを付けてください)", render_kw={"role": "switch"}
+        "現在服用中(服用中ならクリックしてください)",
+        render_kw={"role": "switch"},
     )
     submit = SubmitField("登録")

@@ -58,6 +58,7 @@ class Medicine(db.Model):
     name: so.Mapped[str] = so.mapped_column(sa.String(100))
     taking_start_date: so.Mapped[datetime.date] = so.mapped_column(sa.Date)
     dose_per_day: so.Mapped[Optional[float]]
+    taking_timing: so.Mapped[Optional[str]] = so.mapped_column(sa.String(100))
     memo: so.Mapped[Optional[str]] = so.mapped_column(sa.Text)
     rating: so.Mapped[Optional[int]] = so.mapped_column(default=0)
     is_active: so.Mapped[bool] = so.mapped_column(sa.Boolean)

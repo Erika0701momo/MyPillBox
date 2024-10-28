@@ -2,8 +2,74 @@
 {% block content %}
   <h2 class="mb-4">お薬管理</h2>
   <div class="row">
-    <div class="col-5 col-lg-2">
+    <div class="col-5 col-lg-2 mb-5">
       <a href="{{ url_for('create_medicine') }}" class="btn btn-custom w-100">お薬の登録</a>
+    </div>
+  </div>
+  <h3 class="mb-1">服用中のお薬</h3>
+  <div class="row">
+    <div class="col-12 col-lg-7 mb-3">
+      {% if not active_medicines %}
+        <small class="text-secondary">服用中のお薬はありません</small>
+      {% else %}
+        <ul class="list-group mb-4">
+          {% for medicine in active_medicines %}
+            <li class="list-group-item row d-flex justify-content:space-between align-items-cener">
+              <p class="m-0 ps-0 col-5">{{ medicine.name }}</p>
+              <p class="m-0 col-5">
+                {% for i in range(0, medicine.rating) %}
+                  <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                       class="star-display rating-checked"
+                       alt="star">
+                {% endfor %}
+                {% if medicine.rating < 5 %}
+                  {% for i in range(medicine.rating, 5) %}
+                    <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                         class="star-display"
+                         alt="star">
+                  {% endfor %}
+                {% endif %}
+              </p>
+              <div class="col-2 text-end p-0">
+                <a href="{{ url_for('index') }}" class="btn btn-custom btn-sm">詳細</a>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  </div>
+  <h3 class="mb-1">過去に服用していたお薬</h3>
+  <div class="row">
+    <div class="col-12 col-lg-7 mb-3">
+      {% if not not_active_medicines %}
+        <small class="text-secondary">過去に服用していたお薬はありません</small>
+      {% else %}
+        <ul class="list-group mb-4">
+          {% for medicine in not_active_medicines %}
+            <li class="list-group-item row d-flex justify-content:space-between align-items-cener">
+              <p class="m-0 ps-0 col-5">{{ medicine.name }}</p>
+              <p class="m-0 col-5">
+                {% for i in range(0, medicine.rating) %}
+                  <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                       class="star-display rating-checked"
+                       alt="star">
+                {% endfor %}
+                {% if medicine.rating < 5 %}
+                  {% for i in range(medicine.rating, 5) %}
+                    <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                         class="star-display"
+                         alt="star">
+                  {% endfor %}
+                {% endif %}
+              </p>
+              <div class="col-2 text-end p-0">
+                <a href="{{ url_for('index') }}" class="btn btn-custom btn-sm">詳細</a>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
     </div>
   </div>
 {% endblock content %}

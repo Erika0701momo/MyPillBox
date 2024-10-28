@@ -26,6 +26,10 @@
         {% for error in form.taking_unit.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
       </div>
       <div class="col-12 col-lg-7 mb-3">
+        {{ form.taking_timing.label }}
+        {{ form.taking_timing(class="form-control") }}
+      </div>
+      <div class="col-12 col-lg-7 mb-3">
         {{ form.memo.label }}
         {{ form.memo(class="form-control") }}
       </div>

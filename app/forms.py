@@ -131,6 +131,11 @@ class CreateMedicineFrom(FlaskForm):
         choices=[(unit.name, unit.value) for unit in TakingUnit],
         validators=[DataRequired(message="服用単位は必須入力です")],
     )
+    taking_timing = StringField(
+        "服用するタイミング",
+        validators=[Length(max=100)],
+        render_kw={"placeholder": "例:毎食後、就寝前、症状が出た時等"},
+    )
     memo = TextAreaField(
         "診察メモ",
         render_kw={
@@ -140,7 +145,7 @@ class CreateMedicineFrom(FlaskForm):
     )
     rating = HiddenField("お薬の評価", render_kw={"value": 0})
     is_active = BooleanField(
-        "現在服用中(服用中ならクリックしてください)",
+        "現在服用中(服用中ならオンにしてください)",
         render_kw={"role": "switch"},
     )
     submit = SubmitField("登録")

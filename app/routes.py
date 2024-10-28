@@ -104,7 +104,38 @@ def delete_account():
 @app.route("/medicines", methods=["GET", "POST"])
 @login_required
 def medicines():
-    return render_template("medicines.html")
+    active_query = (
+        sa.select(Medicine)
+        .join(Medicine.user)
+        .where(Medicine.user == current_user, Medicine.is_active == True)
+        .order_by(Medicine.id)
+    )
+    not_active_query = (
+        sa.select(Medicine)
+        .join(Medicine.user)
+        .where(Medicine.user == current_user, Medicine.is_active == False)
+        .order_by(Medicine.id)
+    )
+    rating_active_query = (
+        sa.select(Medicine)
+        .join(Medicine.user)
+        .where(Medicine.user == current_user, Medicine.is_active == True)
+        .order_by(Medicine.rating.desc())
+    )
+    rating_not_active_query = (
+        sa.select(Medicine)
+        .join(Medicine.user)
+        .where(Medicine.user == current_user, Medicine.is_active == False)
+        .order_by(Medicine.rating.desc())
+    )
+    if request.method == "GET":
+        active_medicines = db.session.scalars(active_query).all()
+        not_active_medicines = db.session.scalars(not_active_query).all()
+        return render_template(
+            "medicines.html",
+            active_medicines=active_medicines,
+            not_active_medicines=not_active_medicines,
+        )
 
 
 @app.route("/create_medicine", methods=["GET", "POST"])
@@ -116,6 +147,7 @@ def create_medicine():
             name=form.name.data,
             taking_start_date=form.taking_start_date.data,
             dose_per_day=form.dose_per_day.data,
+            taking_timing=form.taking_timing.data,
             memo=form.memo.data,
             rating=int(form.rating.data),
             is_active=form.is_active.data,

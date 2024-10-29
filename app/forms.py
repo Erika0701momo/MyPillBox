@@ -149,3 +149,17 @@ class CreateMedicineFrom(FlaskForm):
         render_kw={"role": "switch"},
     )
     submit = SubmitField("登録")
+
+
+class ActiveMedicineSortForm(FlaskForm):
+    active_sort = SelectField(
+        "並び替え", choices=[("registerorder", "登録順"), ("ratingorder", "星評価順")]
+    )
+    submit = SubmitField("決定")
+
+
+class NotActiveMedicineSortForm(FlaskForm):
+    not_active_sort = SelectField(
+        "並び替え", choices=[("registerorder", "登録順"), ("ratingorder", "星評価順")]
+    )
+    submit = SubmitField("決定")

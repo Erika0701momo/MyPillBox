@@ -6,6 +6,8 @@ from app.forms import (
     EditUsernameForm,
     DeleteAccountForm,
     CreateMedicineFrom,
+    ActiveMedicineSortForm,
+    NotActiveMedicineSortForm,
 )
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
@@ -101,41 +103,68 @@ def delete_account():
     return render_template("delete_account.html", form=form)
 
 
-@app.route("/medicines", methods=["GET", "POST"])
+@app.route("/medicines", methods=["GET"])
 @login_required
 def medicines():
+    title = "お薬管理"
+
+    # 服用中のお薬並び替えフォーム設定
+    active_form = ActiveMedicineSortForm()
+    active_sort_method = request.args.get("active_sort")
+    active_form.active_sort.data = active_sort_method or "registerorder"
+
+    # 服用中でないお薬並び替えフォーム設定
+    not_active_form = NotActiveMedicineSortForm()
+    not_active_sort_method = request.args.get("not_active_sort")
+    not_active_form.not_active_sort.data = not_active_sort_method or "registerorder"
+
+    # 服用中のお薬のお薬を登録順で取得
     active_query = (
         sa.select(Medicine)
         .join(Medicine.user)
         .where(Medicine.user == current_user, Medicine.is_active == True)
         .order_by(Medicine.id)
     )
+    # 服用中でないお薬を登録順で取得
     not_active_query = (
         sa.select(Medicine)
         .join(Medicine.user)
         .where(Medicine.user == current_user, Medicine.is_active == False)
         .order_by(Medicine.id)
     )
+    # 服用中のお薬を星評価順で取得
     rating_active_query = (
         sa.select(Medicine)
         .join(Medicine.user)
         .where(Medicine.user == current_user, Medicine.is_active == True)
         .order_by(Medicine.rating.desc())
     )
+    # 服用中でないお薬を星評価順で取得
     rating_not_active_query = (
         sa.select(Medicine)
         .join(Medicine.user)
         .where(Medicine.user == current_user, Medicine.is_active == False)
         .order_by(Medicine.rating.desc())
     )
-    if request.method == "GET":
+
+    if active_sort_method == "registerorder":
         active_medicines = db.session.scalars(active_query).all()
+    else:
+        active_medicines = db.session.scalars(rating_active_query).all()
+
+    if not_active_sort_method == "registerorder":
         not_active_medicines = db.session.scalars(not_active_query).all()
-        return render_template(
-            "medicines.html",
-            active_medicines=active_medicines,
-            not_active_medicines=not_active_medicines,
-        )
+    else:
+        not_active_medicines = db.session.scalars(rating_not_active_query).all()
+
+    return render_template(
+        "medicines.html",
+        active_medicines=active_medicines,
+        not_active_medicines=not_active_medicines,
+        active_form=active_form,
+        not_active_form=not_active_form,
+        title=title,
+    )
 
 
 @app.route("/create_medicine", methods=["GET", "POST"])

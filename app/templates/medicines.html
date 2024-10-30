@@ -10,11 +10,19 @@
     <div class="col-12 col-lg-7 mb-3">
       <div class="mb-1 d-flex justify-content-between align-items-center">
         <h5 class="mb-0">服用中のお薬</h5>
-        <form action="" method="get" class="d-flex align-items-center" novalidate>
-          {{ active_form.hidden_tag() }}
-          <small class="me-1">{{ active_form.active_sort.label(class="text-nowrap sort-label") }}</small>
-          {{ active_form.active_sort(class="form-select sort-select") }}
-          {{ active_form.submit(class="btn btn-custom btn-sm ms-1 sort-submit") }}
+        <form action="{{ url_for('medicines') }}"
+              method="get"
+              class="d-flex align-items-center"
+              novalidate>
+          {{ form.hidden_tag() }}
+          <small class="me-1">{{ form.active_sort.label(class="text-nowrap sort-label") }}</small>
+          {{ form.active_sort(class="form-select sort-select") }}
+          <input type="hidden"
+                 name="not_active_sort"
+                 value="{{ form.not_active_sort.data }}">
+          <input type="submit"
+                 class="btn btn-custom btn-sm ms-1 sort-submit"
+                 value="決定">
         </form>
       </div>
       {% if not active_medicines %}
@@ -39,7 +47,8 @@
                 {% endif %}
               </p>
               <div class="col-2 text-end p-0">
-                <a href="{{ url_for('index') }}" class="btn btn-custom btn-sm">詳細</a>
+                <a href="{{ url_for('medicine_detail', medicine_id=medicine.id) }}"
+                   class="btn btn-custom btn-sm">詳細</a>
               </div>
             </li>
           {% endfor %}
@@ -51,11 +60,17 @@
     <div class="col-12 col-lg-7 mb-3">
       <div class="mb-1 d-flex justify-content-between align-items-center">
         <h5 class="mb-0">服用中でないお薬</h5>
-        <form action="" method="get" class="d-flex align-items-center" novalidate>
-          {{ not_active_form.hidden_tag() }}
-          <small class="me-1">{{ not_active_form.not_active_sort.label(class="text-nowrap sort-label") }}</small>
-          {{ not_active_form.not_active_sort(class="form-select sort-select") }}
-          {{ not_active_form.submit(class="btn btn-custom btn-sm ms-1 sort-submit") }}
+        <form action="{{ url_for('medicines') }}"
+              method="get"
+              class="d-flex align-items-center"
+              novalidate>
+          {{ form.hidden_tag() }}
+          <small class="me-1">{{ form.not_active_sort.label(class="text-nowrap sort-label") }}</small>
+          {{ form.not_active_sort(class="form-select sort-select") }}
+          <input type="hidden" name="active_sort" value="{{ form.active_sort.data }}">
+          <input type="submit"
+                 class="btn btn-custom btn-sm ms-1 sort-submit"
+                 value="決定">
         </form>
       </div>
       {% if not not_active_medicines %}
@@ -80,7 +95,8 @@
                 {% endif %}
               </p>
               <div class="col-2 text-end p-0">
-                <a href="{{ url_for('index') }}" class="btn btn-custom btn-sm">詳細</a>
+                <a href="{{ url_for('medicine_detail', medicine_id=medicine.id) }}"
+                   class="btn btn-custom btn-sm">詳細</a>
               </div>
             </li>
           {% endfor %}

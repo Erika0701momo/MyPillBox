@@ -143,7 +143,7 @@ class CreateMedicineFrom(FlaskForm):
             "rows": "4",
         },
     )
-    rating = HiddenField("お薬の評価", render_kw={"value": 0})
+    rating = HiddenField("あなたのこのお薬への評価", render_kw={"value": 0})
     is_active = BooleanField(
         "現在服用中(服用中ならオンにしてください)",
         render_kw={"role": "switch"},
@@ -151,15 +151,10 @@ class CreateMedicineFrom(FlaskForm):
     submit = SubmitField("登録")
 
 
-class ActiveMedicineSortForm(FlaskForm):
+class MedicineSortForm(FlaskForm):
     active_sort = SelectField(
         "並び替え", choices=[("registerorder", "登録順"), ("ratingorder", "星評価順")]
     )
-    submit = SubmitField("決定")
-
-
-class NotActiveMedicineSortForm(FlaskForm):
     not_active_sort = SelectField(
         "並び替え", choices=[("registerorder", "登録順"), ("ratingorder", "星評価順")]
     )
-    submit = SubmitField("決定")

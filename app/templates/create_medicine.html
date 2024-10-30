@@ -37,31 +37,21 @@
         {{ form.rating.label }}
         {{ form.rating(class="form-control") }}
         <br>
-        <img src="{{ url_for('static', filename='images/star_on.png') }}"
-             id="1"
-             class="star medicine-star my-2"
-             onclick="medicineStarRate(this)"
-             alt="star">
-        <img src="{{ url_for('static', filename='images/star_on.png') }}"
-             id="2"
-             class="star medicine-star my-2"
-             onclick="medicineStarRate(this)"
-             alt="star">
-        <img src="{{ url_for('static', filename='images/star_on.png') }}"
-             id="3"
-             class="star medicine-star my-2"
-             onclick="medicineStarRate(this)"
-             alt="star">
-        <img src="{{ url_for('static', filename='images/star_on.png') }}"
-             id="4"
-             class="star medicine-star my-2"
-             onclick="medicineStarRate(this)"
-             alt="star">
-        <img src="{{ url_for('static', filename='images/star_on.png') }}"
-             id="5"
-             class="star medicine-star my-2"
-             onclick="medicineStarRate(this)"
-             alt="star">
+        {% for i in range(1, 6) %}
+          {% if form.rating.data|int >= i %}
+            <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                 id="{{ i }}"
+                 class="star medicine-star rating-checked my-2"
+                 onclick="medicineStarRate(this)"
+                 alt="star">
+          {% else %}
+            <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                 id="{{ i }}"
+                 class="star medicine-star my-2"
+                 onclick="medicineStarRate(this)"
+                 alt="star">
+          {% endif %}
+        {% endfor %}
       </div>
       <div class="col-12 col-lg-7 mb-3">
         {{ form.is_active.label }}
@@ -70,6 +60,9 @@
     </div>
     <div class="row">
       <div class="col-5 col-lg-2">{{ form.submit(class="btn btn-custom w-100") }}</div>
+      <div class="col-5 col-lg-2">
+        <a href="{{ url_for('medicines') }}" class="btn btn-secondary w-100">キャンセル</a>
+      </div>
     </div>
   </form>
 {% endblock content %}

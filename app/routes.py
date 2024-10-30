@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, abort
 from app import app, db
 from app.forms import (
     LoginForm,
@@ -6,8 +6,7 @@ from app.forms import (
     EditUsernameForm,
     DeleteAccountForm,
     CreateMedicineFrom,
-    ActiveMedicineSortForm,
-    NotActiveMedicineSortForm,
+    MedicineSortForm,
 )
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
@@ -27,6 +26,7 @@ def index():
         .where(Medicine.user == current_user, Medicine.is_active == True)
     )
     medicine_kinds = db.session.scalar(query)
+
     return render_template("index.html", title="ホーム", medicine_kinds=medicine_kinds)
 
 
@@ -38,7 +38,9 @@ def login():
     # ログインしている場合はインデックスへリダイレクト
     if current_user.is_authenticated:
         return redirect(url_for("index"))
+
     form = LoginForm()
+
     if form.validate_on_submit():
         user = db.session.scalar(sa.select(User).where(User.email == form.email.data))
         if user is None or not user.check_password(form.password.data):
@@ -50,6 +52,7 @@ def login():
         if not next_page or urlsplit(next_page).netloc != "":
             next_page = url_for("index")
         return redirect(next_page)
+
     return render_template("login.html", form=form)
 
 
@@ -72,6 +75,7 @@ def register():
         db.session.commit()
         flash("アカウントを登録しました！ログインしましょう")
         return redirect(url_for("login"))
+
     return render_template("register.html", form=form)
 
 
@@ -79,6 +83,7 @@ def register():
 @login_required
 def edit_username():
     form = EditUsernameForm()
+
     if form.validate_on_submit():
         current_user.username = form.username.data
         db.session.commit()
@@ -86,6 +91,7 @@ def edit_username():
         return redirect(url_for("edit_username"))
     elif request.method == "GET":
         form.username.data = current_user.username
+
     return render_template("edit_username.html", title="ユーザー名の変更", form=form)
 
 
@@ -93,6 +99,7 @@ def edit_username():
 @login_required
 def delete_account():
     form = DeleteAccountForm()
+
     if form.validate_on_submit():
         user = current_user
         db.session.delete(user)
@@ -100,6 +107,7 @@ def delete_account():
         logout_user()
         flash("アカウントが削除されました。ご利用ありがとうございました。")
         return redirect(url_for("login"))
+
     return render_template("delete_account.html", form=form)
 
 
@@ -108,15 +116,10 @@ def delete_account():
 def medicines():
     title = "お薬管理"
 
-    # 服用中のお薬並び替えフォーム設定
-    active_form = ActiveMedicineSortForm()
-    active_sort_method = request.args.get("active_sort")
-    active_form.active_sort.data = active_sort_method or "registerorder"
-
-    # 服用中でないお薬並び替えフォーム設定
-    not_active_form = NotActiveMedicineSortForm()
-    not_active_sort_method = request.args.get("not_active_sort")
-    not_active_form.not_active_sort.data = not_active_sort_method or "registerorder"
+    # フォーム設定
+    form = MedicineSortForm()
+    form.active_sort.data = request.args.get("active_sort", "registerorder")
+    form.not_active_sort.data = request.args.get("not_active_sort", "registerorder")
 
     # 服用中のお薬のお薬を登録順で取得
     active_query = (
@@ -147,22 +150,21 @@ def medicines():
         .order_by(Medicine.rating.desc())
     )
 
-    if active_sort_method == "registerorder":
-        active_medicines = db.session.scalars(active_query).all()
-    else:
+    if form.active_sort.data == "ratingorder":
         active_medicines = db.session.scalars(rating_active_query).all()
-
-    if not_active_sort_method == "registerorder":
-        not_active_medicines = db.session.scalars(not_active_query).all()
     else:
+        active_medicines = db.session.scalars(active_query).all()
+
+    if form.not_active_sort.data == "ratingorder":
         not_active_medicines = db.session.scalars(rating_not_active_query).all()
+    else:
+        not_active_medicines = db.session.scalars(not_active_query).all()
 
     return render_template(
         "medicines.html",
         active_medicines=active_medicines,
         not_active_medicines=not_active_medicines,
-        active_form=active_form,
-        not_active_form=not_active_form,
+        form=form,
         title=title,
     )
 
@@ -171,6 +173,7 @@ def medicines():
 @login_required
 def create_medicine():
     form = CreateMedicineFrom()
+
     if form.validate_on_submit():
         medicine = Medicine(
             name=form.name.data,
@@ -187,4 +190,14 @@ def create_medicine():
         db.session.commit()
         flash(f"お薬「{medicine.name}」を登録しました")
         return redirect(url_for("medicines"))
+
     return render_template("create_medicine.html", form=form)
+
+
+@app.route("/medicine_detail/<int:medicine_id>")
+@login_required
+def medicine_detail(medicine_id):
+    medicine = db.session.get(Medicine, medicine_id)
+    if medicine is None or medicine.user_id != current_user.id:
+        abort(404)
+    return render_template("medicine_detail.html")

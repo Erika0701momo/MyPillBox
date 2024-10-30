@@ -200,4 +200,4 @@ def medicine_detail(medicine_id):
     medicine = db.session.get(Medicine, medicine_id)
     if medicine is None or medicine.user_id != current_user.id:
         abort(404)
-    return render_template("medicine_detail.html")
+    return render_template("medicine_detail.html", medicine=medicine)

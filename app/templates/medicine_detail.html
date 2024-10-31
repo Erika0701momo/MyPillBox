@@ -7,7 +7,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-12 col-lg-7 mb-3">
+    <div class="col-12 col-lg-7 mb-2">
       <div class="mb-1 d-flex justify-content-between align-items-center">
         <h5 class="mb-0">お薬の情報</h5>
         <div>
@@ -17,19 +17,20 @@
       </div>
       <table class="table table-hover">
         <tr>
-          <td>お薬の名前</td>
-          <td>{{ medicine.name }}</td>
+          <td style="width: 40%;">お薬の名前</td>
+          <td style="width: 60%;">{{ medicine.name }}</td>
         </tr>
         <tr>
-          <td>服用開始日</td>
-          <td>{{ medicine.taking_start_date }}</td>
+          <td style="width: 40%;">服用開始日</td>
+          <td style="width: 60%;">{{ medicine.taking_start_date }}</td>
         </tr>
         <tr>
-          <td>1日に服用する量</td>
-          <td>
+          <td style="width: 40%;">1日に服用する量</td>
+          <td style="width: 60%;">
             {% if not medicine.dose_per_day %}
-              0
-            {% elif medicine.dose_per_day.split(".")[1] == 0 %}
+              -
+              <!-- 一日に服用する量が1.0など小数点以下が0であれば数値に変換 -->
+            {% elif (medicine.dose_per_day|string).split(".")[1] == "0" %}
               {{ medicine.dose_per_day|int }}
             {% else %}
               {{ medicine.dose_per_day }}
@@ -38,16 +39,16 @@
           </td>
         </tr>
         <tr>
-          <td class="text-nowrap">服用するタイミング</td>
-          <td>{{ medicine.taking_timing }}</td>
+          <td style="width: 40%;">
+            服用する
+            <span class="sp-br"></span>
+            タイミング
+          </td>
+          <td style="width: 60%;">{{ medicine.taking_timing or "-" }}</td>
         </tr>
         <tr>
-          <td>診察メモ</td>
-          <td>{{ medicine.memo }}</td>
-        </tr>
-        <tr>
-          <td>お薬の評価</td>
-          <td>
+          <td style="width: 40%;">お薬の評価</td>
+          <td style="width: 60%;">
             {% for i in range(0, medicine.rating) %}
               <img src="{{ url_for('static', filename='images/star_on.png') }}"
                    class="star-display rating-checked"
@@ -63,14 +64,26 @@
           </td>
         </tr>
         <tr>
-          <td>ステータス</td>
-          <td>
+          <td style="width: 40%;">ステータス</td>
+          <td style="width: 60%;">
             {% if medicine.is_active == True %}
               服用中
             {% else %}
               服用していない
             {% endif %}
           </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-lg-7 mb-3">
+      <table class="table table-hover">
+        <tr>
+          <td>診察メモ</td>
+        </tr>
+        <tr>
+          <td>{{ medicine.memo or "-" }}</td>
         </tr>
       </table>
     </div>

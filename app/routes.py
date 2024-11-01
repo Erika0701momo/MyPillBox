@@ -7,6 +7,7 @@ from app.forms import (
     DeleteAccountForm,
     CreateMedicineFrom,
     MedicineSortForm,
+    EditMedicineForm,
 )
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
@@ -92,12 +93,13 @@ def edit_username():
     elif request.method == "GET":
         form.username.data = current_user.username
 
-    return render_template("edit_username.html", title="ユーザー名の変更", form=form)
+    return render_template("edit_username.html", form=form, title="ユーザー名の変更")
 
 
 @app.route("/delete_account", methods=["GET", "POST"])
 @login_required
 def delete_account():
+    title = "アカウント削除"
     form = DeleteAccountForm()
 
     if form.validate_on_submit():
@@ -108,7 +110,7 @@ def delete_account():
         flash("アカウントが削除されました。ご利用ありがとうございました。")
         return redirect(url_for("login"))
 
-    return render_template("delete_account.html", form=form)
+    return render_template("delete_account.html", form=form, title=title)
 
 
 @app.route("/medicines", methods=["GET"])
@@ -172,6 +174,7 @@ def medicines():
 @app.route("/create_medicine", methods=["GET", "POST"])
 @login_required
 def create_medicine():
+    title = "お薬登録"
     form = CreateMedicineFrom()
 
     if form.validate_on_submit():
@@ -191,13 +194,51 @@ def create_medicine():
         flash(f"お薬「{medicine.name}」を登録しました")
         return redirect(url_for("medicines"))
 
-    return render_template("create_medicine.html", form=form)
+    return render_template("create_medicine.html", form=form, title=title)
 
 
 @app.route("/medicine_detail/<int:medicine_id>")
 @login_required
 def medicine_detail(medicine_id):
+    title = "お薬詳細"
     medicine = db.session.get(Medicine, medicine_id)
     if medicine is None or medicine.user_id != current_user.id:
         abort(404)
-    return render_template("medicine_detail.html", medicine=medicine)
+    return render_template("medicine_detail.html", medicine=medicine, title=title)
+
+
+@app.route("/edit_medicine/<int:medicine_id>", methods=["GET", "POST"])
+@login_required
+def edit_medicine(medicine_id):
+    title = "お薬編集"
+    medicine = db.session.get(Medicine, medicine_id)
+    if medicine is None or medicine.user_id != current_user.id:
+        abort(404)
+
+    form = EditMedicineForm()
+
+    if form.validate_on_submit():
+        medicine.name = form.name.data
+        medicine.taking_start_date = form.taking_start_date.data
+        medicine.dose_per_day = form.dose_per_day.data
+        medicine.taking_timing = form.taking_timing.data
+        medicine.memo = form.memo.data
+        medicine.rating = form.rating.data
+        medicine.is_active = form.is_active.data
+
+        db.session.commit()
+        flash(f"お薬「{medicine.name}」の情報を更新しました")
+        return redirect(url_for("medicine_detail", medicine_id=medicine.id))
+    elif request.method == "GET":
+        # フォームに既存データ投入
+        form.name.data = medicine.name
+        form.taking_start_date.data = medicine.taking_start_date
+        form.dose_per_day.data = medicine.dose_per_day
+        form.taking_timing.data = medicine.taking_timing
+        form.memo.data = medicine.memo
+        form.rating.data = medicine.rating
+        form.is_active.data = medicine.is_active
+
+    return render_template(
+        "edit_medicine.html", medicine=medicine, form=form, title=title
+    )

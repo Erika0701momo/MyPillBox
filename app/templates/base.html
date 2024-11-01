@@ -17,11 +17,11 @@
           rel="stylesheet">
     <style>
       body {
-            background-color: #F1F3C2;
-            font-family: "Zen Maru Gothic", serif;
-            font-weight: 500;
-            font-style: normal;
-        }
+        background-color: #F1F3C2;
+        font-family: "Zen Maru Gothic", sans-serif;
+        font-weight: 500;
+        font-style: normal;
+      }
       .navbar-dark .nav-link {
         color: #fff !important;
       }
@@ -37,6 +37,14 @@
       }
       .btn-custom:hover {
         background-color: #D9894A
+      }
+      .btn-back {
+        background-color: #CEDF9F;
+        font-weight: 500;
+        margin-right: .30rem;
+      }
+      .btn-back:hover {
+        background-color: #abbd7a;
       }
       .form-control:focus {
         border-color: #ffc107;
@@ -89,13 +97,14 @@
       }
 
       @media screen and (min-width: 430px) {
-        .sp-br {
-          display: none;
+        .sp-br-container {
+          font-size: 0;
         }
-      }
-      @media screen and (max-width: 429px) {
-        .sp-br {
-          display: inline;
+        .sp-br-container span {
+          font-size: 16px;
+        }
+        .sp-br-container br {
+          display: none;
         }
       }
     </style>

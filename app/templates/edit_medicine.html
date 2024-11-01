@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2 class="mb-3">お薬編集</h2>
+  <small class="d-block mb-2"><span class="red">※</span>は必須入力です</small>
+  <form action="" method="post" novalidate>
+    <div class="row">
+      <div class="col-12 col-lg-7 mb-3">
+        {{ form.hidden_tag() }}
+        <span class="red">※</span>{{ form.name.label }}
+        {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else "") ) }}
+        {% for error in form.name.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12 col-lg-7 mb-3">
+        <span class="red">※</span>{{ form.taking_start_date.label }}
+        {{ form.taking_start_date(class="form-control" + (" is-invalid" if form.taking_start_date.errors else "") ) }}
+        {% for error in form.taking_start_date.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12 col-lg-7 mb-3">
+        {{ form.dose_per_day.label }}
+        {{ form.dose_per_day(class="form-control" + (" is-invalid" if form.dose_per_day.errors else "") ) }}
+        {% for error in form.dose_per_day.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12 col-lg-7 mb-3">
+        {{ form.taking_timing.label }}
+        {{ form.taking_timing(class="form-control") }}
+      </div>
+      <div class="col-12 col-lg-7 mb-3">
+        {{ form.memo.label }}
+        {{ form.memo(class="form-control") }}
+      </div>
+      <div class="col-12 col-lg-7 mb-3">
+        {{ form.rating.label }}
+        {{ form.rating(class="form-control") }}
+        <br>
+        {% for i in range(1, 6) %}
+          {% if form.rating.data|int >= i %}
+            <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                 id="{{ i }}"
+                 class="star medicine-star rating-checked my-2"
+                 onclick="medicineStarRate(this)"
+                 alt="star">
+          {% else %}
+            <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                 id="{{ i }}"
+                 class="star medicine-star my-2"
+                 onclick="medicineStarRate(this)"
+                 alt="star">
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="col-12 col-lg-7 mb-3">
+        {{ form.is_active.label }}
+        <div class="form-check form-switch my-3 mx-2">{{ form.is_active(class="form-check-input") }}</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-5 col-lg-2">{{ form.submit(class="btn btn-custom w-100") }}</div>
+      <div class="col-5 col-lg-2">
+        <a href="{{ url_for('medicine_detail', medicine_id=medicine.id) }}"
+           class="btn btn-secondary w-100">キャンセル</a>
+      </div>
+    </div>
+  </form>
+{% endblock content %}
+{% block script %}
+  <script>
+    function medicineStarRate(e) {
+      const stars = document.querySelectorAll(".star");
+      const rating = document.querySelector("#rating");
+
+      for (s of stars) {
+        if (parseInt(s.id) <= parseInt(e.id)) {
+          s.classList.add("rating-checked");
+        } else if (parseInt(s.id) > parseInt(e.id)) {
+          s.classList.remove("rating-checked");
+        }
+      }
+      rating.value = e.id;
+    }
+  </script>
+{% endblock script %}

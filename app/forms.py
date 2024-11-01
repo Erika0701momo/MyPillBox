@@ -193,3 +193,8 @@ class EditMedicineForm(FlaskForm):
         render_kw={"role": "switch"},
     )
     submit = SubmitField("更新")
+
+
+# 削除モーダル用　POSTで送信してデータベースに変更を加えるのでCSRF対策のためwtformsで削除ボタンを作る
+class EmptyForm(FlaskForm):
+    submit = SubmitField("削除する")

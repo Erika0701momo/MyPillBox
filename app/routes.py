@@ -8,6 +8,7 @@ from app.forms import (
     CreateMedicineFrom,
     MedicineSortForm,
     EditMedicineForm,
+    EmptyForm,
 )
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
@@ -201,10 +202,15 @@ def create_medicine():
 @login_required
 def medicine_detail(medicine_id):
     title = "お薬詳細"
+    # モーダル削除ボタン用
+    form = EmptyForm()
     medicine = db.session.get(Medicine, medicine_id)
+
     if medicine is None or medicine.user_id != current_user.id:
         abort(404)
-    return render_template("medicine_detail.html", medicine=medicine, title=title)
+    return render_template(
+        "medicine_detail.html", medicine=medicine, title=title, form=form
+    )
 
 
 @app.route("/edit_medicine/<int:medicine_id>", methods=["GET", "POST"])
@@ -242,3 +248,22 @@ def edit_medicine(medicine_id):
     return render_template(
         "edit_medicine.html", medicine=medicine, form=form, title=title
     )
+
+
+@app.route("/delete_medicine/<int:medicine_id>", methods=["POST"])
+@login_required
+def delete_medicine(medicine_id):
+    # モーダル削除ボタン用
+    form = EmptyForm()
+
+    if form.validate_on_submit():
+        medicine_to_delete = db.session.get(Medicine, medicine_id)
+        if medicine_to_delete is None or medicine_to_delete.user_id != current_user.id:
+            abort(404)
+        db.session.delete(medicine_to_delete)
+        db.session.commit()
+        flash(f"お薬「{medicine_to_delete.name}」を削除しました")
+        return redirect(url_for("medicines"))
+    else:
+        flash("すみません、お薬削除に失敗しました")
+        return redirect(url_for("medicines"))

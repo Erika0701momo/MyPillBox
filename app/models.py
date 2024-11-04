@@ -30,6 +30,9 @@ class User(UserMixin, db.Model):
     medicines: so.Mapped[list["Medicine"]] = so.relationship(
         cascade="all, delete-orphan", back_populates="user"
     )
+    daily_logs: so.Mapped[list["DailyLog"]] = so.relationship(
+        cascade="all, delete-orphan", back_populates="user"
+    )
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -67,7 +70,54 @@ class Medicine(db.Model):
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id))
 
     user: so.Mapped[User] = so.relationship(back_populates="medicines")
+    daily_log_details: so.Mapped[list["DailyLogDetail"]] = so.relationship(
+        cascade="all, delete-orphan", back_populates="medicine"
+    )
 
     # デバッグ用にクラスのオブジェクトをプリント
     def __repr__(self):
         return f"<Medicine {self.id}, {self.name}>"
+
+
+class DailyLog(db.Model):
+    __tablename__ = "daily_logs"
+
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    date: so.Mapped[datetime.date] = so.mapped_column(sa.Date)
+    mood: so.Mapped[int]
+    condition: so.Mapped[int]
+
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id))
+
+    user: so.Mapped[User] = so.relationship(back_populates="daily_logs")
+    daily_log_details: so.Mapped[list["DailyLogDetail"]] = so.relationship(
+        cascade="all, delete-orphan", back_populates="daily_log"
+    )
+
+    # デバッグ用にクラスのオブジェクトをプリント
+    def __repr__(self):
+        return f"<DailyLog {self.id}, {self.date}>"
+
+
+class DailyLogDetail(db.Model):
+    __tablename__ = "daily_log_details"
+
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    dose: so.Mapped[float]
+
+    medicine_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Medicine.id))
+    daily_log_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(DailyLog.id))
+
+    medicine: so.Mapped[Medicine] = so.relationship(back_populates="daily_log_details")
+    daily_log: so.Mapped[DailyLog] = so.relationship(back_populates="daily_log_details")
+
+    # 複合ユニーク制約
+    __table_args__ = (
+        sa.UniqueConstraint(
+            "medicine_id", "daily_log_id", name="uq_medicine_daily_log"
+        ),
+    )
+
+    # デバッグ用にクラスのオブジェクトをプリント
+    def __repr__(self):
+        return f"<DailyLogDetail id:{self.id}, daily_log_id:{self.daily_log_id}, medicine_id:{self.medicine_id}, dose:{self.dose}>"

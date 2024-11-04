@@ -2,4 +2,7 @@
 {% block content %}
   <h1 class="text-center mb-3 error">404</h1>
   <p class="text-center">お探しのページは見つかりませんでした</p>
+  <p class="text-center">
+    <a href="{{ url_for('index') }}" class="btn btn-custom">ホームへ戻る</a>
+  </p>
 {% endblock content %}

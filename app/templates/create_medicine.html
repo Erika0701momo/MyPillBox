@@ -3,9 +3,9 @@
   <h2 class="mb-3">お薬登録</h2>
   <small class="d-block mb-2"><span class="red">※</span>は必須入力です</small>
   <form action="" method="post" novalidate>
+    {{ form.hidden_tag() }}
     <div class="row">
       <div class="col-12 col-lg-7 mb-3">
-        {{ form.hidden_tag() }}
         <span class="red">※</span>{{ form.name.label }}
         {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else "") ) }}
         {% for error in form.name.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}

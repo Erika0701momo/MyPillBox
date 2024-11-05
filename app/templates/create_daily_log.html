@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2 class="mb-3">日々の記録登録</h2>
+  <small class="d-block mb-2"><span class="red">※</span>は必須入力です</small>
+  <form action="" method="post" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="row">
+      <div class="col-12 col-lg-7 mb-3">
+        <span class="red">※</span>{{ form.date.label }}
+        {{ form.date(class="form-control" + (" is-invalid" if form.date.errors else "") ) }}
+        {% for error in form.date.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12 col-lg-7 mb-3">
+        <span class="red">※</span>{{ form.mood.label }}
+        {{ form.mood(class="form-control" + (" is-invalid" if form.date.errors else "") ) }}
+        <br>
+        {% for i in range(1, 6) %}
+          {% if form.mood.data|int >= i %}
+            <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                 id="{{ i }}"
+                 class="star medicine-star rating-checked my-2"
+                 onclick="medicineStarRate(this)"
+                 alt="star">
+          {% else %}
+            <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                 id="{{ i }}"
+                 class="star medicine-star my-2"
+                 onclick="medicineStarRate(this)"
+                 alt="star">
+          {% endif %}
+        {% endfor %}
+        {% for error in form.mood.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12 col-lg-7 mb-3">
+        <span class="red">※</span>{{ form.condition.label }}
+        {{ form.condition(class="form-control" + (" is-invalid" if form.condition.errors else "") ) }}
+        <br>
+        {% for i in range(1, 6) %}
+          {% if form.condition.data|int >= i %}
+            <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                 id="{{ i }}"
+                 class="star medicine-star rating-checked my-2"
+                 onclick="medicineStarRate(this)"
+                 alt="star">
+          {% else %}
+            <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                 id="{{ i }}"
+                 class="star medicine-star my-2"
+                 onclick="medicineStarRate(this)"
+                 alt="star">
+          {% endif %}
+        {% endfor %}
+        {% for error in form.condition.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12 col-lg-7 mb-3">
+        <p class="mb-0">飲んだお薬を教えてください（飲まなかったお薬の服用量は、空欄にしてください）</p>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>お薬の名前</th>
+              <th>服用量</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 服用中のお薬をリストで表示するループ -->
+            {% for medicine in medicines %}
+              <tr>
+                <td>{{ medicine.name }}</td>
+                <!-- ユーザーが入力した服用量と単位を表示するセル -->
+                <td>{{ form.details[loop.index0].dose }} {{ medicine.taking_unit.value }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </form>
+  {% endblock content %}

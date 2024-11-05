@@ -11,6 +11,7 @@ from wtforms import (
     SelectField,
     FieldList,
     FormField,
+    IntegerField,
 )
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
 import sqlalchemy as sa
@@ -202,6 +203,24 @@ class EmptyForm(FlaskForm):
     submit = SubmitField("削除する")
 
 
-#
+# DailyLogFormのサブフォーム
 class DailyLogDetailForm(FlaskForm):
     dose = MyFloatField("服用量")
+
+
+class DailyLogForm(FlaskForm):
+    date = DateField(
+        "日付を選んでください", validators=[DataRequired(message="日付は必須入力です")]
+    )
+    mood = HiddenField(
+        "その日の気分を教えてください",
+        validators=[DataRequired(message="気分は必須入力です")],
+    )
+
+    condition = HiddenField(
+        "その日の体調を教えてください",
+        validators=[DataRequired(message="体調は必須入力です")],
+    )
+    # detailsに、複数のDailyLogDetailFormを持たせる
+    details = FieldList(FormField(DailyLogDetailForm), min_entries=1)
+    submit = SubmitField("登録")

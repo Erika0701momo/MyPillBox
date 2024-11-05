@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="mb-4">
+    <h2 class="mb-2">日々の記録</h2>
+    <p>
+      <small>「記録する」ボタンをクリックすると、特定の日の気分、体調、服用したお薬を記録することができます</small>
+    </p>
+  </div>
+  <div class="row">
+    <div class="col-5 col-lg-2 mb-5">
+      <a href="{{ url_for('create_daily_log') }}" class="btn btn-custom w-100">記録する</a>
+    </div>
+  </div>
+{% endblock content %}

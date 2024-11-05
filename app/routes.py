@@ -9,6 +9,7 @@ from app.forms import (
     MedicineSortForm,
     EditMedicineForm,
     EmptyForm,
+    DailyLogForm,
 )
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
@@ -267,3 +268,31 @@ def delete_medicine(medicine_id):
     else:
         flash("すみません、お薬削除に失敗しました")
         return redirect(url_for("medicines"))
+
+
+@app.route("/daily_logs")
+@login_required
+def daily_logs():
+    title = "日々の記録"
+    return render_template("daily_logs.html", title=title)
+
+
+@app.route("/create_daily_log", methods=["GET", "POST"])
+@login_required
+def create_daily_log():
+    title = "日々の記録登録"
+    form = DailyLogForm()
+
+    # 服用中のお薬を取得
+    active_query = (
+        sa.select(Medicine)
+        .join(Medicine.user)
+        .where(Medicine.user == current_user, Medicine.is_active == True)
+        .order_by(Medicine.id)
+    )
+    active_medicines = db.session.scalars(active_query).all()
+    form.details.min_entries = len(active_medicines)
+
+    return render_template(
+        "create_daily_log.html", form=form, medicines=active_medicines, title=title
+    )

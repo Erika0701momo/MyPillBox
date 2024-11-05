@@ -202,5 +202,6 @@ class EmptyForm(FlaskForm):
     submit = SubmitField("削除する")
 
 
+#
 class DailyLogDetailForm(FlaskForm):
     dose = MyFloatField("服用量")

@@ -9,6 +9,8 @@ from wtforms import (
     DateField,
     FloatField,
     SelectField,
+    FieldList,
+    FormField,
 )
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
 import sqlalchemy as sa
@@ -198,3 +200,7 @@ class EditMedicineForm(FlaskForm):
 # 削除モーダル用　POSTで送信してデータベースに変更を加えるのでCSRF対策のためwtformsで削除ボタンを作る
 class EmptyForm(FlaskForm):
     submit = SubmitField("削除する")
+
+
+class DailyLogDetailForm(FlaskForm):
+    dose = MyFloatField("服用量")

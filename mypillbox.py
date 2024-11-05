@@ -1,7 +1,7 @@
 import sqlalchemy as sa
 import sqlalchemy.orm as so
 from app import app, db
-from app.models import User, Medicine, TakingUnit
+from app.models import User, Medicine, TakingUnit, DailyLog, DailyLogDetail
 
 
 # flask shellで使うためのシェルコンテキストを設定
@@ -14,4 +14,6 @@ def make_shell_context():
         "User": User,
         "Medicine": Medicine,
         "TakingUnit": TakingUnit,
+        "DailyLog": DailyLog,
+        "DailyLogDetail": DailyLogDetail,
     }

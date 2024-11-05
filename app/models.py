@@ -96,7 +96,7 @@ class DailyLog(db.Model):
 
     # デバッグ用にクラスのオブジェクトをプリント
     def __repr__(self):
-        return f"<DailyLog {self.id}, {self.date}>"
+        return f"<DailyLog {self.id}, {self.date}, user_id:{self.user_id}>"
 
 
 class DailyLogDetail(db.Model):

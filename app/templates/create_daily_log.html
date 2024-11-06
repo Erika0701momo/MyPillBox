@@ -1,77 +1,122 @@
 {% extends "base.html" %}
 {% block content %}
   <h2 class="mb-3">日々の記録登録</h2>
-  <small class="d-block mb-2"><span class="red">※</span>は必須入力です</small>
-  <form action="" method="post" novalidate>
-    {{ form.hidden_tag() }}
-    <div class="row">
-      <div class="col-12 col-lg-7 mb-3">
-        <span class="red">※</span>{{ form.date.label }}
-        {{ form.date(class="form-control" + (" is-invalid" if form.date.errors else "") ) }}
-        {% for error in form.date.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
-      </div>
-      <div class="col-12 col-lg-7 mb-3">
-        <span class="red">※</span>{{ form.mood.label }}
-        {{ form.mood(class="form-control" + (" is-invalid" if form.date.errors else "") ) }}
-        <br>
-        {% for i in range(1, 6) %}
-          {% if form.mood.data|int >= i %}
-            <img src="{{ url_for('static', filename='images/star_on.png') }}"
-                 id="{{ i }}"
-                 class="star medicine-star rating-checked my-2"
-                 onclick="medicineStarRate(this)"
-                 alt="star">
-          {% else %}
-            <img src="{{ url_for('static', filename='images/star_on.png') }}"
-                 id="{{ i }}"
-                 class="star medicine-star my-2"
-                 onclick="medicineStarRate(this)"
-                 alt="star">
-          {% endif %}
-        {% endfor %}
-        {% for error in form.mood.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
-      </div>
-      <div class="col-12 col-lg-7 mb-3">
-        <span class="red">※</span>{{ form.condition.label }}
-        {{ form.condition(class="form-control" + (" is-invalid" if form.condition.errors else "") ) }}
-        <br>
-        {% for i in range(1, 6) %}
-          {% if form.condition.data|int >= i %}
-            <img src="{{ url_for('static', filename='images/star_on.png') }}"
-                 id="{{ i }}"
-                 class="star medicine-star rating-checked my-2"
-                 onclick="medicineStarRate(this)"
-                 alt="star">
-          {% else %}
-            <img src="{{ url_for('static', filename='images/star_on.png') }}"
-                 id="{{ i }}"
-                 class="star medicine-star my-2"
-                 onclick="medicineStarRate(this)"
-                 alt="star">
-          {% endif %}
-        {% endfor %}
-        {% for error in form.condition.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
-      </div>
-      <div class="col-12 col-lg-7 mb-3">
-        <p class="mb-0">飲んだお薬を教えてください（飲まなかったお薬の服用量は、空欄にしてください）</p>
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th>お薬の名前</th>
-              <th>服用量</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- 服用中のお薬をリストで表示するループ -->
-            {% for medicine in medicines %}
+  {% if not medicines %}
+    <p>服用中のお薬がありません まず、お薬管理メニューから服用中のお薬を登録しましょう</p>
+  {% else %}
+    <small class="d-block mb-2"><span class="red">※</span>は必須入力です</small>
+    <form action="" method="post" novalidate>
+      {{ form.hidden_tag() }}
+      <div class="row">
+        <div class="col-12 col-lg-7 mb-3">
+          <span class="red">※</span>{{ form.date.label }}
+          {{ form.date(class="form-control" + (" is-invalid" if form.date.errors else "") ) }}
+          {% for error in form.date.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="col-12 col-lg-7 mb-3">
+          <span class="red">※</span>{{ form.mood.label }}
+          {{ form.mood(class="form-control" + (" is-invalid" if form.mood.errors else "") ) }}
+          <br>
+          {% for i in range(1, 6) %}
+            {% if form.mood.data|int >= i %}
+              <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                   id="{{ i }}"
+                   class="star star-rating mood-star rating-checked my-2"
+                   onclick="StarRate(this)"
+                   alt="star">
+            {% else %}
+              <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                   id="{{ i }}"
+                   class="star star-rating mood-star my-2"
+                   onclick="StarRate(this)"
+                   alt="star">
+            {% endif %}
+          {% endfor %}
+          {% for error in form.mood.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="col-12 col-lg-7 mb-4">
+          <span class="red">※</span>{{ form.condition.label }}
+          {{ form.condition(class="form-control" + (" is-invalid" if form.condition.errors else "") ) }}
+          <br>
+          {% for i in range(1, 6) %}
+            {% if form.condition.data|int >= i %}
+              <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                   id="{{ i }}"
+                   class="star star-rating condition-star rating-checked my-2"
+                   onclick="StarRate(this)"
+                   alt="star">
+            {% else %}
+              <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                   id="{{ i }}"
+                   class="star star-rating condition-star my-2"
+                   onclick="StarRate(this)"
+                   alt="star">
+            {% endif %}
+          {% endfor %}
+          {% for error in form.condition.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="col-12 col-lg-7 mb-3">
+          <p class="mb-0">飲んだお薬を教えてください（飲まなかったお薬の服用量は、空欄にしてください）</p>
+          <table class="table table-hover table-input">
+            <thead>
               <tr>
-                <td>{{ medicine.name }}</td>
-                <!-- ユーザーが入力した服用量と単位を表示するセル -->
-                <td>{{ form.details[loop.index0].dose }} {{ medicine.taking_unit.value }}</td>
+                <th>お薬の名前</th>
+                <th>服用量</th>
               </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              <!-- 服用中のお薬をリストで表示するループ -->
+              {% for medicine in medicines %}
+                <tr>
+                  <td style="width: 60%;">{{ medicine.name }}</td>
+                  <!-- ユーザーが入力した服用量と単位を表示するセル -->
+                  <td style="width:40%;">
+                    {{ form.details[loop.index0].dose(class="form-control d-inline-block" + (" is-invalid" if form.details[loop.index0].errors else "") , style="width: 50px;" ) }} {{ medicine.taking_unit.value }}
+                    {% for error in form.details[loop.index0].dose.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-5 col-lg-2">{{ form.submit(class="btn btn-custom w-100") }}</div>
+        <div class="col-5 col-lg-2">
+          <a href="{{ url_for('daily_logs') }}" class="btn btn-secondary w-100">キャンセル</a>
+        </div>
       </div>
     </form>
-  {% endblock content %}
+  {% endif %}
+{% endblock content %}
+{% block script %}
+  <script>
+    function StarRate(e) {
+      const moodStars = document.querySelectorAll(".mood-star");
+      const conditionStars = document.querySelectorAll(".condition-star")
+      const moodRating = document.querySelector("#mood");
+      const conditionRating = document.querySelector("#condition")
+
+      if (e.classList.contains("mood-star")) {
+        for (const s of moodStars) {
+          if (parseInt(s.id) <= parseInt(e.id)) {
+            s.classList.add("rating-checked");
+          } else if (parseInt(s.id) > parseInt(e.id)) {
+            s.classList.remove("rating-checked");
+          }
+        }
+        moodRating.value = e.id;
+      } else {
+        for (const s of conditionStars) {
+          if (parseInt(s.id) <= parseInt(e.id)) {
+            s.classList.add("rating-checked");
+          } else if (parseInt(s.id) > parseInt(e.id)) {
+            s.classList.remove("rating-checked");
+          }
+        }
+        conditionRating.value = e.id;
+      }
+      
+    }
+  </script>
+{% endblock script %}

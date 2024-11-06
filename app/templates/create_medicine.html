@@ -47,7 +47,7 @@
           {% else %}
             <img src="{{ url_for('static', filename='images/star_on.png') }}"
                  id="{{ i }}"
-                 class="star medicine-star my-2"
+                 class="star star-rating my-2"
                  onclick="medicineStarRate(this)"
                  alt="star">
           {% endif %}
@@ -58,7 +58,7 @@
         <div class="form-check form-switch my-3 mx-2">{{ form.is_active(class="form-check-input") }}</div>
       </div>
     </div>
-    <div class="row">
+    <div class="row mb-3">
       <div class="col-5 col-lg-2">{{ form.submit(class="btn btn-custom w-100") }}</div>
       <div class="col-5 col-lg-2">
         <a href="{{ url_for('medicines') }}" class="btn btn-secondary w-100">キャンセル</a>
@@ -68,18 +68,18 @@
 {% endblock content %}
 {% block script %}
   <script>
-  function medicineStarRate(e) {
-    const stars = document.querySelectorAll(".star");
-    const rating = document.querySelector("#rating");
+    function medicineStarRate(e) {
+      const stars = document.querySelectorAll(".star");
+      const rating = document.querySelector("#rating");
 
-    for (s of stars) {
-      if (parseInt(s.id) <= parseInt(e.id)) {
-        s.classList.add("rating-checked");
-      } else if (parseInt(s.id) > parseInt(e.id)) {
-        s.classList.remove("rating-checked");
+      for (const s of stars) {
+        if (parseInt(s.id) <= parseInt(e.id)) {
+          s.classList.add("rating-checked");
+        } else if (parseInt(s.id) > parseInt(e.id)) {
+          s.classList.remove("rating-checked");
+        }
       }
+      rating.value = e.id;
     }
-    rating.value = e.id;
-  }
   </script>
 {% endblock script %}

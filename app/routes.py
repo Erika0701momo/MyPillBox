@@ -14,7 +14,7 @@ from app.forms import (
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 import sqlalchemy.orm as so
-from app.models import User, Medicine, TakingUnit
+from app.models import User, Medicine, TakingUnit, DailyLog, DailyLogDetail
 from urllib.parse import urlsplit
 
 
@@ -291,7 +291,40 @@ def create_daily_log():
         .order_by(Medicine.id)
     )
     active_medicines = db.session.scalars(active_query).all()
+
+    # 服用中のお薬の数だけエントリを追加し、dose_per_dayを初期値として設定
     form.details.min_entries = len(active_medicines)
+    for medicine in active_medicines:
+        detail_entry = form.details.append_entry()
+        if medicine.dose_per_day is not None:
+            if str(medicine.dose_per_day).split(".")[1] == "0":
+                detail_entry.dose.data = int(medicine.dose_per_day)
+            else:
+                detail_entry.dose.data = medicine.dose_per_day
+
+    if form.validate_on_submit():
+        new_daily_log = DailyLog(
+            date=form.date.data,
+            mood=int(form.mood.data),
+            condition=int(form.condition.data),
+            user=current_user,
+        )
+        db.session.add(new_daily_log)
+        db.session.commit()
+
+        for idx, medicine in enumerate(active_medicines):
+            if form.details[idx].dose.data is None:
+                form.details[idx].dose.data = 0
+            daily_log_detail = DailyLogDetail(
+                dose=form.details[idx].dose.data,
+                medicine=medicine,
+                daily_log=new_daily_log,
+            )
+            db.session.add(daily_log_detail)
+
+        db.session.commit()
+        flash(f"{new_daily_log.date.strftime("%Y/%m/%d")}の記録を登録しました")
+        return redirect(url_for("daily_logs"))
 
     return render_template(
         "create_daily_log.html", form=form, medicines=active_medicines, title=title

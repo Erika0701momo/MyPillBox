@@ -36,13 +36,13 @@
           {% if form.rating.data|int >= i %}
             <img src="{{ url_for('static', filename='images/star_on.png') }}"
                  id="{{ i }}"
-                 class="star medicine-star rating-checked my-2"
+                 class="star star-rating rating-checked my-2"
                  onclick="medicineStarRate(this)"
                  alt="star">
           {% else %}
             <img src="{{ url_for('static', filename='images/star_on.png') }}"
                  id="{{ i }}"
-                 class="star medicine-star my-2"
+                 class="star star-rating my-2"
                  onclick="medicineStarRate(this)"
                  alt="star">
           {% endif %}
@@ -53,7 +53,7 @@
         <div class="form-check form-switch my-3 mx-2">{{ form.is_active(class="form-check-input") }}</div>
       </div>
     </div>
-    <div class="row">
+    <div class="row mb-3">
       <div class="col-5 col-lg-2">{{ form.submit(class="btn btn-custom w-100") }}</div>
       <div class="col-5 col-lg-2">
         <a href="{{ url_for('medicine_detail', medicine_id=medicine.id) }}"

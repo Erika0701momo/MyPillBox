@@ -11,13 +11,14 @@ from wtforms import (
     SelectField,
     FieldList,
     FormField,
-    IntegerField,
+    Form,
 )
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
 import sqlalchemy as sa
 from app import db
-from app.models import User, TakingUnit
+from app.models import User, TakingUnit, DailyLog
 import re
+from flask_login import current_user
 
 
 # FloatFieldのデフォルトエラーメッセージを上書き、全角数字判定
@@ -204,13 +205,15 @@ class EmptyForm(FlaskForm):
 
 
 # DailyLogFormのサブフォーム
-class DailyLogDetailForm(FlaskForm):
+class DailyLogDetailForm(Form):
     dose = MyFloatField("服用量")
 
 
 class DailyLogForm(FlaskForm):
     date = DateField(
-        "日付を選んでください", validators=[DataRequired(message="日付は必須入力です")]
+        "日付を選んでください",
+        format="%Y-%m-%d",
+        validators=[DataRequired(message="日付は必須入力です")],
     )
     mood = HiddenField(
         "その日の気分を教えてください",
@@ -222,5 +225,17 @@ class DailyLogForm(FlaskForm):
         validators=[DataRequired(message="体調は必須入力です")],
     )
     # detailsに、複数のDailyLogDetailFormを持たせる
-    details = FieldList(FormField(DailyLogDetailForm), min_entries=1)
+    details = FieldList(FormField(DailyLogDetailForm))
     submit = SubmitField("登録")
+
+    # 既に登録されている日付を入力したらバリデーションエラーを表示
+    def validate_date(self, date):
+        registerd_date = db.session.scalar(
+            sa.select(DailyLog)
+            .join(DailyLog.user)
+            .where(DailyLog.user == current_user, DailyLog.date == date.data)
+        )
+        if registerd_date is not None:
+            raise ValidationError(
+                "既に登録済みの日付です 違う日付を選択するか、日々の記録一覧からその日付の記録を編集してださい"
+            )

@@ -62,7 +62,7 @@
       .red {
         color: red;
       }
-      .medicine-star {
+      .star-rating {
         width: 3em;
         height: 3em;
         filter: invert(99%) sepia(1%) saturate(0%) hue-rotate(161deg) brightness(101%) contrast(104%);
@@ -86,14 +86,20 @@
         margin-right: .30rem;
       }
       .table {
-        border: 3px #A1D6B2 solid;
         border-collapse: separate;
         border-spacing: 0;
         border-radius: 10px;
         overflow: hidden;
       }
-      .table td {
+      .table-colored {
+        border: 3px #A1D6B2 solid;
+        
+      }
+      .table-colored td {
         border-bottom: 1px #dee2e6 solid;
+      }
+      .table-input {
+        border: 3px #dee2e6 solid
       }
 
       @media screen and (min-width: 430px) {

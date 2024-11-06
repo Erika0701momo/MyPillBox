@@ -277,6 +277,9 @@ def daily_logs():
     return render_template("daily_logs.html", title=title)
 
 
+# query = sa.select(DailyLog).where(DailyLog.user == user)
+
+
 @app.route("/create_daily_log", methods=["GET", "POST"])
 @login_required
 def create_daily_log():

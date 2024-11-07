@@ -22,7 +22,7 @@ from urllib.parse import urlsplit
 @app.route("/index")
 @login_required
 def index():
-    # 服用中の薬の種類を取得
+    # 現在のユーザーの服用中の薬の種類を取得
     query = (
         sa.select(sa.func.count(Medicine.id))
         .join(Medicine.user)
@@ -274,10 +274,21 @@ def delete_medicine(medicine_id):
 @login_required
 def daily_logs():
     title = "日々の記録"
-    return render_template("daily_logs.html", title=title)
+
+    # 現在のユーザーの日々の記録を取得
+    query = (
+        sa.select(DailyLog)
+        .where(DailyLog.user == current_user)
+        .order_by(DailyLog.date.desc())
+    )
+    daily_logs = db.session.scalars(query).all()
+
+    return render_template("daily_logs.html", daily_logs=daily_logs, title=title)
 
 
 # query = sa.select(DailyLog).where(DailyLog.user == user)
+# for log in dailylog2.dailylogdetails:
+# print(log.medicine.name)
 
 
 @app.route("/create_daily_log", methods=["GET", "POST"])

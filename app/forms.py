@@ -193,7 +193,7 @@ class EditMedicineForm(FlaskForm):
     )
     rating = HiddenField("あなたのこのお薬への評価")
     is_active = BooleanField(
-        "現在服用中(オフにすると、過去に服用していたお薬に移動します)",
+        "現在服用中(オフにすると、服用中でないお薬に移動します)",
         render_kw={"role": "switch"},
     )
     submit = SubmitField("更新")

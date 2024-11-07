@@ -10,20 +10,22 @@
     <div class="col-12 col-lg-7 mb-3">
       <div class="mb-1 d-flex justify-content-between align-items-center">
         <h5 class="mb-0">服用中のお薬</h5>
-        <form action="{{ url_for('medicines') }}"
-              method="get"
-              class="d-flex align-items-center"
-              novalidate>
-          {{ form.hidden_tag() }}
-          <small class="me-1">{{ form.active_sort.label(class="text-nowrap sort-label") }}</small>
-          {{ form.active_sort(class="form-select sort-select") }}
-          <input type="hidden"
-                 name="not_active_sort"
-                 value="{{ form.not_active_sort.data }}">
-          <input type="submit"
-                 class="btn btn-custom btn-sm ms-1 sort-submit"
-                 value="決定">
-        </form>
+        {% if active_medicines %}
+          <form action="{{ url_for('medicines') }}"
+                method="get"
+                class="d-flex align-items-center"
+                novalidate>
+            {{ form.hidden_tag() }}
+            <small class="me-1">{{ form.active_sort.label(class="text-nowrap sort-label") }}</small>
+            {{ form.active_sort(class="form-select sort-select") }}
+            <input type="hidden"
+                   name="not_active_sort"
+                   value="{{ form.not_active_sort.data }}">
+            <input type="submit"
+                   class="btn btn-custom btn-sm ms-1 sort-submit"
+                   value="決定">
+          </form>
+        {% endif %}
       </div>
       {% if not active_medicines %}
         <small class="text-secondary">服用中のお薬はありません</small>
@@ -60,21 +62,23 @@
     <div class="col-12 col-lg-7 mb-3">
       <div class="mb-1 d-flex justify-content-between align-items-center">
         <h5 class="mb-0">服用中でないお薬</h5>
-        <form action="{{ url_for('medicines') }}"
-              method="get"
-              class="d-flex align-items-center"
-              novalidate>
-          {{ form.hidden_tag() }}
-          <small class="me-1">{{ form.not_active_sort.label(class="text-nowrap sort-label") }}</small>
-          {{ form.not_active_sort(class="form-select sort-select") }}
-          <input type="hidden" name="active_sort" value="{{ form.active_sort.data }}">
-          <input type="submit"
-                 class="btn btn-custom btn-sm ms-1 sort-submit"
-                 value="決定">
-        </form>
+        {% if not_active_medicines %}
+          <form action="{{ url_for('medicines') }}"
+                method="get"
+                class="d-flex align-items-center"
+                novalidate>
+            {{ form.hidden_tag() }}
+            <small class="me-1">{{ form.not_active_sort.label(class="text-nowrap sort-label") }}</small>
+            {{ form.not_active_sort(class="form-select sort-select") }}
+            <input type="hidden" name="active_sort" value="{{ form.active_sort.data }}">
+            <input type="submit"
+                   class="btn btn-custom btn-sm ms-1 sort-submit"
+                   value="決定">
+          </form>
+        {% endif %}
       </div>
       {% if not not_active_medicines %}
-        <small class="text-secondary">過去に服用していたお薬はありません</small>
+        <small class="text-secondary">服用中でないお薬はありません</small>
       {% else %}
         <ul class="list-group mb-4">
           {% for medicine in not_active_medicines %}

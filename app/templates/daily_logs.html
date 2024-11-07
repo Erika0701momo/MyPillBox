@@ -13,8 +13,61 @@
   </div>
   <div class="row">
     <div class="col-12 col-lg-7 mb-3">
-      <h5 class="mb-0">日々の記録一覧</h5>
-      <div class="accordion" id="accordionDailyLog"></div>
+      <h5 class="mb-2">日々の記録一覧</h5>
+      {% if not daily_logs %}
+        <small class="text-secondary">記録はまだありません</small>
+      {% else %}
+        <div class="accordion" id="accordionDailyLog">
+          {% for daily_log in daily_logs %}
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed d-flex flex-column align-items-start p-2"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapse{{ loop.index }}"
+                        aria-expanded="false"
+                        aria-controls="collapse{{ loop.index }}">
+                  <span class="pb-1">{{ daily_log.date.strftime("%Y/%m/%d") }}</span>
+                  <span>気分:
+                    {% for i in range(0, daily_log.mood) %}
+                      <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                           class="star-display rating-checked"
+                           alt="star">
+                    {% endfor %}
+                    {% if daily_log.mood < 5 %}
+                      {% for i in range(daily_log.mood, 5) %}
+                        <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                             class="star-display"
+                             alt="star">
+                      {% endfor %}
+                    {% endif %}
+                    　体調:
+                    {% for i in range(0, daily_log.condition) %}
+                      <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                           class="star-display rating-checked"
+                           alt="star">
+                    {% endfor %}
+                    {% if daily_log.condition < 5 %}
+                      {% for i in range(daily_log.condition, 5) %}
+                        <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                             class="star-display"
+                             alt="star">
+                      {% endfor %}
+                    {% endif %}
+                  </span>
+                </button>
+              </h2>
+              <div id="collapse{{ loop.index }}"
+                   class="accordion-collapse collapse"
+                   data-bs-parent="#accordionDailyLog">
+                <div class="accordion-body">
+                  <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
     </div>
   </div>
 {% endblock content %}

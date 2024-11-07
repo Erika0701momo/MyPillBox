@@ -283,6 +283,10 @@ def daily_logs():
     )
     daily_logs = db.session.scalars(query).all()
 
+    # 各DailyLogに対してdoseがすべて0.0かをチェックする
+    for log in daily_logs:
+        log.all_doses_zero = all(detail.dose == 0.0 for detail in log.daily_log_details)
+
     return render_template("daily_logs.html", daily_logs=daily_logs, title=title)
 
 

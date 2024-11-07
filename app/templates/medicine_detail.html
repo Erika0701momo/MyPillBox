@@ -38,7 +38,7 @@
           <td style="width: 60%;">
             {% if not medicine.dose_per_day %}
               -
-              <!-- 一日に服用する量が1.0など小数点以下が0であれば数値に変換 -->
+              {# 一日に服用する量が1.0など小数点以下が0であれば数値に変換 #}
             {% elif (medicine.dose_per_day|string).split(".")[1] == "0" %}
               {{ medicine.dose_per_day|int }}
             {% else %}

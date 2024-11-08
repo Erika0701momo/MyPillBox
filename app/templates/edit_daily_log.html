@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2 class="mb-3">{{ daily_log.date.strftime("%Y/%m/%d") }}の記録編集</h2>
+  <small class="d-block mb-3"><span class="red">※</span>は必須入力です</small>
+  <form action="" method="post" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="row">
+      <div class="col-12 col-lg-7 mb-3">
+        <span class="red">※</span>{{ form.mood.label }}
+        {{ form.mood(class="form-control" + (" is-invalid" if form.mood.errors else "") ) }}
+        <br>
+        {% for i in range(1, 6) %}
+          {% if form.mood.data|int >= i %}
+            <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                 id="{{ i }}"
+                 class="star star-rating mood-star rating-checked my-2"
+                 onclick="StarRate(this)"
+                 alt="star">
+          {% else %}
+            <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                 id="{{ i }}"
+                 class="star star-rating mood-star my-2"
+                 onclick="StarRate(this)"
+                 alt="star">
+          {% endif %}
+        {% endfor %}
+        {% for error in form.mood.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12 col-lg-7 mb-4">
+        <span class="red">※</span>{{ form.condition.label }}
+        {{ form.condition(class="form-control" + (" is-invalid" if form.condition.errors else "") ) }}
+        <br>
+        {% for i in range(1, 6) %}
+          {% if form.condition.data|int >= i %}
+            <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                 id="{{ i }}"
+                 class="star star-rating condition-star rating-checked my-2"
+                 onclick="StarRate(this)"
+                 alt="star">
+          {% else %}
+            <img src="{{ url_for('static', filename='images/star_on.png') }}"
+                 id="{{ i }}"
+                 class="star star-rating condition-star my-2"
+                 onclick="StarRate(this)"
+                 alt="star">
+          {% endif %}
+        {% endfor %}
+        {% for error in form.condition.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12 col-lg-7 mb-3">
+        <p class="mb-0">飲んだお薬を教えてください（飲まなかったお薬の服用量は、空欄にしてください）</p>
+      </div>
+    </div>
+  </form>
+{% endblock content %}
+{% block script %}
+  <script>
+    function StarRate(e) {
+      const moodStars = document.querySelectorAll(".mood-star");
+      const conditionStars = document.querySelectorAll(".condition-star")
+      const moodRating = document.querySelector("#mood");
+      const conditionRating = document.querySelector("#condition")
+
+      if (e.classList.contains("mood-star")) {
+        for (const s of moodStars) {
+          if (parseInt(s.id) <= parseInt(e.id)) {
+            s.classList.add("rating-checked");
+          } else if (parseInt(s.id) > parseInt(e.id)) {
+            s.classList.remove("rating-checked");
+          }
+        }
+        moodRating.value = e.id;
+      } else {
+        for (const s of conditionStars) {
+          if (parseInt(s.id) <= parseInt(e.id)) {
+            s.classList.add("rating-checked");
+          } else if (parseInt(s.id) > parseInt(e.id)) {
+            s.classList.remove("rating-checked");
+          }
+        }
+        conditionRating.value = e.id;
+      }
+      
+    }
+  </script>
+{% endblock script %}

@@ -118,5 +118,12 @@
       }
       
     }
+    /* ユーザーのローカルタイムで今日の日付を取得し、YYYY-MM-DD形式に変換 */
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const localDate = `${year}-${month}-${day}`;
+    document.getElementById("date").value = localDate;
   </script>
 {% endblock script %}

@@ -10,6 +10,7 @@ from app.forms import (
     EditMedicineForm,
     EmptyForm,
     DailyLogForm,
+    EditDailyLogForm,
 )
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
@@ -23,14 +24,20 @@ from urllib.parse import urlsplit
 @login_required
 def index():
     # 現在のユーザーの服用中の薬の種類を取得
-    query = (
-        sa.select(sa.func.count(Medicine.id))
-        .join(Medicine.user)
-        .where(Medicine.user == current_user, Medicine.is_active == True)
+    medicine_query = sa.select(sa.func.count(Medicine.id)).where(
+        Medicine.user == current_user, Medicine.is_active == True
     )
-    medicine_kinds = db.session.scalar(query)
+    medicine_kinds = db.session.scalar(medicine_query)
 
-    return render_template("index.html", title="ホーム", medicine_kinds=medicine_kinds)
+    # 現在のユーザーの日々の記録数を取得
+    daily_log_query = sa.select(sa.func.count(DailyLog.id)).where(
+        DailyLog.user == current_user
+    )
+    days = db.session.scalar(daily_log_query)
+
+    return render_template(
+        "index.html", title="ホーム", medicine_kinds=medicine_kinds, days=days
+    )
 
 
 # q = sa.select(sa.func.count(Medicine.id)).join(Medicine.user).where(Medicine.user == u, Medicine.is_active==True)
@@ -304,7 +311,6 @@ def create_daily_log():
     # 服用中のお薬を取得
     active_query = (
         sa.select(Medicine)
-        .join(Medicine.user)
         .where(Medicine.user == current_user, Medicine.is_active == True)
         .order_by(Medicine.id)
     )
@@ -347,3 +353,30 @@ def create_daily_log():
     return render_template(
         "create_daily_log.html", form=form, medicines=active_medicines, title=title
     )
+
+
+@app.route("/edit_daily_log/<int:daily_log_id>", methods=["GET", "POST"])
+@login_required
+def edit_daily_log(daily_log_id):
+    title = "日々の記録編集"
+    form = EditDailyLogForm()
+
+    daily_log = db.session.get(DailyLog, daily_log_id)
+    if daily_log is None or daily_log.user_id != current_user.id:
+        abort(404)
+
+    if request.method == "GET":
+        # フォームに既存データ投入
+        form.mood.data = daily_log.mood
+        form.condition.data = daily_log.condition
+
+    return render_template(
+        "edit_daily_log.html",
+        daily_log=daily_log,
+        form=form,
+        title=title,
+    )
+
+
+# for detail in dailylog.daily_log_details:
+#    print(detail.medicine.taking_unit.value)

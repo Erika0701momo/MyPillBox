@@ -204,7 +204,7 @@ class EmptyForm(FlaskForm):
     submit = SubmitField("削除する")
 
 
-# DailyLogFormのサブフォーム
+# DailyLogFormとEditDailyLogFormのサブフォーム
 class DailyLogDetailForm(Form):
     dose = MyFloatField("服用量")
 
@@ -239,3 +239,18 @@ class DailyLogForm(FlaskForm):
             raise ValidationError(
                 "既に登録済みの日付です 違う日付を選択するか、日々の記録一覧からその日付の記録を編集してださい"
             )
+
+
+class EditDailyLogForm(FlaskForm):
+    mood = HiddenField(
+        "その日の気分を教えてください",
+        validators=[DataRequired(message="気分は必須入力です")],
+    )
+
+    condition = HiddenField(
+        "その日の体調を教えてください",
+        validators=[DataRequired(message="体調は必須入力です")],
+    )
+    # detailsに、複数のDailyLogDetailFormを持たせる
+    details = FieldList(FormField(DailyLogDetailForm))
+    submit = SubmitField("更新")

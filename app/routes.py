@@ -359,16 +359,35 @@ def create_daily_log():
 @login_required
 def edit_daily_log(daily_log_id):
     title = "日々の記録編集"
-    form = EditDailyLogForm()
 
     daily_log = db.session.get(DailyLog, daily_log_id)
     if daily_log is None or daily_log.user_id != current_user.id:
         abort(404)
 
-    if request.method == "GET":
-        # フォームに既存データ投入
-        form.mood.data = daily_log.mood
-        form.condition.data = daily_log.condition
+    form = EditDailyLogForm(obj=daily_log)
+
+    # 初期表示のための日々の記録詳細の取得
+    existing_details = {
+        detail.medicine_id: detail for detail in daily_log.daily_log_details
+    }
+
+    if form.validate_on_submit:
+        pass
+    elif request.method == "GET":
+        # 現在服用中かつdaily_logの日付より前に服用開始日が設定されたお薬を取得
+        active_query = (
+            sa.select(Medicine)
+            .where(
+                Medicine.user == current_user,
+                Medicine.is_active == True,
+                Medicine.taking_start_date <= daily_log.date,
+            )
+            .order_by(Medicine.id)
+        )
+        active_medicines = db.session.scalars(active_query)
+
+        # フォームのdetailsフィールドに初期値を設定
+        form.details.entries.clear()
 
     return render_template(
         "edit_daily_log.html",

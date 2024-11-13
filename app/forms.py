@@ -207,6 +207,7 @@ class EmptyForm(FlaskForm):
 # DailyLogFormとEditDailyLogFormのサブフォーム
 class DailyLogDetailForm(Form):
     dose = MyFloatField("服用量")
+    medicine_id = HiddenField()
 
 
 class DailyLogForm(FlaskForm):

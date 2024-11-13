@@ -11,6 +11,7 @@ from app.forms import (
     EmptyForm,
     DailyLogForm,
     EditDailyLogForm,
+    DailyLogDetailForm,
 )
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
@@ -327,6 +328,7 @@ def create_daily_log():
                 detail_entry.dose.data = medicine.dose_per_day
 
     if form.validate_on_submit():
+        # new_daily_logをデータベースに登録
         new_daily_log = DailyLog(
             date=form.date.data,
             mood=int(form.mood.data),
@@ -336,6 +338,7 @@ def create_daily_log():
         db.session.add(new_daily_log)
         db.session.commit()
 
+        # 各daily_log_detailをデータベースに登録
         for idx, medicine in enumerate(active_medicines):
             if form.details[idx].dose.data is None:
                 form.details[idx].dose.data = 0
@@ -364,30 +367,42 @@ def edit_daily_log(daily_log_id):
     if daily_log is None or daily_log.user_id != current_user.id:
         abort(404)
 
-    form = EditDailyLogForm(obj=daily_log)
+    # フォームの初期化
+    form = EditDailyLogForm(
+        mood=daily_log.mood,
+        condition=daily_log.condition,
+    )
 
-    # 初期表示のための日々の記録詳細の取得
-    existing_details = {
-        detail.medicine_id: detail for detail in daily_log.daily_log_details
-    }
-
-    if form.validate_on_submit:
-        pass
-    elif request.method == "GET":
-        # 現在服用中かつdaily_logの日付より前に服用開始日が設定されたお薬を取得
-        active_query = (
-            sa.select(Medicine)
-            .where(
-                Medicine.user == current_user,
-                Medicine.is_active == True,
-                Medicine.taking_start_date <= daily_log.date,
-            )
-            .order_by(Medicine.id)
+    # 服用中のお薬を取得
+    active_query = (
+        sa.select(Medicine)
+        .where(
+            Medicine.user == current_user,
+            Medicine.is_active == True,
+            Medicine.taking_start_date
+            <= daily_log.date,  # DailyLogのdate以前に服用開始されたもの
         )
-        active_medicines = db.session.scalars(active_query)
+        .order_by(Medicine.id)
+    )
+    active_medicines = db.session.scalars(active_query).all()
 
-        # フォームのdetailsフィールドに初期値を設定
-        form.details.entries.clear()
+    for detail in daily_log.daily_log_details:
+        # フォームエントリに各服用量を設定 float型の数値が整数か判定
+        detail_entry = form.details.append_entry(
+            {"dose": int(detail.dose) if detail.dose.is_integer() else detail.dose}
+        )
+        detail_entry.medicine_name = detail.medicine.name
+        detail_entry.medicine_unit = detail.medicine.taking_unit.value
+        detail_entry.medicine_id = detail.medicine.id
+
+    for medicine in active_medicines:
+        if not any(
+            detail.medicine_id == medicine.id for detail in daily_log.daily_log_details
+        ):
+            detail_entry = form.details.append_entry({"dose": None})
+            detail_entry.medicine_name = medicine.name
+            detail_entry.medicine_unit = medicine.taking_unit.value
+            detail_entry.medicine_id = medicine.id
 
     return render_template(
         "edit_daily_log.html",

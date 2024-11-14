@@ -320,6 +320,8 @@ def create_daily_log():
     # 服用中のお薬の数だけエントリを追加し、dose_per_dayを初期値として設定
     form.details.min_entries = len(active_medicines)
     for medicine in active_medicines:
+        # form.details.append_entry()でWTFormsのFieldListに新しいフォームエントリ(項目)を追加
+        # TODO 短い書き方に変更
         detail_entry = form.details.append_entry()
         if medicine.dose_per_day is not None:
             if str(medicine.dose_per_day).split(".")[1] == "0":
@@ -340,17 +342,17 @@ def create_daily_log():
 
         # 各daily_log_detailをデータベースに登録
         for idx, medicine in enumerate(active_medicines):
-            if form.details[idx].dose.data is None:
-                form.details[idx].dose.data = 0
+            # if form.details[idx].dose.data is None:
+            #     form.details[idx].dose.data = 0
             daily_log_detail = DailyLogDetail(
-                dose=form.details[idx].dose.data,
+                dose=form.details[idx].dose.data or 0,
                 medicine=medicine,
                 daily_log=new_daily_log,
             )
             db.session.add(daily_log_detail)
 
         db.session.commit()
-        flash(f"{new_daily_log.date.strftime("%Y/%m/%d")}の記録を登録しました")
+        flash(f"{new_daily_log.date.strftime('%Y/%m/%d')}の記録を登録しました")
         return redirect(url_for("daily_logs"))
 
     return render_template(
@@ -373,36 +375,67 @@ def edit_daily_log(daily_log_id):
         condition=daily_log.condition,
     )
 
-    # 服用中のお薬を取得
-    active_query = (
-        sa.select(Medicine)
-        .where(
-            Medicine.user == current_user,
-            Medicine.is_active == True,
-            Medicine.taking_start_date
-            <= daily_log.date,  # DailyLogのdate以前に服用開始されたもの
+    # POSTリクエストでバリデーションが失敗した場合はフォームエントリの新規追加をしない
+    if request.method == "POST" and not form.validate_on_submit():
+        pass
+    else:
+        # GETリクエスト時またはバリデーション成功時のみ新規エントリを追加
+        # 服用中のお薬を取得
+        active_query = (
+            sa.select(Medicine)
+            .where(
+                Medicine.user == current_user,
+                Medicine.is_active == True,
+                Medicine.taking_start_date
+                <= daily_log.date,  # DailyLogのdate以前に服用開始されたもの
+            )
+            .order_by(Medicine.id)
         )
-        .order_by(Medicine.id)
-    )
-    active_medicines = db.session.scalars(active_query).all()
+        active_medicines = db.session.scalars(active_query).all()
 
-    for detail in daily_log.daily_log_details:
-        # フォームエントリに各服用量を設定 float型の数値が整数か判定
-        detail_entry = form.details.append_entry(
-            {"dose": int(detail.dose) if detail.dose.is_integer() else detail.dose}
-        )
-        detail_entry.medicine_name = detail.medicine.name
-        detail_entry.medicine_unit = detail.medicine.taking_unit.value
-        detail_entry.medicine_id = detail.medicine.id
+        for detail in daily_log.daily_log_details:
+            # form.details.append_entry()でWTFormsのFieldListに新しいフォームエントリ(項目)を追加
+            # フォームエントリに各服用量を設定 float型の数値が整数か判定
+            detail_entry = form.details.append_entry(
+                {"dose": int(detail.dose) if detail.dose.is_integer() else detail.dose}
+            )
+            detail_entry.medicine_name = detail.medicine.name
+            detail_entry.medicine_unit = detail.medicine.taking_unit.value
+            detail_entry.medicine_id.data = detail.medicine.id
 
-    for medicine in active_medicines:
-        if not any(
-            detail.medicine_id == medicine.id for detail in daily_log.daily_log_details
+        for medicine in active_medicines:
+            # medicineがdaily_log_detailsに含まれていなければdetail_entryを設定
+            if not any(
+                detail.medicine_id == medicine.id
+                for detail in daily_log.daily_log_details
+            ):
+                detail_entry = form.details.append_entry({"dose": None})
+                detail_entry.medicine_name = medicine.name
+                detail_entry.medicine_unit = medicine.taking_unit.value
+                detail_entry.medicine_id.data = medicine.id
+
+    if form.validate_on_submit():
+        daily_log.mood = form.mood.data
+        daily_log.condition = form.condition.data
+
+        # DailyLogDetailの更新
+        for detail_form, detail in zip(
+            form.details.entries, daily_log.daily_log_details
         ):
-            detail_entry = form.details.append_entry({"dose": None})
-            detail_entry.medicine_name = medicine.name
-            detail_entry.medicine_unit = medicine.taking_unit.value
-            detail_entry.medicine_id = medicine.id
+            detail.dose = detail_form.dose.data or 0
+
+        # active_medicinesの追加分もDeilyLogDetailに登録
+        for detail_form in form.details.entries[len(daily_log.daily_log_details) :]:
+            new_detail = DailyLogDetail(
+                dose=detail_form.dose.data or 0,
+                medicine_id=detail_form.medicine_id.data,
+                daily_log=daily_log,
+            )
+            db.session.add(new_detail)
+
+        db.session.commit()
+        flash(f"{daily_log.date.strftime('%Y/%m/%d')}の記録を更新しました")
+        return redirect(url_for("daily_logs"))
 
     return render_template(
         "edit_daily_log.html",

@@ -56,7 +56,7 @@
           {% for error in form.condition.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
         </div>
         <div class="col-12 col-lg-7 mb-3">
-          <p class="mb-0">飲んだお薬を教えてください（飲まなかったお薬の服用量は、空欄にしてください）</p>
+          <p class="mb-0">飲んだお薬を教えてください（飲まなかったお薬の服用量は、空欄または0にしてください）</p>
           <table class="table table-hover table-input">
             <thead>
               <tr>
@@ -65,11 +65,11 @@
               </tr>
             </thead>
             <tbody>
-              <!-- 服用中のお薬をリストで表示するループ -->
+              {# 服用中のお薬をリストで表示するループ #}
               {% for medicine in medicines %}
                 <tr>
                   <td style="width: 60%;">{{ medicine.name }}</td>
-                  <!-- ユーザーが入力した服用量と単位を表示するセル -->
+                  {# ユーザーが入力した服用量と単位を表示するセル #}
                   <td style="width:40%;">
                     {{ form.details[loop.index0].dose(class="form-control d-inline-block" + (" is-invalid" if form.details[loop.index0].errors else "") , style="width: 50px;" ) }} {{ medicine.taking_unit.value }}
                     {% for error in form.details[loop.index0].dose.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}

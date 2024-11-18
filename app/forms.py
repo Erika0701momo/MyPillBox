@@ -33,14 +33,16 @@ class MyFloatField(FloatField):
 
         # 全角数字を含むかどうかチェック
         if re.search(r"[０-９．]", input_value):
-            self.data = None
+            # self.data = input_value  # 入力値を保持
+            # self.data = None
             raise ValidationError(self.gettext("半角数字で入力してください"))
 
         # 半角数字のチェック
         try:
             self.data = float(input_value)
         except ValueError:
-            self.data = None
+            # self.data = input_value  # 入力値を保持
+            # self.data = None
             raise ValidationError(self.gettext("半角数字で入力してください"))
 
 
@@ -207,7 +209,6 @@ class EmptyForm(FlaskForm):
 # DailyLogFormとEditDailyLogFormのサブフォーム
 class DailyLogDetailForm(Form):
     dose = MyFloatField("服用量")
-    medicine_id = HiddenField()
 
 
 class DailyLogForm(FlaskForm):

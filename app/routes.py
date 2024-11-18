@@ -317,17 +317,20 @@ def create_daily_log():
     )
     active_medicines = db.session.scalars(active_query).all()
 
-    # 服用中のお薬の数だけエントリを追加し、dose_per_dayを初期値として設定
-    form.details.min_entries = len(active_medicines)
-    for medicine in active_medicines:
-        # form.details.append_entry()でWTFormsのFieldListに新しいフォームエントリ(項目)を追加
-        # TODO 短い書き方に変更
-        detail_entry = form.details.append_entry()
-        if medicine.dose_per_day is not None:
-            if str(medicine.dose_per_day).split(".")[1] == "0":
-                detail_entry.dose.data = int(medicine.dose_per_day)
-            else:
-                detail_entry.dose.data = medicine.dose_per_day
+    if request.method == "GET":
+        # 服用中のお薬の数だけエントリを追加し、dose_per_dayを初期値として設定
+        form.details.min_entries = len(active_medicines)
+        for medicine in active_medicines:
+            # form.details.append_entry()でWTFormsのFieldListに新しいフォームエントリ(項目)を追加
+            # TODO 短い書き方に変更
+            detail_entry = form.details.append_entry()
+            if medicine.dose_per_day is not None:
+                if str(medicine.dose_per_day).split(".")[1] == "0":
+                    detail_entry.dose.data = int(medicine.dose_per_day)
+                else:
+                    detail_entry.dose.data = medicine.dose_per_day
+    else:
+        form.details.min_entries = 0
 
     if form.validate_on_submit():
         # new_daily_logをデータベースに登録

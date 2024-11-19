@@ -41,7 +41,7 @@
           {% if form.rating.data|int >= i %}
             <img src="{{ url_for('static', filename='images/star_on.png') }}"
                  id="{{ i }}"
-                 class="star medicine-star rating-checked my-2"
+                 class="star star-rating rating-checked my-2"
                  onclick="medicineStarRate(this)"
                  alt="star">
           {% else %}

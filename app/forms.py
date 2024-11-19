@@ -33,7 +33,7 @@ class MyFloatField(FloatField):
 
         # 全角数字を含むかどうかチェック
         if re.search(r"[０-９．]", input_value):
-            # self.data = input_value  # 入力値を保持
+            self.data = input_value  # 入力値を保持
             # self.data = None
             raise ValidationError(self.gettext("半角数字で入力してください"))
 
@@ -41,7 +41,7 @@ class MyFloatField(FloatField):
         try:
             self.data = float(input_value)
         except ValueError:
-            # self.data = input_value  # 入力値を保持
+            self.data = input_value  # 入力値を保持
             # self.data = None
             raise ValidationError(self.gettext("半角数字で入力してください"))
 
@@ -149,7 +149,7 @@ class CreateMedicineFrom(FlaskForm):
             "rows": "4",
         },
     )
-    rating = HiddenField("あなたのこのお薬への評価", render_kw={"value": 0})
+    rating = HiddenField("あなたのこのお薬への評価", default=0)
     is_active = BooleanField(
         "現在服用中(服用中ならオンにしてください)",
         render_kw={"role": "switch"},

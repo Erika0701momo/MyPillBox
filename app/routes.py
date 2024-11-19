@@ -248,7 +248,12 @@ def edit_medicine(medicine_id):
         # フォームに既存データ投入
         form.name.data = medicine.name
         form.taking_start_date.data = medicine.taking_start_date
-        form.dose_per_day.data = medicine.dose_per_day
+        # 1日に服用する量を設定 float型の数値が整数か判定
+        form.dose_per_day.data = (
+            int(medicine.dose_per_day)
+            if medicine.dose_per_day and medicine.dose_per_day.is_integer()
+            else medicine.dose_per_day
+        )
         form.taking_timing.data = medicine.taking_timing
         form.memo.data = medicine.memo
         form.rating.data = medicine.rating
@@ -322,13 +327,13 @@ def create_daily_log():
         form.details.min_entries = len(active_medicines)
         for medicine in active_medicines:
             # form.details.append_entry()でWTFormsのFieldListに新しいフォームエントリ(項目)を追加
-            # TODO 短い書き方に変更
             detail_entry = form.details.append_entry()
-            if medicine.dose_per_day is not None:
-                if str(medicine.dose_per_day).split(".")[1] == "0":
-                    detail_entry.dose.data = int(medicine.dose_per_day)
-                else:
-                    detail_entry.dose.data = medicine.dose_per_day
+            # 1日に服用する量を設定 float型の数値が整数か判定
+            detail_entry.dose.data = (
+                int(medicine.dose_per_day)
+                if medicine.dose_per_day and medicine.dose_per_day.is_integer()
+                else medicine.dose_per_day
+            )
     else:
         form.details.min_entries = 0
 

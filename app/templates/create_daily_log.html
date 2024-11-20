@@ -71,7 +71,7 @@
                   <td style="width: 60%;">{{ medicine.name }}</td>
                   {# ユーザーが入力した服用量と単位を表示するセル #}
                   <td style="width:40%;">
-                    {{ form.details[loop.index0].dose(class="form-control d-inline-block" + (" is-invalid" if form.details[loop.index0].errors else "") , style="width: 50px;" ) }} {{ medicine.taking_unit.value }}
+                    {{ form.details[loop.index0].dose(class="form-control d-inline-block" + (" is-invalid dose-is-invalid" if form.details[loop.index0].errors else "") , style="width: 50px;" ) }} {{ medicine.taking_unit.value }}
                     {% for error in form.details[loop.index0].dose.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
                   </td>
                 </tr>
@@ -118,6 +118,7 @@
       }
       
     }
+    {% if not form.date.data%}
     /* ユーザーのローカルタイムで今日の日付を取得し、YYYY-MM-DD形式に変換 */
     const today = new Date();
     const year = today.getFullYear();
@@ -125,5 +126,6 @@
     const day = String(today.getDate()).padStart(2, '0');
     const localDate = `${year}-${month}-${day}`;
     document.getElementById("date").value = localDate;
+    {% endif %}
   </script>
 {% endblock script %}

@@ -57,18 +57,17 @@
             </tr>
           </thead>
           <tbody>
-            {% for detail_form in form.details %}
-              {% if detail_form.medicine_name %}
-                <tr>
-                  <td style="width: 60%;">{{ detail_form.medicine_name }}</td>
-                  <td style="width:40%;">
-                    {{ detail_form.dose(class="form-control d-inline-block" + (" is-invalid" if detail_form.dose.errors else "") , style="width: 50px;" ) }}
-                    {{ detail_form.medicine_unit }}
-                    {% for error in detail_form.dose.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
-                    {{ detail_form.medicine_id() }}
-                  </td>
-                </tr>
-              {% endif %}
+            {% set sliced_log_details = form.details[:3] %}
+            {% for detail in daily_log.daily_log_details %}
+              <tr>
+                <td style="width: 60%;">{{ detail.medicine.name }}</td>
+                <td style="width: 40%;">
+                  {{ sliced_log_details[loop.index0].dose(class="form-control d-inline-block" + (" is-invalid dose-is-invalid" if sliced_log_details[loop.index0].errors else "") , style="width: 50px;" ) }} {{ detail.medicine.taking_unit.value }}
+                  {% for error in sliced_log_details[loop.index0].dose.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                  {% endfor %}
+                </td>
+              </tr>
             {% endfor %}
           </tbody>
         </table>

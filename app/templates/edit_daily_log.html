@@ -57,18 +57,31 @@
             </tr>
           </thead>
           <tbody>
-            {% set sliced_log_details = form.details[:3] %}
             {% for detail in daily_log.daily_log_details %}
               <tr>
                 <td style="width: 60%;">{{ detail.medicine.name }}</td>
                 <td style="width: 40%;">
-                  {{ sliced_log_details[loop.index0].dose(class="form-control d-inline-block" + (" is-invalid dose-is-invalid" if sliced_log_details[loop.index0].errors else "") , style="width: 50px;" ) }} {{ detail.medicine.taking_unit.value }}
-                  {% for error in sliced_log_details[loop.index0].dose.errors %}
+                  {{ form.daily_log_details[loop.index0].dose(class="form-control d-inline-block" + (" is-invalid dose-is-invalid" if form.daily_log_details[loop.index0].errors else "") , style="width: 50px;" ) }} {{ detail.medicine.taking_unit.value }}
+                  {% for error in form.daily_log_details[loop.index0].dose.errors %}
                     <div class="invalid-feedback">{{ error }}</div>
                   {% endfor %}
                 </td>
               </tr>
             {% endfor %}
+            {# 追加分のお薬があれば表示 #}
+            {% if medicines %}
+              {% for medicine in medicines %}
+                <tr>
+                  <td style="width: 60%;">{{ medicine.name }}</td>
+                  <td style="width: 40%;">
+                    {{ form.added_meds_details[loop.index0].dose(class="form-control d-inline-block" + (" is-invalid dose-is-invalid" if form.added_meds_details[loop.index0].errors else "") , style="width: 50px;" ) }} {{ medicine.taking_unit.value }}
+                    {% for error in form.added_meds_details[loop.index0].dose.errors %}
+                      <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                  </td>
+                </tr>
+              {% endfor %}
+            {% endif %}
           </tbody>
         </table>
       </div>

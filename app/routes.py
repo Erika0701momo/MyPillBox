@@ -93,6 +93,7 @@ def register():
 @app.route("/edit_username", methods=["GET", "POST"])
 @login_required
 def edit_username():
+    title = "ユーザー名の変更"
     form = EditUsernameForm()
 
     if form.validate_on_submit():
@@ -103,7 +104,7 @@ def edit_username():
     elif request.method == "GET":
         form.username.data = current_user.username
 
-    return render_template("edit_username.html", form=form, title="ユーザー名の変更")
+    return render_template("edit_username.html", form=form, title=title)
 
 
 @app.route("/delete_account", methods=["GET", "POST"])
@@ -287,6 +288,8 @@ def delete_medicine(medicine_id):
 @login_required
 def daily_logs():
     title = "日々の記録"
+    # モーダル削除ボタン用
+    form = EmptyForm()
 
     # 現在のユーザーの日々の記録を取得
     query = (
@@ -300,12 +303,9 @@ def daily_logs():
     for log in daily_logs:
         log.all_doses_zero = all(detail.dose == 0.0 for detail in log.daily_log_details)
 
-    return render_template("daily_logs.html", daily_logs=daily_logs, title=title)
-
-
-# query = sa.select(DailyLog).where(DailyLog.user == user)
-# for log in dailylog2.dailylogdetails:
-# print(log.medicine.name)
+    return render_template(
+        "daily_logs.html", daily_logs=daily_logs, form=form, title=title
+    )
 
 
 @app.route("/create_daily_log", methods=["GET", "POST"])
@@ -397,16 +397,22 @@ def edit_daily_log(daily_log_id):
         ):
             medicines_to_add.append(medicine)
 
-    detail_count = len(daily_log.daily_log_details)
-    medicines_to_add_count = len(medicines_to_add)
-
     if form.validate_on_submit():
         # DailyLogの更新
         daily_log.mood = form.mood.data
         daily_log.condition = form.condition.data
         # DailyLogDetailの更新
         for idx, detail in enumerate(daily_log.daily_log_details):
-            detail.dose = form.details[idx].dose.data or 0
+            detail.dose = form.daily_log_details[idx].dose.data or 0
+        # medicines_to_addの分もDailyLogDetailに登録
+        if medicines_to_add:
+            for idx, medicine in enumerate(medicines_to_add):
+                new_detail = DailyLogDetail(
+                    dose=form.added_meds_details[idx].dose.data or 0,
+                    medicine=medicine,
+                    daily_log=daily_log,
+                )
+                db.session.add(new_detail)
         db.session.commit()
         flash(f"{daily_log.date.strftime('%Y/%m/%d')}の記録を更新しました")
         return redirect(url_for("daily_logs"))
@@ -417,7 +423,7 @@ def edit_daily_log(daily_log_id):
         # daily_log_detailsのお薬の数だけエントリを追加し、doseを初期値として設定
         for detail in daily_log.daily_log_details:
             # form.details.append_entry()でWTFormsのFieldListに新しいフォームエントリ(項目)を追加
-            detail_entry = form.details.append_entry()
+            detail_entry = form.daily_log_details.append_entry()
             # 各お薬の服用量を設定 float型の数値が整数か判定
             detail_entry.dose.data = (
                 int(detail.dose) if detail.dose.is_integer() else detail.dose
@@ -426,80 +432,34 @@ def edit_daily_log(daily_log_id):
         if medicines_to_add:
             for medicine in medicines_to_add:
                 # form.details.append_entry()でWTFormsのFieldListに新しいフォームエントリ(項目)を追加
-                detail_entry = form.details.append_entry({"dose": None})
-
-    # # POSTリクエストでバリデーションが失敗した場合はフォームエントリの新規追加をしない
-    # if request.method == "POST" and not form.validate_on_submit():
-    #     pass
-    # else:
-    #     # GETリクエスト時またはバリデーション成功時のみ新規エントリを追加
-    #     # 服用中のお薬を取得
-    #     active_query = (
-    #         sa.select(Medicine)
-    #         .where(
-    #             Medicine.user == current_user,
-    #             Medicine.is_active == True,
-    #             Medicine.taking_start_date
-    #             <= daily_log.date,  # DailyLogのdate以前に服用開始されたもの
-    #         )
-    #         .order_by(Medicine.id)
-    #     )
-    #     active_medicines = db.session.scalars(active_query).all()
-
-    #     for detail in daily_log.daily_log_details:
-    #         # form.details.append_entry()でWTFormsのFieldListに新しいフォームエントリ(項目)を追加
-    #         # フォームエントリに各服用量を設定 float型の数値が整数か判定
-    #         detail_entry = form.details.append_entry(
-    #             {"dose": int(detail.dose) if detail.dose.is_integer() else detail.dose}
-    #         )
-    #         detail_entry.medicine_name = detail.medicine.name
-    #         detail_entry.medicine_unit = detail.medicine.taking_unit.value
-    #         detail_entry.medicine_id.data = detail.medicine.id
-
-    #     for medicine in active_medicines:
-    #         # medicineがdaily_log_detailsに含まれていなければdetail_entryを設定
-    #         if not any(
-    #             detail.medicine_id == medicine.id
-    #             for detail in daily_log.daily_log_details
-    #         ):
-    #             detail_entry = form.details.append_entry({"dose": None})
-    #             detail_entry.medicine_name = medicine.name
-    #             detail_entry.medicine_unit = medicine.taking_unit.value
-    #             detail_entry.medicine_id.data = medicine.id
-
-    # if form.validate_on_submit():
-    #     daily_log.mood = form.mood.data
-    #     daily_log.condition = form.condition.data
-
-    #     # DailyLogDetailの更新
-    #     for detail_form, detail in zip(
-    #         form.details.entries, daily_log.daily_log_details
-    #     ):
-    #         detail.dose = detail_form.dose.data or 0
-
-    #     # active_medicinesの追加分もDeilyLogDetailに登録
-    #     for detail_form in form.details.entries[len(daily_log.daily_log_details) :]:
-    #         new_detail = DailyLogDetail(
-    #             dose=detail_form.dose.data or 0,
-    #             medicine_id=detail_form.medicine_id.data,
-    #             daily_log=daily_log,
-    #         )
-    #         db.session.add(new_detail)
-
-    #     db.session.commit()
-    #     flash(f"{daily_log.date.strftime('%Y/%m/%d')}の記録を更新しました")
-    #     return redirect(url_for("daily_logs"))
+                detail_entry = form.added_meds_details.append_entry({"dose": None})
 
     return render_template(
         "edit_daily_log.html",
         daily_log=daily_log,
         medicines=medicines_to_add,
-        detail_count=detail_count,
-        medicine_count=medicines_to_add_count,
         form=form,
         title=title,
     )
 
 
-# for detail in dailylog.daily_log_details:
-#    print(detail.medicine.taking_unit.value)
+@app.route("/delete_daily_log/<int:daily_log_id>", methods=["POST"])
+@login_required
+def delete_daily_log(daily_log_id):
+    # モーダル削除ボタン用
+    form = EmptyForm()
+
+    if form.validate_on_submit():
+        daily_log_to_delete = db.session.get(DailyLog, daily_log_id)
+        if (
+            daily_log_to_delete is None
+            or daily_log_to_delete.user_id != current_user.id
+        ):
+            abort(404)
+        db.session.delete(daily_log_to_delete)
+        db.session.commit()
+        flash(f"{daily_log_to_delete.date.strftime('%Y/%m/%d')}の記録を削除しました")
+        return redirect(url_for("daily_logs"))
+    else:
+        flash("すみません、記録削除に失敗しました")
+        return redirect(url_for("daily_logs"))

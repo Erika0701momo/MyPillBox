@@ -27,7 +27,7 @@
                         data-bs-target="#collapse{{ loop.index }}"
                         aria-expanded="false"
                         aria-controls="collapse{{ loop.index }}">
-                  <span class="pb-1">{{ daily_log.date.strftime("%Y/%m/%d") }}</span>
+                  <span class="pb-1">{{ daily_log.date.strftime('%Y/%m/%d') }}</span>
                   <span>気分:
                     {% for i in range(0, daily_log.mood) %}
                       <img src="{{ url_for('static', filename='images/star_on.png') }}"
@@ -91,7 +91,9 @@
                 <button type="button"
                         class="btn btn-danger btn-sm mx-2 mt-0 mb-3"
                         data-bs-toggle="modal"
-                        data-bs-target="#deletingModal">記録を削除</button>
+                        data-bs-target="#deletingModal"
+                        data-date="{{ daily_log.date.strftime('%Y/%m/%d') }}"
+                        data-url="{{ url_for('delete_daily_log', daily_log_id=daily_log.id) }}">記録を削除</button>
               </div>
             </div>
           {% endfor %}
@@ -100,3 +102,51 @@
     </div>
   </div>
 {% endblock content %}
+{# 削除モーダル #}
+{% block modal %}
+  <div class="modal fade"
+       id="deletingModal"
+       tabindex="-1"
+       aria-labelledby="deletingModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="deletingModalLabel"></h1>
+          <button type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"></button>
+        </div>
+        <div class="modal-body"></div>
+        <div class="modal-footer">
+          <form id="deleteForm" method="post">
+            {{ form.hidden_tag() }}
+            {{ form.submit(class="btn btn-danger") }}
+          </form>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock modal %}
+{% block script %}
+  <script>
+    const deletingModal = document.getElementById("deletingModal");
+    deletingModal.addEventListener("show.bs.modal", function (event) {
+    const button = event.relatedTarget; // モーダルを開いたボタン
+    const date = button.getAttribute("data-date");
+    const url = button.getAttribute("data-url");
+
+    // モーダルのタイトルとボディを更新
+    const modalTitle = deletingModal.querySelector(".modal-title");
+    const modalBody = deletingModal.querySelector(".modal-body");
+    modalTitle.textContent = `${date}の記録削除`;
+    modalBody.textContent = `${date}の記録を削除します。よろしいですか？`
+
+    // フォームのactionを更新
+    const form = deletingModal.querySelector("#deleteForm");
+    form.action = url;
+    });
+  </script>
+{% endblock script %}

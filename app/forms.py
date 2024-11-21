@@ -253,6 +253,7 @@ class EditDailyLogForm(FlaskForm):
         "その日の体調を教えてください",
         validators=[DataRequired(message="体調は必須入力です")],
     )
-    # detailsに、複数のDailyLogDetailFormを持たせる
-    details = FieldList(FormField(DailyLogDetailForm))
+    # daily_log_detailsとadded_meds_detailsに、複数のDailyLogDetailFormを持たせる
+    daily_log_details = FieldList(FormField(DailyLogDetailForm))
+    added_meds_details = FieldList(FormField(DailyLogDetailForm))
     submit = SubmitField("更新")

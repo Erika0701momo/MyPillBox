@@ -11,13 +11,12 @@ from app.forms import (
     EmptyForm,
     DailyLogForm,
     EditDailyLogForm,
-    DailyLogDetailForm,
 )
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
-import sqlalchemy.orm as so
 from app.models import User, Medicine, TakingUnit, DailyLog, DailyLogDetail
 from urllib.parse import urlsplit
+from flask_paginate import Pagination, get_page_parameter
 
 
 @app.route("/")
@@ -291,11 +290,24 @@ def daily_logs():
     # モーダル削除ボタン用
     form = EmptyForm()
 
-    # 現在のユーザーの日々の記録を取得
+    # クエリパラメータから現在のページ番号を取得
+    if not page:
+        page = request.args.get(get_page_parameter(), type=int, default=1)
+    per_page = 3
+
+    # 全体の件数を取得
+    total_query = sa.select(sa.func.count(DailyLog.id)).where(
+        DailyLog.user == current_user
+    )
+    total_count = db.session.scalar(total_query)
+
+    # ページネーションされた日々の記録を取得
     query = (
         sa.select(DailyLog)
         .where(DailyLog.user == current_user)
         .order_by(DailyLog.date.desc())
+        .limit(per_page)
+        .offset((page - 1) * per_page)
     )
     daily_logs = db.session.scalars(query).all()
 
@@ -303,8 +315,21 @@ def daily_logs():
     for log in daily_logs:
         log.all_doses_zero = all(detail.dose == 0.0 for detail in log.daily_log_details)
 
+    pagination = Pagination(
+        page=page,
+        per_page=per_page,
+        total=total_count,
+        display_msg="<b>{total}</b>件中の<b>{start} - {end}</b>件",
+        record_name="日々の記録",
+        css_framework="bootstrap5",
+    )
+
     return render_template(
-        "daily_logs.html", daily_logs=daily_logs, form=form, title=title
+        "daily_logs.html",
+        daily_logs=daily_logs,
+        form=form,
+        pagination=pagination,
+        title=title,
     )
 
 
@@ -459,6 +484,20 @@ def delete_daily_log(daily_log_id):
         db.session.delete(daily_log_to_delete)
         db.session.commit()
         flash(f"{daily_log_to_delete.date.strftime('%Y/%m/%d')}の記録を削除しました")
+
+        # 削除後の総件数を取得
+        total_query = sa.select(sa.func.count(DailyLog.id)).where(
+            DailyLog.user == current_user
+        )
+        total_count = db.session.scalar(total_query)
+        per_page = 3
+        current_page = int(request.args.get("page", 1))
+        max_page = (total_count + per_page - 1) // per_page  # 総ページ数を計算
+
+        # 現在のページが無効になった場合、最終ページにリダイレクト
+        if current_page > max_page and max_page > 0:
+            return redirect(url_for("daily_logs", page=max_page))
+
         return redirect(url_for("daily_logs"))
     else:
         flash("すみません、記録削除に失敗しました")

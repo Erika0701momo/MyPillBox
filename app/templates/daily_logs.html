@@ -17,7 +17,8 @@
       {% if not daily_logs %}
         <small class="text-secondary">記録はまだありません</small>
       {% else %}
-        <div class="accordion" id="accordionDailyLog">
+        {{ pagination.info }}
+        <div class="accordion mb-3" id="accordionDailyLog">
           {% for daily_log in daily_logs %}
             <div class="accordion-item">
               <h2 class="accordion-header">
@@ -98,6 +99,7 @@
             </div>
           {% endfor %}
         </div>
+        <div class="d-flex justify-content-center mb-3">{{ pagination.links }}</div>
       {% endif %}
     </div>
   </div>

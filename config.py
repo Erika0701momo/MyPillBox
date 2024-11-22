@@ -14,3 +14,5 @@ class Config:
     MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
     MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
     ADMINS = ["kinako771@gmail.com"]
+    # daily_logs.htmlで表示する日々の記録の数を設定
+    LOGS_PER_PAGE = 10

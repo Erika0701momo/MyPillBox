@@ -28,7 +28,7 @@
       .navbar-dark .nav-link:hover {
         color: #65966d !important; /* #A1D6B2より少し濃い色 */
       }
-      nav {
+      .navbar {
         background-color: #A1D6B2;
       }
       .btn-custom {
@@ -108,7 +108,16 @@
         background-image: none!important;
         padding-right: 0!important;
       }
+      .pagination {
+        --bs-pagination-active-bg: #569560;
+        --bs-pagination-color: #65966d;
+        --bs-pagination-hover-color: #156723;
+        --bs-pagination-active-border-color: #569560;
 
+      }
+      .pagination-page-info {
+        padding-left: .25rem;
+      }
       @media screen and (min-width: 430px) {
         .sp-br-container {
           font-size: 0;

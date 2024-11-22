@@ -291,8 +291,7 @@ def daily_logs():
     form = EmptyForm()
 
     # クエリパラメータから現在のページ番号を取得
-    if not page:
-        page = request.args.get(get_page_parameter(), type=int, default=1)
+    page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page = 3
 
     # 全体の件数を取得

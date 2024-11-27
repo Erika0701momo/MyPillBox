@@ -11,12 +11,15 @@ from app.forms import (
     EmptyForm,
     DailyLogForm,
     EditDailyLogForm,
+    SelectMonthForm,
 )
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 from app.models import User, Medicine, TakingUnit, DailyLog, DailyLogDetail
 from urllib.parse import urlsplit
 from flask_paginate import Pagination, get_page_parameter
+from datetime import datetime, date, timedelta
+from dateutil import relativedelta
 
 
 @app.route("/")
@@ -207,18 +210,61 @@ def create_medicine():
     return render_template("create_medicine.html", form=form, title=title)
 
 
-@app.route("/medicine_detail/<int:medicine_id>")
+@app.route("/medicine_detail/<int:medicine_id>", methods=["POST"])
 @login_required
 def medicine_detail(medicine_id):
     title = "お薬詳細"
     # モーダル削除ボタン用
     form = EmptyForm()
+    selectform = SelectMonthForm()
     medicine = db.session.get(Medicine, medicine_id)
 
     if medicine is None or medicine.user_id != current_user.id:
         abort(404)
+
+    # グラフ用デフォルト値（空のデータ）
+    chart_data = {"dates": [], "doses": [], "moods": [], "conditions": []}
+    max_dose = 0
+
+    if request.method == "POST":
+        selected_month = selectform.month.data
+        # 月初と月末の日付を計算
+        start_date = datetime.strptime(selected_month + "-01", "%Y-%m-%d").date()
+        end_date = (
+            start_date.replace(day=1) + relativedelta(month=1) - timedelta(days=1)
+        )
+
+        # グラフに表示するデータを取得
+        logs = db.session.execute(
+            sa.select(
+                DailyLog.date, DailyLogDetail.dose, DailyLog.mood, DailyLog.condition
+            )
+            .join(DailyLogDetail, DailyLog.id == DailyLogDetail.daily_log_id)
+            .where(
+                DailyLog.date.between(start_date, end_date),
+                DailyLogDetail.medicine_id == medicine.id,
+                DailyLog.user == current_user,
+            )
+            .order_by(DailyLog.date)
+        ).all()
+
+        # データ整形
+        chart_data = {
+            "dates": [log[0].strftime("%Y-%m-%d") for log in logs],
+            "doses": [log[1] for log in logs],
+            "moods": [log[2] for log in logs],
+            "conditions": [log[3] for log in logs],
+        }
+        max_dose = max(chart_data["doses"]) if chart_data["doses"] else 0
+
     return render_template(
-        "medicine_detail.html", medicine=medicine, title=title, form=form
+        "medicine_detail.html",
+        medicine=medicine,
+        title=title,
+        form=form,
+        selectform=selectform,
+        chart_data=chart_data,
+        max_dose=max_dose,
     )
 
 

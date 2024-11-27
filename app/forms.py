@@ -12,6 +12,7 @@ from wtforms import (
     FieldList,
     FormField,
     Form,
+    MonthField,
 )
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
 import sqlalchemy as sa
@@ -257,3 +258,8 @@ class EditDailyLogForm(FlaskForm):
     daily_log_details = FieldList(FormField(DailyLogDetailForm))
     added_meds_details = FieldList(FormField(DailyLogDetailForm))
     submit = SubmitField("更新")
+
+
+class SelectMonthForm(FlaskForm):
+    month = MonthField(format="%Y-%m")
+    submit = SubmitField("決定")

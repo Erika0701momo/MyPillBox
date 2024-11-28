@@ -8,7 +8,18 @@
   </div>
   <div class="row">
     <div class="col-12 col-lg-7 mb-3">
-      <p>ここにグラフを表示</p>
+      <div class="d-flex justify-content-between align-items-center graph-container mb-2">
+        <h5 class="mb-0">月ごとのグラフ</h5>
+        <form action="{{ url_for('medicine_detail', medicine_id=medicine.id) }}"
+              method="get"
+              class="d-flex"
+              novalidate>
+          {{ selectform.hidden_tag() }}
+          {{ selectform.month(class="form-control select-month me-1") }}
+          {{ selectform.submit(class="btn btn-custom btn-sm graph-submit") }}
+        </form>
+      </div>
+      <canvas id="medicineChart"></canvas>
     </div>
   </div>
   <div class="row">
@@ -127,3 +138,72 @@
     </div>
   </div>
 {% endblock modal %}
+{% block script %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"
+          integrity="sha512-ZwR1/gSZM3ai6vCdI+LVF1zSq/5HznD3ZSTk7kajkaj4D292NLuduDCO1c/NT8Id+jE58KYLKT7hXnbtryGmMg=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer"></script>
+  <script>
+  const chartData = {{ chart_data | tojson | safe }};
+  const maxDose = {{ max_dose | safe }};
+  console.log(chartData, maxDose)
+  const ctx = document.getElementById("medicineChart").getContext("2d");
+  new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: chartData.dates,
+      datasets: [
+        {
+          label: "お薬の量({{ medicine.taking_unit.value }})",
+          data: chartData.doses,
+          borderColor: 'rgba(54, 162, 235, 1)',
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          type: 'bar',
+          yAxisID: 'y-dose',
+        },
+        {
+          label: "気分",
+          data: chartData.moods,
+          borderColor: 'rgba(255, 99, 132, 1)',
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          type: 'line',
+          yAxisID: 'y-rating',
+        },
+        {
+          label: "体調",
+          data: chartData.conditions,
+          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          type: 'line',
+          yAxisID: 'y-rating',
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        "y-dose": {
+          type: "linear",
+          position: "left",
+          min: 0,
+          max: maxDose,
+          title: {
+            display: true,
+            text: "お薬の量({{ medicine.taking_unit.value }})"
+          }
+        },
+        "y-rating": {
+          type: "linear",
+          position: "right",
+          min: 1,
+          max: 5,
+          title: {
+            display: true,
+            text: "気分と体調"
+          }
+        }
+      }
+    }
+  });
+  </script>
+{% endblock script %}

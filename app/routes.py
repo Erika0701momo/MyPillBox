@@ -18,8 +18,8 @@ import sqlalchemy as sa
 from app.models import User, Medicine, TakingUnit, DailyLog, DailyLogDetail
 from urllib.parse import urlsplit
 from flask_paginate import Pagination, get_page_parameter
-from datetime import datetime, date, timedelta
-from dateutil import relativedelta
+from datetime import datetime, date, timedelta, timezone
+from dateutil.relativedelta import relativedelta
 
 
 @app.route("/")
@@ -210,12 +210,13 @@ def create_medicine():
     return render_template("create_medicine.html", form=form, title=title)
 
 
-@app.route("/medicine_detail/<int:medicine_id>", methods=["POST"])
+@app.route("/medicine_detail/<int:medicine_id>", methods=["GET"])
 @login_required
 def medicine_detail(medicine_id):
     title = "お薬詳細"
     # モーダル削除ボタン用
     form = EmptyForm()
+
     selectform = SelectMonthForm()
     medicine = db.session.get(Medicine, medicine_id)
 
@@ -226,36 +227,35 @@ def medicine_detail(medicine_id):
     chart_data = {"dates": [], "doses": [], "moods": [], "conditions": []}
     max_dose = 0
 
-    if request.method == "POST":
-        selected_month = selectform.month.data
-        # 月初と月末の日付を計算
-        start_date = datetime.strptime(selected_month + "-01", "%Y-%m-%d").date()
-        end_date = (
-            start_date.replace(day=1) + relativedelta(month=1) - timedelta(days=1)
+    selected_month = request.args.get("month") or datetime.now(
+        timezone(timedelta(hours=9))
+    ).strftime("%Y-%m")
+    selectform.month.data = datetime.strptime(selected_month, "%Y-%m")
+
+    # 月初と月末の日付を計算
+    start_date = datetime.strptime(selected_month + "-01", "%Y-%m-%d").date()
+    end_date = start_date.replace(day=1) + relativedelta(months=1) - timedelta(days=1)
+
+    # グラフに表示するデータを取得
+    logs = db.session.execute(
+        sa.select(DailyLog.date, DailyLogDetail.dose, DailyLog.mood, DailyLog.condition)
+        .join(DailyLogDetail, DailyLog.id == DailyLogDetail.daily_log_id)
+        .where(
+            DailyLog.date.between(start_date, end_date),
+            DailyLogDetail.medicine_id == medicine.id,
+            DailyLog.user == current_user,
         )
+        .order_by(DailyLog.date)
+    ).all()
 
-        # グラフに表示するデータを取得
-        logs = db.session.execute(
-            sa.select(
-                DailyLog.date, DailyLogDetail.dose, DailyLog.mood, DailyLog.condition
-            )
-            .join(DailyLogDetail, DailyLog.id == DailyLogDetail.daily_log_id)
-            .where(
-                DailyLog.date.between(start_date, end_date),
-                DailyLogDetail.medicine_id == medicine.id,
-                DailyLog.user == current_user,
-            )
-            .order_by(DailyLog.date)
-        ).all()
-
-        # データ整形
-        chart_data = {
-            "dates": [log[0].strftime("%Y-%m-%d") for log in logs],
-            "doses": [log[1] for log in logs],
-            "moods": [log[2] for log in logs],
-            "conditions": [log[3] for log in logs],
-        }
-        max_dose = max(chart_data["doses"]) if chart_data["doses"] else 0
+    # データ整形
+    chart_data = {
+        "dates": [log[0].strftime("%m/%d") for log in logs],
+        "doses": [int(log[1]) if log[1].is_integer() else log[1] for log in logs],
+        "moods": [log[2] for log in logs],
+        "conditions": [log[3] for log in logs],
+    }
+    max_dose = max(chart_data["doses"]) if chart_data["doses"] else 0
 
     return render_template(
         "medicine_detail.html",

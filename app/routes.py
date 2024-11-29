@@ -223,9 +223,9 @@ def medicine_detail(medicine_id):
     if medicine is None or medicine.user_id != current_user.id:
         abort(404)
 
-    # グラフ用デフォルト値（空のデータ）
+    # グラフ用デフォルト値
     chart_data = {"dates": [], "doses": [], "moods": [], "conditions": []}
-    max_dose = 0
+    max_dose = 6
 
     selected_month = request.args.get("month") or datetime.now(
         timezone(timedelta(hours=9))
@@ -235,6 +235,11 @@ def medicine_detail(medicine_id):
     # 月初と月末の日付を計算
     start_date = datetime.strptime(selected_month + "-01", "%Y-%m-%d").date()
     end_date = start_date.replace(day=1) + relativedelta(months=1) - timedelta(days=1)
+
+    # 選択月の全日付を生成
+    all_dates = [
+        start_date + timedelta(days=i) for i in range((end_date - start_date).days + 1)
+    ]
 
     # グラフに表示するデータを取得
     logs = db.session.execute(
@@ -248,6 +253,17 @@ def medicine_detail(medicine_id):
         .order_by(DailyLog.date)
     ).all()
 
+    # データを辞書形式に変換
+    log_dict = {log[0]: log for log in logs}
+
+    # 日付ごとにデータを補完
+    chart_data = {
+        "dates": [d.strftime("%m/%d") for d in all_dates],
+        "doses": [log_dict.get(d, (d, 0, None, None))[1] for d in all_dates],
+        "moods": [log_dict.get(d, (d, 0, None, None))[2] for d in all_dates],
+        "conditions": [log_dict.get(d, (d, 0, None, None))[3] for d in all_dates],
+    }
+
     # データ整形
     chart_data = {
         "dates": [log[0].strftime("%m/%d") for log in logs],
@@ -255,7 +271,12 @@ def medicine_detail(medicine_id):
         "moods": [log[2] for log in logs],
         "conditions": [log[3] for log in logs],
     }
-    max_dose = max(chart_data["doses"]) if chart_data["doses"] else 0
+
+    if chart_data["doses"]:
+        if max_dose < max(chart_data["doses"]):
+            max_dose = max(chart_data["doses"])
+    else:
+        max_dose = 0
 
     return render_template(
         "medicine_detail.html",

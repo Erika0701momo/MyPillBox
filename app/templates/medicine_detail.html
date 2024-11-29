@@ -144,66 +144,72 @@
           crossorigin="anonymous"
           referrerpolicy="no-referrer"></script>
   <script>
-  const chartData = {{ chart_data | tojson | safe }};
-  const maxDose = {{ max_dose | safe }};
-  console.log(chartData, maxDose)
-  const ctx = document.getElementById("medicineChart").getContext("2d");
-  new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: chartData.dates,
-      datasets: [
-        {
-          label: "お薬の量({{ medicine.taking_unit.value }})",
-          data: chartData.doses,
-          borderColor: 'rgba(54, 162, 235, 1)',
-          backgroundColor: 'rgba(54, 162, 235, 0.2)',
-          type: 'bar',
-          yAxisID: 'y-dose',
-        },
-        {
-          label: "気分",
-          data: chartData.moods,
-          borderColor: 'rgba(255, 99, 132, 1)',
-          backgroundColor: 'rgba(255, 99, 132, 0.2)',
-          type: 'line',
-          yAxisID: 'y-rating',
-        },
-        {
-          label: "体調",
-          data: chartData.conditions,
-          borderColor: 'rgba(75, 192, 192, 1)',
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          type: 'line',
-          yAxisID: 'y-rating',
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        "y-dose": {
-          type: "linear",
-          position: "left",
-          min: 0,
-          max: maxDose,
-          title: {
-            display: true,
-            text: "お薬の量({{ medicine.taking_unit.value }})"
+    const chartData = {{ chart_data | tojson | safe }};
+    const maxDose = {{ max_dose | safe }};
+    const ctx = document.getElementById("medicineChart").getContext("2d");
+
+    new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: chartData.dates,
+        datasets: [
+          {
+            label: "お薬の量({{ medicine.taking_unit.value }})",
+            data: chartData.doses,
+            borderColor: 'rgba(54, 162, 235, 1)',
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            type: 'bar',
+            yAxisID: 'y-dose',
+          },
+          {
+            label: "気分",
+            data: chartData.moods,
+            borderColor: 'rgba(255, 99, 132, 1)',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            type: 'line',
+            yAxisID: 'y-rating',
+          },
+          {
+            label: "体調",
+            data: chartData.conditions,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            type: 'line',
+            yAxisID: 'y-rating',
           }
-        },
-        "y-rating": {
-          type: "linear",
-          position: "right",
-          min: 1,
-          max: 5,
-          title: {
-            display: true,
-            text: "気分と体調"
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          "y-dose": {
+            type: "linear",
+            position: "left",
+            min: 0,
+            max: maxDose,
+            title: {
+              display: true,
+              text: "お薬の量({{ medicine.taking_unit.value }})",
+            },
+            ticks: {
+              stepSize: 1
+            }
+          },
+          "y-rating": {
+            type: "linear",
+            position: "right",
+            min: 1,
+            max: 5,
+            title: {
+              display: true,
+              text: "気分と体調",
+            },
+            ticks: {
+              stepSize: 1
+            }
           }
         }
       }
-    }
-  });
+    });
   </script>
 {% endblock script %}

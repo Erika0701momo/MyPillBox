@@ -257,20 +257,24 @@ def medicine_detail(medicine_id):
     log_dict = {log[0]: log for log in logs}
 
     # 日付ごとにデータを補完
+    default_data = ("", 0, None, None)
     chart_data = {
         "dates": [d.strftime("%m/%d") for d in all_dates],
-        "doses": [log_dict.get(d, (d, 0, None, None))[1] for d in all_dates],
-        "moods": [log_dict.get(d, (d, 0, None, None))[2] for d in all_dates],
-        "conditions": [log_dict.get(d, (d, 0, None, None))[3] for d in all_dates],
+        "doses": [
+            int(dose) if dose.is_integer() else dose
+            for d, dose in ((d, log_dict.get(d, default_data)[1]) for d in all_dates)
+        ],
+        "moods": [log_dict.get(d, default_data)[2] for d in all_dates],
+        "conditions": [log_dict.get(d, default_data)[3] for d in all_dates],
     }
 
     # データ整形
-    chart_data = {
-        "dates": [log[0].strftime("%m/%d") for log in logs],
-        "doses": [int(log[1]) if log[1].is_integer() else log[1] for log in logs],
-        "moods": [log[2] for log in logs],
-        "conditions": [log[3] for log in logs],
-    }
+    # chart_data = {
+    #     "dates": [log[0].strftime("%m/%d") for log in logs],
+    #     "doses": [int(log[1]) if log[1].is_integer() else log[1] for log in logs],
+    #     "moods": [log[2] for log in logs],
+    #     "conditions": [log[3] for log in logs],
+    # }
 
     if chart_data["doses"]:
         if max_dose < max(chart_data["doses"]):
@@ -315,7 +319,7 @@ def edit_medicine(medicine_id):
         # フォームに既存データ投入
         form.name.data = medicine.name
         form.taking_start_date.data = medicine.taking_start_date
-        # 1日に服用する量を設定 float型の数値が整数か判定
+        # 1日に服用する量を設定 数値が整数に変換できるか判定
         form.dose_per_day.data = (
             int(medicine.dose_per_day)
             if medicine.dose_per_day and medicine.dose_per_day.is_integer()
@@ -418,7 +422,7 @@ def create_daily_log():
     for medicine in active_medicines:
         # form.details.append_entry()でWTFormsのFieldListに新しいフォームエントリ(項目)を追加
         detail_entry = form.details.append_entry()
-        # 1日に服用する量を設定 float型の数値が整数か判定
+        # 1日に服用する量を設定 数値が整数に変換できるか判定
         detail_entry.dose.data = (
             int(medicine.dose_per_day)
             if medicine.dose_per_day and medicine.dose_per_day.is_integer()
@@ -515,7 +519,7 @@ def edit_daily_log(daily_log_id):
         for detail in daily_log.daily_log_details:
             # form.details.append_entry()でWTFormsのFieldListに新しいフォームエントリ(項目)を追加
             detail_entry = form.daily_log_details.append_entry()
-            # 各お薬の服用量を設定 float型の数値が整数か判定
+            # 各お薬の服用量を設定 数値が整数に変換できるか判定
             detail_entry.dose.data = (
                 int(detail.dose) if detail.dose.is_integer() else detail.dose
             )

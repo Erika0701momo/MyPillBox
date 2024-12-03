@@ -124,9 +124,16 @@
       .graph-container, .graph-submit {
         height: 31px;
       }
-      canvas {
+      .canvascontainer {
+        position: relative;
+        width: 100%;
+        height: auto;
+      }
+      .canvascontainer canvas {
         background-color: #ffffff;
         border-radius: 10px;
+        width: 100%;
+        height: 100%;
       }
       @media screen and (min-width: 430px) {
         .sp-br-container {
@@ -138,7 +145,11 @@
         .sp-br-container br {
           display: none;
         }
-        
+      }
+      @media screen and (max-width: 430px) {
+        .canvascontainer {
+          aspect-ratio: 6 / 4;
+        }
       }
       
     </style>

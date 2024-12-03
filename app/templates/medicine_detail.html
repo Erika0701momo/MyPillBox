@@ -19,7 +19,9 @@
           {{ selectform.submit(class="btn btn-custom btn-sm graph-submit") }}
         </form>
       </div>
-      <canvas id="medicineChart"></canvas>
+      <div class="canvascontainer">
+        <canvas id="medicineChart"></canvas>
+      </div>
     </div>
   </div>
   <div class="row">
@@ -181,6 +183,7 @@
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         scales: {
           "y-dose": {
             type: "linear",

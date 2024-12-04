@@ -16,11 +16,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap"
           rel="stylesheet">
     <style>
+      html, body {
+        height: 100%;
+      }
       body {
         background-color: #F1F3C2;
         font-family: "Zen Maru Gothic", sans-serif;
         font-weight: 500;
         font-style: normal;
+        display: flex;
+        flex-direction: column;
+      }
+      .container {
+        flex: 1;
       }
       .navbar-dark .nav-link {
         color: #fff !important;
@@ -135,6 +143,12 @@
         width: 100%;
         height: 100%;
       }
+      footer {
+        padding: 0.6rem 0;
+        text-align: center;
+        background-color: #cedf9f;
+        font-size: 0.9rem;
+      }
       @media screen and (min-width: 430px) {
         .sp-br-container {
           font-size: 0;
@@ -212,6 +226,11 @@
     </div>
     {% block modal %}
     {% endblock modal %}
+    <footer>
+      <p class="mb-0">
+        <small>© 2024 Erika Inoue Goodluck&Relax</small>
+      </p>
+    </footer>
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
     {% block script %}
     {% endblock script %}

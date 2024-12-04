@@ -160,7 +160,8 @@ class CreateMedicineFrom(FlaskForm):
 
 class MedicineSortForm(FlaskForm):
     active_sort = SelectField(
-        "並び替え", choices=[("registerorder", "登録順"), ("ratingorder", "星評価順")]
+        "並び替え",
+        choices=[("registerorder", "登録順"), ("ratingorder", "星評価順")],
     )
     not_active_sort = SelectField(
         "並び替え", choices=[("registerorder", "登録順"), ("ratingorder", "星評価順")]

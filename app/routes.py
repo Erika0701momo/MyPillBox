@@ -268,14 +268,6 @@ def medicine_detail(medicine_id):
         "conditions": [log_dict.get(d, default_data)[3] for d in all_dates],
     }
 
-    # データ整形
-    # chart_data = {
-    #     "dates": [log[0].strftime("%m/%d") for log in logs],
-    #     "doses": [int(log[1]) if log[1].is_integer() else log[1] for log in logs],
-    #     "moods": [log[2] for log in logs],
-    #     "conditions": [log[3] for log in logs],
-    # }
-
     if chart_data["doses"]:
         if max_dose < max(chart_data["doses"]):
             max_dose = max(chart_data["doses"])
@@ -363,7 +355,7 @@ def daily_logs():
 
     # クエリパラメータから現在のページ番号を取得
     page = request.args.get(get_page_parameter(), type=int, default=1)
-    per_page = 3
+    per_page = 10
 
     # 全体の件数を取得
     total_query = sa.select(sa.func.count(DailyLog.id)).where(
@@ -554,20 +546,6 @@ def delete_daily_log(daily_log_id):
         db.session.delete(daily_log_to_delete)
         db.session.commit()
         flash(f"{daily_log_to_delete.date.strftime('%Y/%m/%d')}の記録を削除しました")
-
-        # 削除後の総件数を取得
-        total_query = sa.select(sa.func.count(DailyLog.id)).where(
-            DailyLog.user == current_user
-        )
-        total_count = db.session.scalar(total_query)
-        per_page = 3
-        current_page = int(request.args.get("page", 1))
-        max_page = (total_count + per_page - 1) // per_page  # 総ページ数を計算
-
-        # 現在のページが無効になった場合、最終ページにリダイレクト
-        if current_page > max_page and max_page > 0:
-            return redirect(url_for("daily_logs", page=max_page))
-
         return redirect(url_for("daily_logs"))
     else:
         flash("すみません、記録削除に失敗しました")

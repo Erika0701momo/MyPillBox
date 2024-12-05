@@ -355,7 +355,7 @@ def daily_logs():
 
     # クエリパラメータから現在のページ番号を取得
     page = request.args.get(get_page_parameter(), type=int, default=1)
-    per_page = 10
+    per_page = app.config["LOGS_PER_PAGE"]
 
     # 全体の件数を取得
     total_query = sa.select(sa.func.count(DailyLog.id)).where(

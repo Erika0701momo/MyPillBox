@@ -18,7 +18,7 @@ import sqlalchemy as sa
 from app.models import User, Medicine, TakingUnit, DailyLog, DailyLogDetail
 from urllib.parse import urlsplit
 from flask_paginate import Pagination, get_page_parameter
-from datetime import datetime, date, timedelta, timezone
+from datetime import datetime, timedelta, timezone
 from dateutil.relativedelta import relativedelta
 
 
@@ -41,9 +41,6 @@ def index():
     return render_template(
         "index.html", title="ホーム", medicine_kinds=medicine_kinds, days=days
     )
-
-
-# q = sa.select(sa.func.count(Medicine.id)).join(Medicine.user).where(Medicine.user == u, Medicine.is_active==True)
 
 
 @app.route("/login", methods=["GET", "POST"])

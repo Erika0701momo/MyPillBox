@@ -10,3 +10,4 @@ class Config:
     ) or "sqlite:///" + os.path.join(basedir, "app.db")
     # daily_logs.htmlで表示する日々の記録の数を設定
     LOGS_PER_PAGE = 10
+    LANGUAGES = ["ja", "en"]

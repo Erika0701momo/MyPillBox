@@ -20,6 +20,7 @@ from urllib.parse import urlsplit
 from flask_paginate import Pagination, get_page_parameter
 from datetime import datetime, timedelta, timezone
 from dateutil.relativedelta import relativedelta
+from flask_babel import _
 
 
 @app.route("/")

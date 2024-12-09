@@ -20,6 +20,7 @@ from app import db
 from app.models import User, TakingUnit, DailyLog
 import re
 from flask_login import current_user
+from flask_babel import lazy_gettext as _l
 
 
 # FloatFieldのデフォルトエラーメッセージを上書き、全角数字判定
@@ -49,73 +50,79 @@ class MyFloatField(FloatField):
 
 class LoginForm(FlaskForm):
     email = StringField(
-        "メールアドレス",
+        _l("メールアドレス"),
         validators=[
-            DataRequired(message="メールアドレスは必須入力です"),
-            Email(message="正しいメールアドレスの形式で入力してください"),
+            DataRequired(message=_l("メールアドレスは必須入力です")),
+            Email(message=_l("正しいメールアドレスの形式で入力してください")),
         ],
         render_kw={"placeholder": "name@example.com"},
     )
     password = PasswordField(
-        "パスワード",
-        validators=[DataRequired(message="パスワードは必須入力です")],
+        _l("パスワード"),
+        validators=[DataRequired(message=_l("パスワードは必須入力です"))],
         render_kw={"placeholder": "Password"},
     )
-    submit = SubmitField("ログイン")
+    submit = SubmitField(_l("ログイン"))
 
 
 class RegisterForm(FlaskForm):
     username = StringField(
-        "ユーザー名",
-        validators=[DataRequired(message="ユーザー名は必須入力です"), Length(max=64)],
+        _l("ユーザー名"),
+        validators=[
+            DataRequired(message=_l("ユーザー名は必須入力です")),
+            Length(max=64),
+        ],
         render_kw={"placeholder": "username"},
     )
     email = StringField(
-        "メールアドレス",
+        _l("メールアドレス"),
         validators=[
-            DataRequired(message="メールアドレスは必須入力です"),
+            DataRequired(message=_l("メールアドレスは必須入力です")),
             Length(max=120),
-            Email(message="正しいメールアドレスの形式で入力してください"),
+            Email(message=_l("正しいメールアドレスの形式で入力してください")),
         ],
         render_kw={"placeholder": "name@example.com"},
     )
     password = PasswordField(
-        "パスワード",
-        validators=[DataRequired(message="パスワードは必須入力です"), Length(max=60)],
+        _l("パスワード"),
+        validators=[
+            DataRequired(message=_l("パスワードは必須入力です")),
+            Length(max=60),
+        ],
         render_kw={"placeholder": "Password"},
     )
     password2 = PasswordField(
-        "パスワード(確認用)",
+        _l("パスワード(確認用)"),
         validators=[
-            DataRequired(message="パスワード(確認用)は必須入力です"),
-            EqualTo("password", "パスワードが一致しません"),
+            DataRequired(message=_l("パスワード(確認用)は必須入力です")),
+            EqualTo("password", _l("パスワードが一致しません")),
             Length(max=60),
         ],
         render_kw={"placeholder": "Password2"},
     )
-    submit = SubmitField("新規登録")
+    submit = SubmitField(_l("新規登録"))
 
     def validate_email(self, email):
         user = db.session.scalar(sa.select(User).where(User.email == email.data))
         if user is not None:
             raise ValidationError(
-                "既に登録済みのメールアドレスです 違うアドレスを入力してください"
+                _l("既に登録済みのメールアドレスです 違うアドレスを入力してください")
             )
 
 
 class EditUsernameForm(FlaskForm):
     username = StringField(
-        "ユーザー名",
+        _l("ユーザー名"),
         validators=[
-            DataRequired(message="新しいユーザー名を入力してください"),
+            DataRequired(message=_l("新しいユーザー名を入力してください")),
             Length(max=64),
         ],
     )
-    submit = SubmitField("変更")
+    submit = SubmitField(_l("変更"))
 
 
 class DeleteAccountForm(FlaskForm):
-    submit = SubmitField("削除する")
+    submit = SubmitField(_l("削除する"))
 
 
 class CreateMedicineFrom(FlaskForm):
@@ -160,11 +167,12 @@ class CreateMedicineFrom(FlaskForm):
 
 class MedicineSortForm(FlaskForm):
     active_sort = SelectField(
-        "並び替え",
-        choices=[("registerorder", "登録順"), ("ratingorder", "星評価順")],
+        _l("並び替え"),
+        choices=[("registerorder", _l("登録順")), ("ratingorder", _l("星評価順"))],
     )
     not_active_sort = SelectField(
-        "並び替え", choices=[("registerorder", "登録順"), ("ratingorder", "星評価順")]
+        _l("並び替え"),
+        choices=[("registerorder", _l("登録順")), ("ratingorder", _l("星評価順"))],
     )
 
 

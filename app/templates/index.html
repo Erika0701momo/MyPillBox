@@ -6,14 +6,14 @@
            class="img-fluid rounded-circle"
            alt="Avatar">
     </p>
-    <h2 class="mb-4">ようこそ、{{ current_user.username }}さん！</h2>
-    <p>現在服用中のお薬：{{ medicine_kinds }}種類</p>
-    <p>記録してきた日数：{{ days }}日</p>
+    <h2 class="mb-4">{{ _("ようこそ、%(username)sさん！", username=current_user.username) }}</h2>
+    <p>{{ _("現在服用中のお薬：%(medicine_kinds)s種類", medicine_kinds=medicine_kinds) }}</p>
+    <p>{{ _("記録してきた日数：%(days)s日", days=days) }}</p>
     <p>
-      <a href="{{ url_for('edit_username') }}">ユーザー名の変更</a>
+      <a href="{{ url_for('edit_username') }}">{{ _("ユーザー名の変更") }}</a>
     </p>
     <p>
-      <a href="{{ url_for('delete_account') }}">アカウント削除</a>
+      <a href="{{ url_for('delete_account') }}">{{ _("アカウント削除") }}</a>
     </p>
   </div>
 {% endblock content %}

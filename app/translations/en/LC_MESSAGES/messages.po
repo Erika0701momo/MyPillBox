@@ -1,0 +1,231 @@
+# English translations for PROJECT.
+# Copyright (C) 2024 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2024-12-09 14:02+0900\n"
+"PO-Revision-Date: 2024-12-09 10:30+0900\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+#: app/__init__.py:22
+msgid "このページにアクセスするにはログインしてください"
+msgstr "Please log in to access this page."
+
+#: app/forms.py:40 app/forms.py:48
+msgid "半角数字で入力してください"
+msgstr "Please enter in numbers."
+
+#: app/forms.py:53 app/forms.py:78
+msgid "メールアドレス"
+msgstr "Email"
+
+#: app/forms.py:55 app/forms.py:80
+msgid "メールアドレスは必須入力です"
+msgstr "Email is required."
+
+#: app/forms.py:56 app/forms.py:82
+msgid "正しいメールアドレスの形式で入力してください"
+msgstr "Please enter a valid Email."
+
+#: app/forms.py:61 app/forms.py:87
+msgid "パスワード"
+msgstr "Password"
+
+#: app/forms.py:62 app/forms.py:89
+msgid "パスワードは必須入力です"
+msgstr "Password is required."
+
+#: app/forms.py:65
+msgid "ログイン"
+msgstr "Sign In"
+
+#: app/forms.py:70 app/forms.py:115
+msgid "ユーザー名"
+msgstr "Username"
+
+#: app/forms.py:72
+msgid "ユーザー名は必須入力です"
+msgstr "Username is required."
+
+#: app/forms.py:95
+msgid "パスワード(確認用)"
+msgstr "Repeat Password"
+
+#: app/forms.py:97
+msgid "パスワード(確認用)は必須入力です"
+msgstr "Please repeat your password."
+
+#: app/forms.py:98
+msgid "パスワードが一致しません"
+msgstr "Passwords do not match."
+
+#: app/forms.py:103 app/templates/register.html:39
+msgid "新規登録"
+msgstr "Register"
+
+#: app/forms.py:109
+msgid "既に登録済みのメールアドレスです 違うアドレスを入力してください"
+msgstr "This email is already registered. Please enter a different email."
+
+#: app/forms.py:117
+msgid "新しいユーザー名を入力してください"
+msgstr "Please enter a new username."
+
+#: app/forms.py:121
+msgid "変更"
+msgstr "Change"
+
+#: app/forms.py:125
+msgid "削除する"
+msgstr "Delete"
+
+#: app/forms.py:170 app/forms.py:174
+msgid "並び替え"
+msgstr "Sort"
+
+#: app/forms.py:171 app/forms.py:175
+msgid "登録順"
+msgstr "By Date"
+
+#: app/forms.py:171 app/forms.py:175
+msgid "星評価順"
+msgstr "By Rating"
+
+#: app/routes.py:30 app/templates/base.html:197
+msgid "ホーム"
+msgstr "Home"
+
+#: app/routes.py:59
+msgid "メールアドレスまたはパスワードが違います"
+msgstr "The email or password is incorrect."
+
+#: app/routes.py:88
+msgid "アカウントを登録しました！ログインしましょう"
+msgstr "Your account has been registered! Please log in."
+
+#: app/routes.py:97 app/templates/edit_username.html:3
+#: app/templates/index.html:13
+msgid "ユーザー名の変更"
+msgstr "Change Username"
+
+#: app/routes.py:103
+msgid "ユーザー名を変更しました"
+msgstr "Username has been changed."
+
+#: app/routes.py:114 app/templates/delete_account.html:3
+#: app/templates/index.html:16
+msgid "アカウント削除"
+msgstr "Delete Account"
+
+#: app/routes.py:122
+msgid "アカウントが削除されました。ご利用ありがとうございました。"
+msgstr "Your account has been deleted. Thank you for using our service."
+
+#: app/routes.py:131 app/templates/base.html:202 app/templates/medicines.html:3
+msgid "お薬管理"
+msgstr "Meds Management"
+
+#: app/templates/base.html:207
+msgid "日々の記録"
+msgstr "Daily Logs"
+
+#: app/templates/base.html:212
+msgid "ログアウト"
+msgstr "Logout"
+
+#: app/templates/delete_account.html:13
+msgid "アカウントを削除すると、記録してきたお薬の情報などがすべて削除されます。よろしいですか？"
+msgstr ""
+"Deleting your account will permanently remove all your recorded meds "
+"information and other data. Are you sure?"
+
+#: app/templates/delete_account.html:20 app/templates/edit_username.html:16
+msgid "キャンセル"
+msgstr "Cancel"
+
+#: app/templates/index.html:9
+#, python-format
+msgid "ようこそ、%(username)sさん！"
+msgstr "Welcome, %(username)s!"
+
+#: app/templates/index.html:10
+#, python-format
+msgid "現在服用中のお薬：%(medicine_kinds)s種類"
+msgstr "Currently taking: %(medicine_kinds)s kinds of meds"
+
+#: app/templates/index.html:11
+#, python-format
+msgid "記録してきた日数：%(days)s日"
+msgstr "Number of days recorded: %(days)s days"
+
+#: app/templates/login.html:6
+msgid "ログイン - MyPillBox"
+msgstr "Sign In - MyPillBox"
+
+#: app/templates/login.html:61
+msgid "MyPillBoxは、あなたに合う処方薬が"
+msgstr "MyPillBox is a medication management site designed to help you find "
+
+#: app/templates/login.html:63
+msgid "見つけられるお薬管理サイトです。"
+msgstr "the prescription drugs that suit you."
+
+#: app/templates/login.html:84
+msgid "新規登録していない場合は、"
+msgstr "New user? Click "
+
+#: app/templates/login.html:84
+msgid "こちら"
+msgstr "here"
+
+#: app/templates/login.html:84
+msgid "から登録してください"
+msgstr " to register!"
+
+#: app/templates/medicines.html:6
+msgid "お薬の登録"
+msgstr "Register Meds"
+
+#: app/templates/medicines.html:12
+msgid "服用中のお薬"
+msgstr "Currently Taking Meds"
+
+#: app/templates/medicines.html:26 app/templates/medicines.html:76
+msgid "決定"
+msgstr "Apply"
+
+#: app/templates/medicines.html:31
+msgid "服用中のお薬はありません"
+msgstr "No meds currently being taken."
+
+#: app/templates/medicines.html:53 app/templates/medicines.html:103
+msgid "詳細"
+msgstr "Details"
+
+#: app/templates/medicines.html:64
+msgid "服用中でないお薬"
+msgstr "Meds Not Currently Taken"
+
+#: app/templates/medicines.html:81
+msgid "服用中でないお薬はありません"
+msgstr "No meds not currently being taken."
+
+#: app/templates/register.html:6
+msgid "新規登録 - MyPillBox"
+msgstr "Register - MyPillBox"
+
+#: app/templates/register.html:68
+msgid "ログイン画面へ"
+msgstr "Go to Sign In Page"
+

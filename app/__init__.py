@@ -6,7 +6,7 @@ from flask_login import LoginManager
 import logging
 from logging.handlers import RotatingFileHandler
 import os
-from flask_babel import Babel
+from flask_babel import Babel, lazy_gettext as _l
 
 
 # クライアントの言語を取得してマッチする言語を見つける
@@ -19,7 +19,7 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
-login.login_message = "このページにアクセスするにはログインしてください"
+login.login_message = _l("このページにアクセスするにはログインしてください")
 login.login_view = "login"
 babel = Babel(app, locale_selector=get_locale)
 

@@ -27,6 +27,7 @@ from flask_babel import _
 @app.route("/index")
 @login_required
 def index():
+    title = _("ホーム")
     # 現在のユーザーの服用中の薬の種類を取得
     medicine_query = sa.select(sa.func.count(Medicine.id)).where(
         Medicine.user == current_user, Medicine.is_active == True
@@ -40,7 +41,7 @@ def index():
     days = db.session.scalar(daily_log_query)
 
     return render_template(
-        "index.html", title="ホーム", medicine_kinds=medicine_kinds, days=days
+        "index.html", title=title, medicine_kinds=medicine_kinds, days=days
     )
 
 
@@ -55,7 +56,7 @@ def login():
     if form.validate_on_submit():
         user = db.session.scalar(sa.select(User).where(User.email == form.email.data))
         if user is None or not user.check_password(form.password.data):
-            flash("メールアドレスまたはパスワードが違います")
+            flash(_("メールアドレスまたはパスワードが違います"))
             return redirect(url_for("login"))
         login_user(user)
         # ログイン前にアクセスしたページがあればそこへ遷移
@@ -84,7 +85,7 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash("アカウントを登録しました！ログインしましょう")
+        flash(_("アカウントを登録しました！ログインしましょう"))
         return redirect(url_for("login"))
 
     return render_template("register.html", form=form)
@@ -93,13 +94,13 @@ def register():
 @app.route("/edit_username", methods=["GET", "POST"])
 @login_required
 def edit_username():
-    title = "ユーザー名の変更"
+    title = _("ユーザー名の変更")
     form = EditUsernameForm()
 
     if form.validate_on_submit():
         current_user.username = form.username.data
         db.session.commit()
-        flash("ユーザー名を変更しました")
+        flash(_("ユーザー名を変更しました"))
         return redirect(url_for("edit_username"))
     elif request.method == "GET":
         form.username.data = current_user.username
@@ -110,7 +111,7 @@ def edit_username():
 @app.route("/delete_account", methods=["GET", "POST"])
 @login_required
 def delete_account():
-    title = "アカウント削除"
+    title = _("アカウント削除")
     form = DeleteAccountForm()
 
     if form.validate_on_submit():
@@ -118,7 +119,7 @@ def delete_account():
         db.session.delete(user)
         db.session.commit()
         logout_user()
-        flash("アカウントが削除されました。ご利用ありがとうございました。")
+        flash(_("アカウントが削除されました。ご利用ありがとうございました。"))
         return redirect(url_for("login"))
 
     return render_template("delete_account.html", form=form, title=title)
@@ -127,7 +128,7 @@ def delete_account():
 @app.route("/medicines", methods=["GET"])
 @login_required
 def medicines():
-    title = "お薬管理"
+    title = _("お薬管理")
 
     # フォーム設定
     form = MedicineSortForm()

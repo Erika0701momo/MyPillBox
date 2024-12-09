@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>新規登録 - MyPillBox</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <title>{{ _("新規登録 - MyPillBox") }}</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap"
+          rel="stylesheet">
     <style>
       body {
           background-color: #F1F3C2;
@@ -31,51 +33,42 @@
           font-weight: 500 !important;
       }
     </style>
-</head>
-<body class="d-flex align-items-center py-4">
-<main class="col-10 mx-auto col-lg-5">
-  <h1 class="display-6 mb-3 text-center">新規登録</h1>
-    <form action="" method="post" class="p-4 p-md-5 border rounded-3 bg-body-tertiary" novalidate>
-    {{ form.hidden_tag() }}
+  </head>
+  <body class="d-flex align-items-center py-4">
+    <main class="col-10 mx-auto col-lg-5">
+      <h1 class="display-6 mb-3 text-center">{{ _("新規登録") }}</h1>
+      <form action=""
+            method="post"
+            class="p-4 p-md-5 border rounded-3 bg-body-tertiary"
+            novalidate>
+        {{ form.hidden_tag() }}
         <div class="form-floating mb-3">
-            {{ form.username(class="form-control" + (" is-invalid" if form.username.errors else "")) }}
-            {{ form.username.label }}
-            {% for error in form.username.errors %}
-            <div class="invalid-feedback">
-              {{ error }}
-            </div>
-            {% endfor %}
+          {{ form.username(class="form-control" + (" is-invalid" if form.username.errors else "") ) }}
+          {{ form.username.label }}
+          {% for error in form.username.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
         </div>
         <div class="form-floating mb-3">
-            {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
-            {{ form.email.label }}
-            {% for error in form.email.errors %}
-            <div class="invalid-feedback">
-              {{ error }}
-            </div>
-            {% endfor %}
+          {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "") ) }}
+          {{ form.email.label }}
+          {% for error in form.email.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
         </div>
         <div class="form-floating mb-3">
-            {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "")) }}
-            {{ form.password.label }}
-            {% for error in form.password.errors %}
-              <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
+          {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "") ) }}
+          {{ form.password.label }}
+          {% for error in form.password.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
         </div>
         <div class="form-floating mb-3">
-            {{ form.password2(class="form-control" + (" is-invalid" if form.password2.errors else "")) }}
-            {{ form.password2.label }}
-            {% for error in form.password2.errors %}
-              <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
+          {{ form.password2(class="form-control" + (" is-invalid" if form.password2.errors else "") ) }}
+          {{ form.password2.label }}
+          {% for error in form.password2.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
         </div>
         {{ form.submit(class="w-100 btn btn-lg btn-custom") }}
         <hr class="my-4">
         <div class="text-center">
-          <small class="text-body-secondary"><a href="{{ url_for('login') }}">ログイン画面へ</a></small>
+          <small class="text-body-secondary"><a href="{{ url_for('login') }}">{{ _("ログイン画面へ") }}</a></small>
         </div>
-    </form>
-</main>
-<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
-</body>
+      </form>
+    </main>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+  </body>
 </html>

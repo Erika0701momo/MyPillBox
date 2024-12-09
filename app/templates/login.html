@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ログイン - MyPillBox</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <title>{{ _("ログイン - MyPillBox") }}</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap"
+          rel="stylesheet">
     <style>
         body {
             background-color: #F1F3C2;
@@ -36,52 +38,54 @@
           color: #A1D6B2;
         }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container col-xl-10 col-xxl-8 px-4 py-5">
       {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        {% for message in messages %}
-        <div class="alert alert-info" role="alert">{{ message }}</div>
-        {% endfor %}
-      {% endif %}
+        {% if messages %}
+          {% for message in messages %}<div class="alert alert-info" role="alert">{{ message }}</div>{% endfor %}
+        {% endif %}
       {% endwith %}
-        <div class="row align-items-center g-lg-5 py-5">
-          <div class="col-lg-7 text-center text-lg-start">
-            <h1 class="display-4 fw-bold lh-1 text-body-emphasis mb-3">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-capsule-pill" viewBox="0 0 16 16">
-                <path d="M11.02 5.364a3 3 0 0 0-4.242-4.243L1.121 6.778a3 3 0 1 0 4.243 4.243l5.657-5.657Zm-6.413-.657 2.878-2.879a2 2 0 1 1 2.829 2.829L7.435 7.536 4.607 4.707ZM12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm-.5 1.042a3 3 0 0 0 0 5.917V9.042Zm1 5.917a3 3 0 0 0 0-5.917v5.917Z"/>
-              </svg>
-              MyPillBox
-            </h1>
-            <p class="col-lg-10 fs-4">MyPillBoxは、あなたに合う処方薬が<br>見つけられるお薬管理サイトです。</p>
-          </div>
-          <div class="col-md-10 mx-auto col-lg-5">
-            <form action="" method="post" class="p-4 p-md-5 border rounded-3 bg-body-tertiary" novalidate>
+      <div class="row align-items-center g-lg-5 py-5">
+        <div class="col-lg-7 text-center text-lg-start">
+          <h1 class="display-4 fw-bold lh-1 text-body-emphasis mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 fill="currentColor"
+                 class="bi bi-capsule-pill"
+                 viewBox="0 0 16 16">
+              <path d="M11.02 5.364a3 3 0 0 0-4.242-4.243L1.121 6.778a3 3 0 1 0 4.243 4.243l5.657-5.657Zm-6.413-.657 2.878-2.879a2 2 0 1 1 2.829 2.829L7.435 7.536 4.607 4.707ZM12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm-.5 1.042a3 3 0 0 0 0 5.917V9.042Zm1 5.917a3 3 0 0 0 0-5.917v5.917Z" />
+            </svg>
+            MyPillBox
+          </h1>
+          <p class="col-lg-10 fs-4">
+            {{ _("MyPillBoxは、あなたに合う処方薬が") }}
+            <br>
+            {{ _("見つけられるお薬管理サイトです。") }}
+          </p>
+        </div>
+        <div class="col-md-10 mx-auto col-lg-5">
+          <form action=""
+                method="post"
+                class="p-4 p-md-5 border rounded-3 bg-body-tertiary"
+                novalidate>
             {{ form.hidden_tag() }}
-              <div class="form-floating mb-3">
-                {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
-                {{ form.email.label }}
-                {% for error in form.email.errors %}
-                <div class="invalid-feedback">
-                  {{ error }}
-                </div>
-                {% endfor %}
-              </div>
-              <div class="form-floating mb-3">
-                {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "")) }}
-                {{ form.password.label }}
-                {% for error in form.password.errors %}
-                  <div class="invalid-feedback">{{ error }}</div>
-                {% endfor %}
-              </div>
-              {{ form.submit(class="w-100 btn btn-lg btn-custom") }}
-              <hr class="my-4">
-              <small class="text-body-secondary">新規登録していない場合は、<a href="{{ url_for('register') }}">こちら</a>から登録してください</small>
-            </form>
-          </div>
+            <div class="form-floating mb-3">
+              {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "") ) }}
+              {{ form.email.label }}
+              {% for error in form.email.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="form-floating mb-3">
+              {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "") ) }}
+              {{ form.password.label }}
+              {% for error in form.password.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+            {{ form.submit(class="w-100 btn btn-lg btn-custom") }}
+            <hr class="my-4">
+            <small class="text-body-secondary">{{ _("新規登録していない場合は、") }}<a href="{{ url_for('register') }}">{{ _("こちら") }}</a>{{ _("から登録してください") }}</small>
+          </form>
         </div>
       </div>
-<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
-</body>
+    </div>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+  </body>
 </html>

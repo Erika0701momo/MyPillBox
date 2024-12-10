@@ -127,42 +127,47 @@ class DeleteAccountForm(FlaskForm):
 
 class CreateMedicineFrom(FlaskForm):
     name = StringField(
-        "お薬の名前",
-        validators=[DataRequired(message="お薬の名前は必須入力です"), Length(max=100)],
-        render_kw={"placeholder": "例:デパス0.5mg"},
+        _l("お薬の名前"),
+        validators=[
+            DataRequired(message=_l("お薬の名前は必須入力です")),
+            Length(max=100),
+        ],
+        render_kw={"placeholder": _l("例:デパス0.5mg")},
     )
     taking_start_date = DateField(
-        "服用開始日",
+        _l("服用開始日"),
         format="%Y-%m-%d",
-        validators=[DataRequired(message="服用開始日は必須入力です")],
+        validators=[DataRequired(message=_l("服用開始日は必須入力です"))],
     )
     dose_per_day = MyFloatField(
-        "1日に服用する量",
-        render_kw={"placeholder": "例:1　(2.5のように小数点の記入も可能です)"},
+        _l("1日に服用する量"),
+        render_kw={"placeholder": _l("例:1　(2.5のように小数点の記入も可能です)")},
     )
     taking_unit = SelectField(
-        "服用単位",
-        choices=[(unit.name, unit.value) for unit in TakingUnit],
-        validators=[DataRequired(message="服用単位は必須入力です")],
+        _l("服用単位"),
+        [(unit.name, TakingUnit.get_translated(unit)) for unit in TakingUnit],
+        validators=[DataRequired(message=_l("服用単位は必須入力です"))],
     )
     taking_timing = StringField(
-        "服用するタイミング",
+        _l("服用するタイミング"),
         validators=[Length(max=100)],
-        render_kw={"placeholder": "例:毎食後、就寝前、症状が出た時等"},
+        render_kw={"placeholder": _l("例:毎食後、就寝前、症状が出た時等")},
     )
     memo = TextAreaField(
-        "診察メモ",
+        _l("診察メモ"),
         render_kw={
-            "placeholder": "このお薬がなぜ処方されたかや、医師からのアドバイス、注意点などを書いてみましょう",
+            "placeholder": _l(
+                "このお薬がなぜ処方されたかや、医師からのアドバイス、注意点などを書いてみましょう"
+            ),
             "rows": "4",
         },
     )
-    rating = HiddenField("あなたのこのお薬への評価", default=0)
+    rating = HiddenField(_l("あなたのこのお薬への評価"), default=0)
     is_active = BooleanField(
-        "現在服用中(服用中ならオンにしてください)",
+        _l("現在服用中(服用中ならオンにしてください)"),
         render_kw={"role": "switch"},
     )
-    submit = SubmitField("登録")
+    submit = SubmitField(_l("登録"))
 
 
 class MedicineSortForm(FlaskForm):
@@ -178,37 +183,42 @@ class MedicineSortForm(FlaskForm):
 
 class EditMedicineForm(FlaskForm):
     name = StringField(
-        "お薬の名前",
-        validators=[DataRequired(message="お薬の名前は必須入力です"), Length(max=100)],
-        render_kw={"placeholder": "例:デパス0.5mg"},
+        _l("お薬の名前"),
+        validators=[
+            DataRequired(message=_l("お薬の名前は必須入力です")),
+            Length(max=100),
+        ],
+        render_kw={"placeholder": _l("例:デパス0.5mg")},
     )
     taking_start_date = DateField(
-        "服用開始日",
+        _l("服用開始日"),
         format="%Y-%m-%d",
-        validators=[DataRequired(message="服用開始日は必須入力です")],
+        validators=[DataRequired(message=_l("服用開始日は必須入力です"))],
     )
     dose_per_day = MyFloatField(
-        "1日に服用する量",
-        render_kw={"placeholder": "例:1　(2.5のように小数点の記入も可能です)"},
+        _l("1日に服用する量"),
+        render_kw={"placeholder": _l("例:1　(2.5のように小数点の記入も可能です)")},
     )
     taking_timing = StringField(
-        "服用するタイミング",
+        _l("服用するタイミング"),
         validators=[Length(max=100)],
-        render_kw={"placeholder": "例:毎食後、就寝前、症状が出た時等"},
+        render_kw={"placeholder": _l("例:毎食後、就寝前、症状が出た時等")},
     )
     memo = TextAreaField(
-        "診察メモ",
+        _l("診察メモ"),
         render_kw={
-            "placeholder": "このお薬がなぜ処方されたかや、医師からのアドバイス、注意点などを書いてみましょう",
+            "placeholder": _l(
+                "このお薬がなぜ処方されたかや、医師からのアドバイス、注意点などを書いてみましょう"
+            ),
             "rows": "4",
         },
     )
-    rating = HiddenField("あなたのこのお薬への評価")
+    rating = HiddenField(_l("あなたのこのお薬への評価"))
     is_active = BooleanField(
-        "現在服用中(オフにすると、服用中でないお薬に移動します)",
+        _l("現在服用中(オフにすると、服用中でないお薬に移動します)"),
         render_kw={"role": "switch"},
     )
-    submit = SubmitField("更新")
+    submit = SubmitField(_l("更新"))
 
 
 # 削除モーダル用　POSTで送信してデータベースに変更を加えるのでCSRF対策のためwtformsで削除ボタンを作る

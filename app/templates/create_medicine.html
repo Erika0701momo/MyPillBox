@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-  <h2 class="mb-3">お薬登録</h2>
-  <small class="d-block mb-2"><span class="red">※</span>は必須入力です</small>
+  <h2 class="mb-3">{{ _("お薬登録") }}</h2>
+  <small class="d-block mb-2"><span class="red">※</span>{{ _("は必須入力です") }}</small>
   <form action="" method="post" novalidate>
     {{ form.hidden_tag() }}
     <div class="row">
@@ -61,7 +61,7 @@
     <div class="row mb-3">
       <div class="col-5 col-lg-2">{{ form.submit(class="btn btn-custom w-100") }}</div>
       <div class="col-5 col-lg-2">
-        <a href="{{ url_for('medicines') }}" class="btn btn-secondary w-100">キャンセル</a>
+        <a href="{{ url_for('medicines') }}" class="btn btn-secondary w-100">{{ _("キャンセル") }}</a>
       </div>
     </div>
   </form>

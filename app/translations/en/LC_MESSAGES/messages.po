@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-12-09 14:02+0900\n"
+"POT-Creation-Date: 2024-12-10 11:54+0900\n"
 "PO-Revision-Date: 2024-12-09 10:30+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -90,17 +90,89 @@ msgstr "Change"
 msgid "削除する"
 msgstr "Delete"
 
-#: app/forms.py:170 app/forms.py:174
+#: app/forms.py:130 app/forms.py:186
+msgid "お薬の名前"
+msgstr "Med Name"
+
+#: app/forms.py:132 app/forms.py:188
+msgid "お薬の名前は必須入力です"
+msgstr "The med name is required."
+
+#: app/forms.py:135 app/forms.py:191
+msgid "例:デパス0.5mg"
+msgstr "Example: Xanax 0.5mg"
+
+#: app/forms.py:138 app/forms.py:194
+msgid "服用開始日"
+msgstr "Start Date"
+
+#: app/forms.py:140 app/forms.py:196
+msgid "服用開始日は必須入力です"
+msgstr "The start date is required."
+
+#: app/forms.py:143 app/forms.py:199
+msgid "1日に服用する量"
+msgstr "Daily Dosage"
+
+#: app/forms.py:144 app/forms.py:200
+msgid "例:1　(2.5のように小数点の記入も可能です)"
+msgstr "Example: 1 (Decimals like 2.5 are also allowed.)"
+
+#: app/forms.py:147
+msgid "服用単位"
+msgstr "Dosage Unit"
+
+#: app/forms.py:149
+msgid "服用単位は必須入力です"
+msgstr "The dosage unit is required."
+
+#: app/forms.py:152 app/forms.py:203
+msgid "服用するタイミング"
+msgstr "Timing of Dosage"
+
+#: app/forms.py:154 app/forms.py:205
+msgid "例:毎食後、就寝前、症状が出た時等"
+msgstr "Example: After every meal, before bedtime, or when symptoms appear."
+
+#: app/forms.py:157 app/forms.py:208
+msgid "診察メモ"
+msgstr "Doctor's Notes"
+
+#: app/forms.py:159 app/forms.py:210
+msgid "このお薬がなぜ処方されたかや、医師からのアドバイス、注意点などを書いてみましょう"
+msgstr "Write down why this medicine was prescribed, along with any advice or warnings from your doctor."
+
+#: app/forms.py:165 app/forms.py:216
+msgid "あなたのこのお薬への評価"
+msgstr "Your Rating for This Med"
+
+#: app/forms.py:167
+msgid "現在服用中(服用中ならオンにしてください)"
+msgstr "Currently Taking (Switch on if you are taking this med.)"
+
+#: app/forms.py:170
+msgid "登録"
+msgstr "Add"
+
+#: app/forms.py:175 app/forms.py:179
 msgid "並び替え"
 msgstr "Sort"
 
-#: app/forms.py:171 app/forms.py:175
+#: app/forms.py:176 app/forms.py:180
 msgid "登録順"
-msgstr "By Date"
+msgstr "By Added"
 
-#: app/forms.py:171 app/forms.py:175
+#: app/forms.py:176 app/forms.py:180
 msgid "星評価順"
 msgstr "By Rating"
+
+#: app/forms.py:218
+msgid "現在服用中(オフにすると、服用中でないお薬に移動します)"
+msgstr ""
+
+#: app/forms.py:221
+msgid "更新"
+msgstr ""
 
 #: app/routes.py:30 app/templates/base.html:197
 msgid "ホーム"
@@ -136,6 +208,15 @@ msgstr "Your account has been deleted. Thank you for using our service."
 msgid "お薬管理"
 msgstr "Meds Management"
 
+#: app/routes.py:189 app/templates/create_medicine.html:3
+msgid "お薬登録"
+msgstr "Add a Med"
+
+#: app/routes.py:206
+#, python-format
+msgid "お薬「%(medicine_name)s」を登録しました"
+msgstr "The med '%(medicine_name)s' has been added."
+
 #: app/templates/base.html:207
 msgid "日々の記録"
 msgstr "Daily Logs"
@@ -144,15 +225,20 @@ msgstr "Daily Logs"
 msgid "ログアウト"
 msgstr "Logout"
 
+#: app/templates/create_medicine.html:4
+msgid "は必須入力です"
+msgstr "are required."
+
+#: app/templates/create_medicine.html:64 app/templates/delete_account.html:20
+#: app/templates/edit_username.html:16
+msgid "キャンセル"
+msgstr "Cancel"
+
 #: app/templates/delete_account.html:13
 msgid "アカウントを削除すると、記録してきたお薬の情報などがすべて削除されます。よろしいですか？"
 msgstr ""
 "Deleting your account will permanently remove all your recorded meds "
 "information and other data. Are you sure?"
-
-#: app/templates/delete_account.html:20 app/templates/edit_username.html:16
-msgid "キャンセル"
-msgstr "Cancel"
 
 #: app/templates/index.html:9
 #, python-format
@@ -195,7 +281,7 @@ msgstr " to register!"
 
 #: app/templates/medicines.html:6
 msgid "お薬の登録"
-msgstr "Register Meds"
+msgstr "Add a Med"
 
 #: app/templates/medicines.html:12
 msgid "服用中のお薬"

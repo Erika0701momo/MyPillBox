@@ -7,6 +7,7 @@ import enum
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from hashlib import md5
+from flask_babel import lazy_gettext as _l
 
 
 # お薬服用単位をenum(定数)で定義
@@ -17,6 +18,19 @@ class TakingUnit(enum.Enum):
     mg = "mg"
     drop = "滴"
     ml = "ml"
+
+    # 翻訳を追加
+    @classmethod
+    def get_translated(cls, value):
+        translation_map = {
+            cls.tablet: _l("tablet"),
+            cls.capsule: _l("capsule"),
+            cls.package: _l("package"),
+            cls.mg: _l("mg"),
+            cls.drop: _l("drop"),
+            cls.ml: _l("ml"),
+        }
+        return translation_map.get(value, value)  # 翻訳が見つからない場合はそのまま返す
 
 
 class User(UserMixin, db.Model):

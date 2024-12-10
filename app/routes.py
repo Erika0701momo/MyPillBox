@@ -186,7 +186,7 @@ def medicines():
 @app.route("/create_medicine", methods=["GET", "POST"])
 @login_required
 def create_medicine():
-    title = "お薬登録"
+    title = _("お薬登録")
     form = CreateMedicineFrom()
 
     if form.validate_on_submit():
@@ -203,7 +203,7 @@ def create_medicine():
         )
         db.session.add(medicine)
         db.session.commit()
-        flash(f"お薬「{medicine.name}」を登録しました")
+        flash(_("お薬「%(medicine_name)s」を登録しました", medicine_name=medicine.name))
         return redirect(url_for("medicines"))
 
     return render_template("create_medicine.html", form=form, title=title)

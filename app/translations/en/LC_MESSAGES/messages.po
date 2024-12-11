@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-12-10 11:54+0900\n"
+"POT-Creation-Date: 2024-12-11 15:04+0900\n"
 "PO-Revision-Date: 2024-12-09 10:30+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -90,31 +90,31 @@ msgstr "Change"
 msgid "削除する"
 msgstr "Delete"
 
-#: app/forms.py:130 app/forms.py:186
+#: app/forms.py:130 app/forms.py:193
 msgid "お薬の名前"
 msgstr "Med Name"
 
-#: app/forms.py:132 app/forms.py:188
+#: app/forms.py:132 app/forms.py:195
 msgid "お薬の名前は必須入力です"
 msgstr "The med name is required."
 
-#: app/forms.py:135 app/forms.py:191
+#: app/forms.py:135 app/forms.py:198
 msgid "例:デパス0.5mg"
 msgstr "Example: Xanax 0.5mg"
 
-#: app/forms.py:138 app/forms.py:194
+#: app/forms.py:138 app/forms.py:201
 msgid "服用開始日"
 msgstr "Start Date"
 
-#: app/forms.py:140 app/forms.py:196
+#: app/forms.py:140 app/forms.py:203
 msgid "服用開始日は必須入力です"
 msgstr "The start date is required."
 
-#: app/forms.py:143 app/forms.py:199
+#: app/forms.py:143 app/forms.py:206
 msgid "1日に服用する量"
 msgstr "Daily Dosage"
 
-#: app/forms.py:144 app/forms.py:200
+#: app/forms.py:144 app/forms.py:207
 msgid "例:1　(2.5のように小数点の記入も可能です)"
 msgstr "Example: 1 (Decimals like 2.5 are also allowed.)"
 
@@ -122,97 +122,123 @@ msgstr "Example: 1 (Decimals like 2.5 are also allowed.)"
 msgid "服用単位"
 msgstr "Dosage Unit"
 
-#: app/forms.py:149
+#: app/forms.py:149 app/helpers.py:5
+msgid "錠"
+msgstr "tablet"
+
+#: app/forms.py:150 app/helpers.py:6
+msgid "カプセル"
+msgstr "capsule"
+
+#: app/forms.py:151 app/helpers.py:7
+msgid "包"
+msgstr "package"
+
+#: app/forms.py:152 app/helpers.py:8
+msgid "mg"
+msgstr "mg"
+
+#: app/forms.py:153 app/helpers.py:9
+msgid "滴"
+msgstr "drop"
+
+#: app/forms.py:154 app/helpers.py:10
+msgid "ml"
+msgstr "ml"
+
+#: app/forms.py:156
 msgid "服用単位は必須入力です"
 msgstr "The dosage unit is required."
 
-#: app/forms.py:152 app/forms.py:203
+#: app/forms.py:159 app/forms.py:210
 msgid "服用するタイミング"
 msgstr "Timing of Dosage"
 
-#: app/forms.py:154 app/forms.py:205
+#: app/forms.py:161 app/forms.py:212
 msgid "例:毎食後、就寝前、症状が出た時等"
 msgstr "Example: After every meal, before bedtime, or when symptoms appear."
 
-#: app/forms.py:157 app/forms.py:208
+#: app/forms.py:164 app/forms.py:215
 msgid "診察メモ"
 msgstr "Doctor's Notes"
 
-#: app/forms.py:159 app/forms.py:210
+#: app/forms.py:166 app/forms.py:217
 msgid "このお薬がなぜ処方されたかや、医師からのアドバイス、注意点などを書いてみましょう"
-msgstr "Write down why this medicine was prescribed, along with any advice or warnings from your doctor."
+msgstr ""
+"Write down why this medicine was prescribed, along with any advice or "
+"warnings from your doctor."
 
-#: app/forms.py:165 app/forms.py:216
+#: app/forms.py:172 app/forms.py:223
 msgid "あなたのこのお薬への評価"
 msgstr "Your Rating for This Med"
 
-#: app/forms.py:167
+#: app/forms.py:174
 msgid "現在服用中(服用中ならオンにしてください)"
 msgstr "Currently Taking (Switch on if you are taking this med.)"
 
-#: app/forms.py:170
+#: app/forms.py:177
 msgid "登録"
 msgstr "Add"
 
-#: app/forms.py:175 app/forms.py:179
+#: app/forms.py:182 app/forms.py:186
 msgid "並び替え"
 msgstr "Sort"
 
-#: app/forms.py:176 app/forms.py:180
+#: app/forms.py:183 app/forms.py:187
 msgid "登録順"
 msgstr "By Added"
 
-#: app/forms.py:176 app/forms.py:180
+#: app/forms.py:183 app/forms.py:187
 msgid "星評価順"
 msgstr "By Rating"
 
-#: app/forms.py:218
+#: app/forms.py:225
 msgid "現在服用中(オフにすると、服用中でないお薬に移動します)"
 msgstr ""
 
-#: app/forms.py:221
+#: app/forms.py:228
 msgid "更新"
 msgstr ""
 
-#: app/routes.py:30 app/templates/base.html:197
+#: app/routes.py:38 app/templates/base.html:197
 msgid "ホーム"
 msgstr "Home"
 
-#: app/routes.py:59
+#: app/routes.py:67
 msgid "メールアドレスまたはパスワードが違います"
 msgstr "The email or password is incorrect."
 
-#: app/routes.py:88
+#: app/routes.py:96
 msgid "アカウントを登録しました！ログインしましょう"
 msgstr "Your account has been registered! Please log in."
 
-#: app/routes.py:97 app/templates/edit_username.html:3
+#: app/routes.py:105 app/templates/edit_username.html:3
 #: app/templates/index.html:13
 msgid "ユーザー名の変更"
 msgstr "Change Username"
 
-#: app/routes.py:103
+#: app/routes.py:111
 msgid "ユーザー名を変更しました"
 msgstr "Username has been changed."
 
-#: app/routes.py:114 app/templates/delete_account.html:3
+#: app/routes.py:122 app/templates/delete_account.html:3
 #: app/templates/index.html:16
 msgid "アカウント削除"
 msgstr "Delete Account"
 
-#: app/routes.py:122
+#: app/routes.py:130
 msgid "アカウントが削除されました。ご利用ありがとうございました。"
 msgstr "Your account has been deleted. Thank you for using our service."
 
-#: app/routes.py:131 app/templates/base.html:202 app/templates/medicines.html:3
+#: app/routes.py:139 app/templates/base.html:202 app/templates/medicines.html:3
 msgid "お薬管理"
 msgstr "Meds Management"
 
-#: app/routes.py:189 app/templates/create_medicine.html:3
+#: app/routes.py:197 app/templates/create_medicine.html:3
 msgid "お薬登録"
 msgstr "Add a Med"
 
-#: app/routes.py:206
+#: app/routes.py:214
 #, python-format
 msgid "お薬「%(medicine_name)s」を登録しました"
 msgstr "The med '%(medicine_name)s' has been added."

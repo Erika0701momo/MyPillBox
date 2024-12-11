@@ -17,7 +17,7 @@ from wtforms import (
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
 import sqlalchemy as sa
 from app import db
-from app.models import User, TakingUnit, DailyLog
+from app.models import User, DailyLog
 import re
 from flask_login import current_user
 from flask_babel import lazy_gettext as _l
@@ -145,7 +145,14 @@ class CreateMedicineFrom(FlaskForm):
     )
     taking_unit = SelectField(
         _l("服用単位"),
-        [(unit.name, TakingUnit.get_translated(unit)) for unit in TakingUnit],
+        choices=[
+            ("tablet", _l("錠")),
+            ("capsule", _l("カプセル")),
+            ("package", _l("包")),
+            ("mg", _l("mg")),
+            ("drop", _l("滴")),
+            ("ml", _l("ml")),
+        ],
         validators=[DataRequired(message=_l("服用単位は必須入力です"))],
     )
     taking_timing = StringField(

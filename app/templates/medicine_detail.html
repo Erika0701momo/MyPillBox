@@ -57,7 +57,7 @@
             {% else %}
               {{ medicine.dose_per_day }}
             {% endif %}
-            {{ medicine.taking_unit.value }}
+            {{ unit_labels[medicine.taking_unit] }}
           </td>
         </tr>
         <tr>

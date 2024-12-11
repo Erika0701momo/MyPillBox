@@ -15,12 +15,20 @@ from app.forms import (
 )
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
-from app.models import User, Medicine, TakingUnit, DailyLog, DailyLogDetail
+from app.models import User, Medicine, DailyLog, DailyLogDetail
 from urllib.parse import urlsplit
 from flask_paginate import Pagination, get_page_parameter
 from datetime import datetime, timedelta, timezone
 from dateutil.relativedelta import relativedelta
-from flask_babel import _
+from flask_babel import _, get_locale
+from flask import g
+from app.helpers import unit_labels
+
+
+@app.before_request
+def before_request():
+    # 場所と選択された言語を取得
+    g.locale = str(get_locale())
 
 
 @app.route("/")
@@ -198,7 +206,7 @@ def create_medicine():
             memo=form.memo.data,
             rating=int(form.rating.data),
             is_active=form.is_active.data,
-            taking_unit=TakingUnit[form.taking_unit.data],
+            taking_unit=form.taking_unit.data,
             user=current_user,
         )
         db.session.add(medicine)
@@ -281,6 +289,7 @@ def medicine_detail(medicine_id):
         selectform=selectform,
         chart_data=chart_data,
         max_dose=max_dose,
+        unit_labels=unit_labels,
     )
 
 

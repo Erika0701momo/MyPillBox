@@ -3,34 +3,33 @@ import sqlalchemy as sa
 import sqlalchemy.orm as so
 from app import db, login
 import datetime
-import enum
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from hashlib import md5
 from flask_babel import lazy_gettext as _l
 
 
-# お薬服用単位をenum(定数)で定義
-class TakingUnit(enum.Enum):
-    tablet = "錠"
-    capsule = "カプセル"
-    package = "包"
-    mg = "mg"
-    drop = "滴"
-    ml = "ml"
+# # お薬服用単位をenum(定数)で定義
+# class TakingUnit(enum.Enum):
+#     tablet = "錠"
+#     capsule = "カプセル"
+#     package = "包"
+#     mg = "mg"
+#     drop = "滴"
+#     ml = "ml"
 
-    # 翻訳を追加
-    @classmethod
-    def get_translated(cls, value):
-        translation_map = {
-            cls.tablet: _l("tablet"),
-            cls.capsule: _l("capsule"),
-            cls.package: _l("package"),
-            cls.mg: _l("mg"),
-            cls.drop: _l("drop"),
-            cls.ml: _l("ml"),
-        }
-        return translation_map.get(value, value)  # 翻訳が見つからない場合はそのまま返す
+#     # 翻訳を追加
+#     @classmethod
+#     def get_translated(cls, value):
+#         translation_map = {
+#             cls.tablet: _l("tablet"),
+#             cls.capsule: _l("capsule"),
+#             cls.package: _l("package"),
+#             cls.mg: _l("mg"),
+#             cls.drop: _l("drop"),
+#             cls.ml: _l("ml"),
+#         }
+#         return translation_map.get(value, value)  # 翻訳が見つからない場合はそのまま返す
 
 
 class User(UserMixin, db.Model):
@@ -79,7 +78,7 @@ class Medicine(db.Model):
     memo: so.Mapped[Optional[str]] = so.mapped_column(sa.Text)
     rating: so.Mapped[Optional[int]] = so.mapped_column(default=0)
     is_active: so.Mapped[bool] = so.mapped_column(sa.Boolean)
-    taking_unit: so.Mapped[TakingUnit] = so.mapped_column(sa.Enum(TakingUnit))
+    taking_unit: so.Mapped[str] = so.mapped_column(sa.String(10))
 
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id))
 

@@ -1,21 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
   <div class="mb-4">
-    <h2 class="mb-2">日々の記録</h2>
+    <h2 class="mb-2">{{ _("日々の記録") }}</h2>
     <p>
-      <small>「記録する」ボタンをクリックすると、特定の日の気分、体調、服用したお薬を記録することができます</small>
+      <small>{{ _("「記録する」ボタンをクリックすると、特定の日の気分、体調、服用したお薬を記録することができます") }}</small>
     </p>
   </div>
   <div class="row">
     <div class="col-5 col-lg-2 mb-5">
-      <a href="{{ url_for('create_daily_log') }}" class="btn btn-custom w-100">記録する</a>
+      <a href="{{ url_for('create_daily_log') }}" class="btn btn-custom w-100">{{ _("記録する") }}</a>
     </div>
   </div>
   <div class="row">
     <div class="col-12 col-lg-7 mb-3">
-      <h5 class="mb-2">日々の記録一覧</h5>
+      <h5 class="mb-2">{{ _("日々の記録一覧") }}</h5>
       {% if not daily_logs %}
-        <small class="text-secondary">記録はまだありません</small>
+        <small class="text-secondary">{{ _("記録はまだありません") }}</small>
       {% else %}
         {{ pagination.info }}
         <div class="accordion mb-3" id="accordionDailyLog">
@@ -28,7 +28,7 @@
                         data-bs-target="#collapse{{ loop.index }}"
                         aria-expanded="false"
                         aria-controls="collapse{{ loop.index }}">
-                  <span class="pb-1">{{ daily_log.date.strftime('%Y/%m/%d') }}</span>
+                  <span class="pb-1">{{ moment(daily_log.date).format("L") }}</span>
                   <span>気分:
                     {% for i in range(0, daily_log.mood) %}
                       <img src="{{ url_for('static', filename='images/star_on.png') }}"
@@ -65,7 +65,7 @@
                   <table class="table table-hover mb-0">
                     {% if daily_log.all_doses_zero %}
                       <tr>
-                        <td>服用したお薬はありません</td>
+                        <td>{{ _("服用したお薬はありません") }}</td>
                       </tr>
                     {% else %}
                       {% for detail in daily_log.daily_log_details %}
@@ -88,13 +88,15 @@
                   </table>
                 </div>
                 <a href="{{ url_for('edit_daily_log', daily_log_id=daily_log.id) }}"
-                   class="btn btn-custom btn-sm ms-4 mt-0 mb-3">記録を編集</a>
+                   class="btn btn-custom btn-sm ms-4 mt-0 mb-3">{{ _("記録を編集") }}</a>
                 <button type="button"
                         class="btn btn-danger btn-sm mx-2 mt-0 mb-3"
                         data-bs-toggle="modal"
                         data-bs-target="#deletingModal"
-                        data-date="{{ daily_log.date.strftime('%Y/%m/%d') }}"
-                        data-url="{{ url_for('delete_daily_log', daily_log_id=daily_log.id) }}">記録を削除</button>
+                        data-date="{{ daily_log.date }}"
+                        data-url="{{ url_for('delete_daily_log', daily_log_id=daily_log.id) }}">
+                  {{ _("記録を削除") }}
+                </button>
               </div>
             </div>
           {% endfor %}
@@ -126,7 +128,7 @@
             {{ form.hidden_tag() }}
             {{ form.submit(class="btn btn-danger") }}
           </form>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _("キャンセル") }}</button>
         </div>
       </div>
     </div>
@@ -137,7 +139,7 @@
     const deletingModal = document.getElementById("deletingModal");
     deletingModal.addEventListener("show.bs.modal", function (event) {
     const button = event.relatedTarget; // モーダルを開いたボタン
-    const date = button.getAttribute("data-date");
+    const date = moment(button.getAttribute("data-date")).format("L");
     const url = button.getAttribute("data-url");
 
     // モーダルのタイトルとボディを更新

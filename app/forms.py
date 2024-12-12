@@ -36,16 +36,14 @@ class MyFloatField(FloatField):
         # 全角数字を含むかどうかチェック
         if re.search(r"[０-９．]", input_value):
             self.data = input_value  # 入力値を保持
-            # self.data = None
-            raise ValidationError(self.gettext("半角数字で入力してください"))
+            raise ValidationError(self.gettext(_l("半角数字で入力してください")))
 
         # 半角数字のチェック
         try:
             self.data = float(input_value)
         except ValueError:
             self.data = input_value  # 入力値を保持
-            # self.data = None
-            raise ValidationError(self.gettext("半角数字で入力してください"))
+            raise ValidationError(self.gettext(_l("半角数字で入力してください")))
 
 
 class LoginForm(FlaskForm):
@@ -148,7 +146,7 @@ class CreateMedicineFrom(FlaskForm):
         choices=[
             ("tablet", _l("錠")),
             ("capsule", _l("カプセル")),
-            ("package", _l("包")),
+            ("packet", _l("包")),
             ("mg", _l("mg")),
             ("drop", _l("滴")),
             ("ml", _l("ml")),
@@ -230,32 +228,32 @@ class EditMedicineForm(FlaskForm):
 
 # 削除モーダル用　POSTで送信してデータベースに変更を加えるのでCSRF対策のためwtformsで削除ボタンを作る
 class EmptyForm(FlaskForm):
-    submit = SubmitField("削除する")
+    submit = SubmitField(_l("削除する"))
 
 
 # DailyLogFormとEditDailyLogFormのサブフォーム
 class DailyLogDetailForm(Form):
-    dose = MyFloatField("服用量")
+    dose = MyFloatField(_l("服用量"))
 
 
 class DailyLogForm(FlaskForm):
     date = DateField(
-        "日付を選んでください",
+        _l("日付を選んでください"),
         format="%Y-%m-%d",
-        validators=[DataRequired(message="日付は必須入力です")],
+        validators=[DataRequired(message=_l("日付は必須入力です"))],
     )
     mood = HiddenField(
-        "その日の気分を教えてください",
-        validators=[DataRequired(message="気分は必須入力です")],
+        _l("その日の気分を教えてください"),
+        validators=[DataRequired(message=_l("気分は必須入力です"))],
     )
 
     condition = HiddenField(
-        "その日の体調を教えてください",
-        validators=[DataRequired(message="体調は必須入力です")],
+        _l("その日の体調を教えてください"),
+        validators=[DataRequired(message=_l("体調は必須入力です"))],
     )
     # detailsに、複数のDailyLogDetailFormを持たせる
     details = FieldList(FormField(DailyLogDetailForm))
-    submit = SubmitField("登録")
+    submit = SubmitField(_l("登録"))
 
     # 既に登録されている日付を入力したらバリデーションエラーを表示
     def validate_date(self, date):
@@ -266,7 +264,9 @@ class DailyLogForm(FlaskForm):
         )
         if registerd_date is not None:
             raise ValidationError(
-                "既に登録済みの日付です 違う日付を選択するか、日々の記録一覧からその日付の記録を編集してださい"
+                _l(
+                    "既に登録済みの日付です 違う日付を選択するか、日々の記録一覧からその日付の記録を編集してださい"
+                )
             )
 
 

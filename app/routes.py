@@ -22,7 +22,7 @@ from datetime import datetime, timedelta, timezone
 from dateutil.relativedelta import relativedelta
 from flask_babel import _, get_locale
 from flask import g
-from app.helpers import unit_labels
+from app.helpers import unit_labels, format_taking_unit
 
 
 @app.before_request
@@ -296,7 +296,7 @@ def medicine_detail(medicine_id):
 @app.route("/edit_medicine/<int:medicine_id>", methods=["GET", "POST"])
 @login_required
 def edit_medicine(medicine_id):
-    title = "お薬編集"
+    title = _("お薬編集")
     medicine = db.session.get(Medicine, medicine_id)
     if medicine is None or medicine.user_id != current_user.id:
         abort(404)
@@ -313,7 +313,12 @@ def edit_medicine(medicine_id):
         medicine.is_active = form.is_active.data
 
         db.session.commit()
-        flash(f"お薬「{medicine.name}」の情報を更新しました")
+        flash(
+            _(
+                "お薬「%(medicine_name)s」の情報を更新しました",
+                medicine_name=medicine.name,
+            )
+        )
         return redirect(url_for("medicine_detail", medicine_id=medicine.id))
     elif request.method == "GET":
         # フォームに既存データ投入
@@ -347,17 +352,17 @@ def delete_medicine(medicine_id):
             abort(404)
         db.session.delete(medicine_to_delete)
         db.session.commit()
-        flash(f"お薬「{medicine_to_delete.name}」を削除しました")
+        flash(_("お薬「%(medicine)s」を削除しました", medicine=medicine_to_delete.name))
         return redirect(url_for("medicines"))
     else:
-        flash("すみません、お薬削除に失敗しました")
+        flash(_("すみません、お薬削除に失敗しました"))
         return redirect(url_for("medicines"))
 
 
 @app.route("/daily_logs")
 @login_required
 def daily_logs():
-    title = "日々の記録"
+    title = _("日々の記録")
     # モーダル削除ボタン用
     form = EmptyForm()
 
@@ -389,8 +394,8 @@ def daily_logs():
         page=page,
         per_page=per_page,
         total=total_count,
-        display_msg="<b>{total}</b>件中の<b>{start} - {end}</b>件",
-        record_name="日々の記録",
+        display_msg=_("<b>{total}</b>件中の<b>{start} - {end}</b>件"),
+        record_name=_("日々の記録"),
         css_framework="bootstrap5",
     )
 
@@ -406,7 +411,7 @@ def daily_logs():
 @app.route("/create_daily_log", methods=["GET", "POST"])
 @login_required
 def create_daily_log():
-    title = "日々の記録登録"
+    title = _("日々の記録登録")
     form = DailyLogForm()
 
     # 服用中のお薬を取得
@@ -416,6 +421,12 @@ def create_daily_log():
         .order_by(Medicine.id)
     )
     active_medicines = db.session.scalars(active_query).all()
+
+    # フォーマット済み単位を生成
+    locale = g.locale
+    formatted_units = {
+        med.id: format_taking_unit(med.taking_unit, locale) for med in active_medicines
+    }
 
     # 服用中のお薬の数だけエントリを追加し、dose_per_dayを初期値として設定
     form.details.min_entries = len(active_medicines)
@@ -442,8 +453,6 @@ def create_daily_log():
 
         # 各daily_log_detailをデータベースに登録
         for idx, medicine in enumerate(active_medicines):
-            # if form.details[idx].dose.data is None:
-            #     form.details[idx].dose.data = 0
             daily_log_detail = DailyLogDetail(
                 dose=form.details[idx].dose.data or 0,
                 medicine=medicine,
@@ -452,11 +461,21 @@ def create_daily_log():
             db.session.add(daily_log_detail)
 
         db.session.commit()
-        flash(f"{new_daily_log.date.strftime('%Y/%m/%d')}の記録を登録しました")
+
+        if g.locale == "ja":
+            formatted_date = new_daily_log.date.strftime("%Y/%m/%d")
+        else:
+            formatted_date = new_daily_log.date.strftime("%m/%d/%Y")
+
+        flash(_("%(date)sの記録を登録しました", date=formatted_date))
         return redirect(url_for("daily_logs"))
 
     return render_template(
-        "create_daily_log.html", form=form, medicines=active_medicines, title=title
+        "create_daily_log.html",
+        form=form,
+        medicines=active_medicines,
+        title=title,
+        unit_labels=formatted_units,
     )
 
 

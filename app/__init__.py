@@ -7,6 +7,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 import os
 from flask_babel import Babel, lazy_gettext as _l
+from flask_moment import Moment
 
 
 # クライアントの言語を取得してマッチする言語を見つける
@@ -22,6 +23,7 @@ login = LoginManager(app)
 login.login_message = _l("このページにアクセスするにはログインしてください")
 login.login_view = "login"
 babel = Babel(app, locale_selector=get_locale)
+moment = Moment(app)
 
 if not app.debug:
     # ログファイル作成

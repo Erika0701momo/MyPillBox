@@ -2,14 +2,14 @@
 {% block content %}
   <div class="col-12 col-lg-7 mb-3">
     <div class="mb-4 d-flex justify-content-between align-items-center">
-      <h2>お薬詳細</h2>
-      <a href="{{ url_for('medicines') }}" class="btn btn-sm btn-back">お薬管理へ戻る</a>
+      <h2>{{ _("お薬詳細") }}</h2>
+      <a href="{{ url_for('medicines') }}" class="btn btn-sm btn-back">{{ _("お薬管理へ戻る") }}</a>
     </div>
   </div>
   <div class="row">
     <div class="col-12 col-lg-7 mb-3">
       <div class="d-flex justify-content-between align-items-center graph-container mb-2">
-        <h5 class="mb-0">月ごとのグラフ</h5>
+        <h5 class="mb-0">{{ _("月ごとのグラフ") }}</h5>
         <form action="{{ url_for('medicine_detail', medicine_id=medicine.id) }}"
               method="get"
               class="d-flex"
@@ -27,7 +27,7 @@
   <div class="row">
     <div class="col-12 col-lg-7 mb-2">
       <div class="mb-1 d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">お薬の情報</h5>
+        <h5 class="mb-0">{{ _("お薬の情報") }}</h5>
         <div>
           <a href="{{ url_for('edit_medicine', medicine_id=medicine.id) }}"
              class="btn btn-custom btn-sm">{{ _("お薬を編集") }}</a>
@@ -39,15 +39,15 @@
       </div>
       <table class="table table-colored table-hover">
         <tr>
-          <td style="width: 40%;">お薬の名前</td>
+          <td style="width: 40%;">{{ _("お薬の名前") }}</td>
           <td style="width: 60%;">{{ medicine.name }}</td>
         </tr>
         <tr>
-          <td style="width: 40%;">服用開始日</td>
+          <td style="width: 40%;">{{ _("服用開始日") }}</td>
           <td style="width: 60%;">{{ moment(medicine.taking_start_date).format("L") }}</td>
         </tr>
         <tr>
-          <td style="width: 40%;">1日に服用する量</td>
+          <td style="width: 40%;">{{ _("1日に服用する量") }}</td>
           <td style="width: 60%;">
             {% if not medicine.dose_per_day %}
               -
@@ -57,19 +57,19 @@
             {% else %}
               {{ medicine.dose_per_day }}
             {% endif %}
-            {{ unit_labels[medicine.taking_unit] }}
+            {{ taking_unit }}
           </td>
         </tr>
         <tr>
           <td style="width: 40%;" class="sp-br-container">
-            <span>服用する</span>
+            <span>{{ _("服用する") }}</span>
             <br>
-            <span>タイミング</span>
+            <span>{{ _("タイミング") }}</span>
           </td>
           <td style="width: 60%;">{{ medicine.taking_timing or "-" }}</td>
         </tr>
         <tr>
-          <td style="width: 40%;">お薬の評価</td>
+          <td style="width: 40%;">{{ _("お薬の評価") }}</td>
           <td style="width: 60%;">
             {% for i in range(0, medicine.rating) %}
               <img src="{{ url_for('static', filename='images/star_on.png') }}"
@@ -86,12 +86,12 @@
           </td>
         </tr>
         <tr>
-          <td style="width: 40%;">ステータス</td>
+          <td style="width: 40%;">{{ _("ステータス") }}</td>
           <td style="width: 60%;">
             {% if medicine.is_active == True %}
-              服用中
+              {{ _("服用中") }}
             {% else %}
-              服用していない
+              {{ _("服用していない") }}
             {% endif %}
           </td>
         </tr>
@@ -102,7 +102,7 @@
     <div class="col-12 col-lg-7 mb-3">
       <table class="table table-colored table-hover">
         <tr>
-          <td>診察メモ</td>
+          <td>{{ _("診察メモ") }}</td>
         </tr>
         <tr>
           <td>{{ medicine.memo or "-" }}</td>

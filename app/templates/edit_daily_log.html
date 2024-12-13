@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-  <h2 class="mb-3">{{ daily_log.date.strftime("%Y/%m/%d") }}の記録編集</h2>
-  <small class="d-block mb-3"><span class="red">※</span>は必須入力です</small>
+  <h2 class="mb-3">{{ moment(daily_log.date).format("L") }}{{ _("の記録編集") }}</h2>
+  <small class="d-block mb-3"><span class="red">※</span>{{ _("は必須入力です") }}</small>
   <form action="" method="post" novalidate>
     {{ form.hidden_tag() }}
     <div class="row">
@@ -48,12 +48,12 @@
         {% for error in form.condition.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
       </div>
       <div class="col-12 col-lg-7 mb-3">
-        <p class="mb-0">飲んだお薬を教えてください（飲まなかったお薬の服用量は、空欄または0にしてください）</p>
+        <p class="mb-0">{{ _("飲んだお薬を教えてください（飲まなかったお薬の服用量は、空欄または0にしてください）") }}</p>
         <table class="table table-hover table-input">
           <thead>
             <tr>
-              <th>お薬の名前</th>
-              <th>服用量</th>
+              <th>{{ _("お薬の名前") }}</th>
+              <th>{{ _("服用量") }}</th>
             </tr>
           </thead>
           <tbody>
@@ -61,7 +61,7 @@
               <tr>
                 <td style="width: 60%;">{{ detail.medicine.name }}</td>
                 <td style="width: 40%;">
-                  {{ form.daily_log_details[loop.index0].dose(class="form-control d-inline-block" + (" is-invalid dose-is-invalid" if form.daily_log_details[loop.index0].errors else "") , style="width: 50px;" ) }} {{ detail.medicine.taking_unit.value }}
+                  {{ form.daily_log_details[loop.index0].dose(class="form-control d-inline-block" + (" is-invalid dose-is-invalid" if form.daily_log_details[loop.index0].errors else "") , style="width: 50px;" ) }} {{ log_unit_labels[detail.id] }}
                   {% for error in form.daily_log_details[loop.index0].dose.errors %}
                     <div class="invalid-feedback">{{ error }}</div>
                   {% endfor %}
@@ -74,7 +74,7 @@
                 <tr>
                   <td style="width: 60%;">{{ medicine.name }}</td>
                   <td style="width: 40%;">
-                    {{ form.added_meds_details[loop.index0].dose(class="form-control d-inline-block" + (" is-invalid dose-is-invalid" if form.added_meds_details[loop.index0].errors else "") , style="width: 50px;" ) }} {{ medicine.taking_unit.value }}
+                    {{ form.added_meds_details[loop.index0].dose(class="form-control d-inline-block" + (" is-invalid dose-is-invalid" if form.added_meds_details[loop.index0].errors else "") , style="width: 50px;" ) }} {{ meds_unit_labels[medicine.id] }}
                     {% for error in form.added_meds_details[loop.index0].dose.errors %}
                       <div class="invalid-feedback">{{ error }}</div>
                     {% endfor %}
@@ -89,7 +89,7 @@
     <div class="row mb-3">
       <div class="col-5 col-lg-2">{{ form.submit(class="btn btn-custom w-100") }}</div>
       <div class="col-5 col-lg-2">
-        <a href="{{ url_for('daily_logs') }}" class="btn btn-secondary w-100">キャンセル</a>
+        <a href="{{ url_for('daily_logs') }}" class="btn btn-secondary w-100">{{ _("キャンセル") }}</a>
       </div>
     </div>
   </form>

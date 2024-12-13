@@ -272,20 +272,20 @@ class DailyLogForm(FlaskForm):
 
 class EditDailyLogForm(FlaskForm):
     mood = HiddenField(
-        "その日の気分を教えてください",
-        validators=[DataRequired(message="気分は必須入力です")],
+        _l("その日の気分を教えてください"),
+        validators=[DataRequired(message=_l("気分は必須入力です"))],
     )
 
     condition = HiddenField(
-        "その日の体調を教えてください",
-        validators=[DataRequired(message="体調は必須入力です")],
+        _l("その日の体調を教えてください"),
+        validators=[DataRequired(message=_l("体調は必須入力です"))],
     )
     # daily_log_detailsとadded_meds_detailsに、複数のDailyLogDetailFormを持たせる
     daily_log_details = FieldList(FormField(DailyLogDetailForm))
     added_meds_details = FieldList(FormField(DailyLogDetailForm))
-    submit = SubmitField("更新")
+    submit = SubmitField(_l("更新"))
 
 
 class SelectMonthForm(FlaskForm):
     month = MonthField(format="%Y-%m")
-    submit = SubmitField("決定")
+    submit = SubmitField(_l("決定"))

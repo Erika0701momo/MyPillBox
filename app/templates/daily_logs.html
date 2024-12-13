@@ -29,7 +29,7 @@
                         aria-expanded="false"
                         aria-controls="collapse{{ loop.index }}">
                   <span class="pb-1">{{ moment(daily_log.date).format("L") }}</span>
-                  <span>気分:
+                  <span>{{ _("気分") }}:
                     {% for i in range(0, daily_log.mood) %}
                       <img src="{{ url_for('static', filename='images/star_on.png') }}"
                            class="star-display rating-checked"
@@ -42,7 +42,7 @@
                              alt="star">
                       {% endfor %}
                     {% endif %}
-                    　体調:
+                    　{{ _("体調") }}:
                     {% for i in range(0, daily_log.condition) %}
                       <img src="{{ url_for('static', filename='images/star_on.png') }}"
                            class="star-display rating-checked"
@@ -79,7 +79,7 @@
                               {% else %}
                                 {{ detail.dose }}
                               {% endif %}
-                              {{ detail.medicine.taking_unit.value }}
+                              {{ detail.localized_taking_unit }}
                             </td>
                           </tr>
                         {% endif %}
@@ -145,8 +145,13 @@
     // モーダルのタイトルとボディを更新
     const modalTitle = deletingModal.querySelector(".modal-title");
     const modalBody = deletingModal.querySelector(".modal-body");
+    {% if g.locale == "ja" %}
     modalTitle.textContent = `${date}の記録削除`;
     modalBody.textContent = `${date}の記録を削除します。よろしいですか？`
+    {% else %}
+    modalTitle.textContent = `Delete Log for ${date}`;
+    modalBody.textContent = `Are you sure you want to delete the log for ${date}?`
+    {% endif %}
 
     // フォームのactionを更新
     const form = deletingModal.querySelector("#deleteForm");

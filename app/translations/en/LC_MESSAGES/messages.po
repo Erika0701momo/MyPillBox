@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-12-13 15:05+0900\n"
+"POT-Creation-Date: 2024-12-16 11:40+0900\n"
 "PO-Revision-Date: 2024-12-09 10:30+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -151,7 +151,7 @@ msgstr "ml"
 msgid "服用単位は必須入力です"
 msgstr "The dosage unit is required."
 
-#: app/forms.py:157 app/forms.py:208
+#: app/forms.py:157 app/forms.py:208 app/templates/medicine_detail.html:64
 msgid "服用するタイミング"
 msgstr "Timing of Dosage"
 
@@ -159,7 +159,7 @@ msgstr "Timing of Dosage"
 msgid "例:毎食後、就寝前、症状が出た時等"
 msgstr "Example: After every meal, before bedtime, or when symptoms appear."
 
-#: app/forms.py:162 app/forms.py:213 app/templates/medicine_detail.html:105
+#: app/forms.py:162 app/forms.py:213 app/templates/medicine_detail.html:101
 msgid "診察メモ"
 msgstr "Doctor's Notes"
 
@@ -288,57 +288,73 @@ msgstr "The med '%(medicine_name)s' has been added."
 msgid "お薬詳細"
 msgstr "Med Details"
 
-#: app/routes.py:302 app/templates/edit_medicine.html:3
+#: app/routes.py:285
+msgid "お薬の量"
+msgstr "Dose"
+
+#: app/routes.py:286 app/templates/daily_logs.html:32
+msgid "気分"
+msgstr "Mood"
+
+#: app/routes.py:287 app/templates/daily_logs.html:45
+msgid "体調"
+msgstr "Condition"
+
+#: app/routes.py:288
+msgid "気分と体調"
+msgstr "Mood and Condition"
+
+#: app/routes.py:316 app/templates/edit_medicine.html:3
 msgid "お薬編集"
 msgstr "Edit Med"
 
-#: app/routes.py:320
+#: app/routes.py:334
 #, python-format
 msgid "お薬「%(medicine_name)s」の情報を更新しました"
 msgstr "The information for the med '%(medicine_name)s' has been updated."
 
-#: app/routes.py:358
+#: app/routes.py:372
 #, python-format
 msgid "お薬「%(medicine)s」を削除しました"
 msgstr "The med '%(medicine)s' has been deleted."
 
-#: app/routes.py:361
+#: app/routes.py:375
 msgid "すみません、お薬削除に失敗しました"
 msgstr "Sorry, failed to delete the med."
 
-#: app/routes.py:368 app/routes.py:406 app/templates/base.html:207
+#: app/routes.py:382 app/routes.py:420 app/templates/base.html:207
 #: app/templates/daily_logs.html:4
 msgid "日々の記録"
 msgstr "Daily Logs"
 
-#: app/routes.py:405
+#: app/routes.py:419
 msgid "<b>{total}</b>件中の<b>{start} - {end}</b>件"
 msgstr "displaying <b>{start} - {end}</b> log(s) in total <b>{total}</b>"
 
-#: app/routes.py:422 app/templates/create_daily_log.html:3
+#: app/routes.py:436 app/templates/create_daily_log.html:3
 msgid "日々の記録登録"
 msgstr "Add a Daily Log"
 
-#: app/routes.py:478
+#: app/routes.py:492
 #, python-format
 msgid "%(date)sの記録を登録しました"
 msgstr "The log for %(date)s has been added."
 
-#: app/routes.py:493
+#: app/routes.py:507
 msgid "日々の記録編集"
 msgstr "Edit Daily Log"
 
-#: app/routes.py:558
+#: app/routes.py:572
 #, python-format
 msgid "%(date)sの記録を更新しました"
 msgstr "Updated the log for %(date)s."
 
-#: app/routes.py:610
+#: app/routes.py:624
 #, python-format
 msgid "%(date)sの記録を削除しました"
 msgstr "The log for %(date)s has been deleted."
 
-#: app/routes.py:613
+#: app/routes.py:627
 msgid "すみません、記録削除に失敗しました"
 msgstr "Sorry, failed to delete the log."
 
@@ -355,7 +371,7 @@ msgstr ""
 #: app/templates/create_daily_log.html:7 app/templates/create_medicine.html:4
 #: app/templates/edit_daily_log.html:4 app/templates/edit_medicine.html:4
 msgid "は必須入力です"
-msgstr "are required."
+msgstr " are required."
 
 #: app/templates/create_daily_log.html:59 app/templates/edit_daily_log.html:51
 msgid "飲んだお薬を教えてください（飲まなかったお薬の服用量は、空欄または0にしてください）"
@@ -366,7 +382,7 @@ msgstr ""
 #: app/templates/create_daily_log.html:86 app/templates/create_medicine.html:64
 #: app/templates/daily_logs.html:131 app/templates/delete_account.html:20
 #: app/templates/edit_daily_log.html:92 app/templates/edit_medicine.html:60
-#: app/templates/edit_username.html:16 app/templates/medicine_detail.html:139
+#: app/templates/edit_username.html:16 app/templates/medicine_detail.html:135
 msgid "キャンセル"
 msgstr "Cancel"
 
@@ -387,14 +403,6 @@ msgstr "List of Logs"
 #: app/templates/daily_logs.html:18
 msgid "記録はまだありません"
 msgstr "No logs available."
-
-#: app/templates/daily_logs.html:32
-msgid "気分"
-msgstr "Mood"
-
-#: app/templates/daily_logs.html:45
-msgid "体調"
-msgstr "Condition"
 
 #: app/templates/daily_logs.html:68
 msgid "服用したお薬はありません"
@@ -477,35 +485,27 @@ msgstr "Edit Med"
 msgid "お薬を削除"
 msgstr "Delete Med"
 
-#: app/templates/medicine_detail.html:65
-msgid "服用する"
-msgstr "Timing"
-
-#: app/templates/medicine_detail.html:67
-msgid "タイミング"
-msgstr " of Dosage"
-
-#: app/templates/medicine_detail.html:72
+#: app/templates/medicine_detail.html:68
 msgid "お薬の評価"
 msgstr "Med Rating"
 
-#: app/templates/medicine_detail.html:89
+#: app/templates/medicine_detail.html:85
 msgid "ステータス"
 msgstr "Status"
 
-#: app/templates/medicine_detail.html:92
+#: app/templates/medicine_detail.html:88
 msgid "服用中"
 msgstr "Currently Taking"
 
-#: app/templates/medicine_detail.html:94
+#: app/templates/medicine_detail.html:90
 msgid "服用していない"
 msgstr "Not Currently Taken"
 
-#: app/templates/medicine_detail.html:124
+#: app/templates/medicine_detail.html:120
 msgid "お薬削除"
 msgstr "Delete Med"
 
-#: app/templates/medicine_detail.html:131
+#: app/templates/medicine_detail.html:127
 #, python-format
 msgid "%(medicine_name)sを削除します。お薬を削除すると、日々の記録のデータからもお薬が削除されます。よろしいですか？"
 msgstr ""
@@ -543,4 +543,7 @@ msgstr "Register - MyPillBox"
 #: app/templates/register.html:68
 msgid "ログイン画面へ"
 msgstr "Go to Sign In Page"
+
+#~ msgid "お薬の量({{ graph_taking_unit }})"
+#~ msgstr "Dose({{ graph_taking_unit }})"
 

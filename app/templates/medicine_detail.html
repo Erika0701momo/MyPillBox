@@ -61,11 +61,7 @@
           </td>
         </tr>
         <tr>
-          <td style="width: 40%;" class="sp-br-container">
-            <span>{{ _("服用する") }}</span>
-            <br>
-            <span>{{ _("タイミング") }}</span>
-          </td>
+          <td style="width: 40%;">{{ _("服用するタイミング") }}</td>
           <td style="width: 60%;">{{ medicine.taking_timing or "-" }}</td>
         </tr>
         <tr>
@@ -150,6 +146,7 @@
   <script>
     const chartData = {{ chart_data | tojson | safe }};
     const maxDose = {{ max_dose | safe }};
+    const chartLabels = {{ chart_labels | tojson | safe }};
     const ctx = document.getElementById("medicineChart").getContext("2d");
 
     new Chart(ctx, {
@@ -158,7 +155,7 @@
         labels: chartData.dates,
         datasets: [
           {
-            label: "お薬の量({{ medicine.taking_unit.value }})",
+            label: chartLabels.dose_label + "({{ graph_taking_unit }})",
             data: chartData.doses,
             borderColor: 'rgba(54, 162, 235, 1)',
             backgroundColor: 'rgba(54, 162, 235, 0.2)',
@@ -166,7 +163,7 @@
             yAxisID: 'y-dose',
           },
           {
-            label: "気分",
+            label: chartLabels.mood_label,
             data: chartData.moods,
             borderColor: 'rgba(255, 99, 132, 1)',
             backgroundColor: 'rgba(255, 99, 132, 0.2)',
@@ -174,7 +171,7 @@
             yAxisID: 'y-rating',
           },
           {
-            label: "体調",
+            label: chartLabels.condition_label,
             data: chartData.conditions,
             borderColor: 'rgba(75, 192, 192, 1)',
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -194,7 +191,7 @@
             max: maxDose,
             title: {
               display: true,
-              text: "お薬の量({{ medicine.taking_unit.value }})",
+              text: chartLabels.dose_label + "({{ graph_taking_unit }})",
             },
             ticks: {
               stepSize: 1
@@ -207,7 +204,7 @@
             max: 5,
             title: {
               display: true,
-              text: "気分と体調",
+              text: chartLabels.y_rating_title,
             },
             ticks: {
               stepSize: 1

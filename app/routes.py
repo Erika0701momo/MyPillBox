@@ -234,9 +234,7 @@ def medicine_detail(medicine_id):
     chart_data = {"dates": [], "doses": [], "moods": [], "conditions": []}
     max_dose = 6
 
-    selected_month = request.args.get("month") or datetime.now(
-        timezone(timedelta(hours=9))
-    ).strftime("%Y-%m")
+    selected_month = request.args.get("month")
     selectform.month.data = datetime.strptime(selected_month, "%Y-%m")
 
     # 月初と月末の日付を計算
@@ -281,7 +279,19 @@ def medicine_detail(medicine_id):
     else:
         max_dose = 0
 
+    chart_labels = {
+        "dose_label": _("お薬の量"),
+        "mood_label": _("気分"),
+        "condition_label": _("体調"),
+        "y_rating_title": _("気分と体調"),
+    }
+
+    # フォーマット済み単位を生成
+    locale = g.locale
     taking_unit = format_dose_unit(medicine.dose_per_day, medicine.taking_unit)
+    if not locale == "ja":
+        taking_unit = taking_unit.title()
+    graph_taking_unit = format_unit(medicine.taking_unit, locale)
 
     return render_template(
         "medicine_detail.html",
@@ -293,6 +303,8 @@ def medicine_detail(medicine_id):
         max_dose=max_dose,
         unit_labels=unit_labels,
         taking_unit=taking_unit,
+        graph_taking_unit=graph_taking_unit,
+        chart_labels=chart_labels,
     )
 
 

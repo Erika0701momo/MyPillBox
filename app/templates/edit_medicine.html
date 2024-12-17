@@ -52,6 +52,7 @@
         {{ form.is_active.label }}
         <div class="form-check form-switch my-3 mx-2">{{ form.is_active(class="form-check-input") }}</div>
       </div>
+      <div>{{ form.local_month() }}</div>
     </div>
     <div class="row mb-3">
       <div class="col-5 col-lg-2">{{ form.submit(class="btn btn-custom w-100") }}</div>
@@ -64,6 +65,18 @@
 {% endblock content %}
 {% block script %}
   <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // ローカル時間を取得
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const localMonth = `${year}- ${month}`;
+
+      // ローカル年月を隠しフィールドに設定
+      document.getElementById("local_month").value = localMonth;
+    })
+
+
     function medicineStarRate(e) {
       const stars = document.querySelectorAll(".star");
       const rating = document.querySelector("#rating");

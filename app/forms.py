@@ -223,6 +223,7 @@ class EditMedicineForm(FlaskForm):
         _l("現在服用中(オフにすると、服用中でないお薬に移動します)"),
         render_kw={"role": "switch"},
     )
+    local_month = HiddenField()
     submit = SubmitField(_l("更新"))
 
 

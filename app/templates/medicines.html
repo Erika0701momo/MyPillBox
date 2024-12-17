@@ -49,7 +49,8 @@
                 {% endif %}
               </p>
               <div class="col-2 text-end p-0">
-                <a href="{{ url_for('medicine_detail', medicine_id=medicine.id) }}"
+                <a id="medicine-detail-link-{{ medicine.id }}"
+                   href="{{ url_for('medicine_detail', medicine_id=medicine.id) }}"
                    class="btn btn-custom btn-sm">{{ _("詳細") }}</a>
               </div>
             </li>
@@ -99,7 +100,8 @@
                 {% endif %}
               </p>
               <div class="col-2 text-end p-0">
-                <a href="{{ url_for('medicine_detail', medicine_id=medicine.id) }}"
+                <a id="medicine-detail-link-{{ medicine.id }}"
+                   href="{{ url_for('medicine_detail', medicine_id=medicine.id) }}"
                    class="btn btn-custom btn-sm">{{ _("詳細") }}</a>
               </div>
             </li>
@@ -109,3 +111,20 @@
     </div>
   </div>
 {% endblock content %}
+{% block script %}
+  <script>
+    document.addEventListener("DOMContentLoaded",() => {
+      // ローカル時間を取得
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const localMonth = `${year}-${month}`;
+
+      // お薬のリンク更新
+      const Links = document.querySelectorAll('[id^="medicine-detail-link-"]');
+      Links.forEach(link => {
+        link.href = `${link.href}?month=${localMonth}`;
+      });
+    });
+  </script>
+{% endblock script %}

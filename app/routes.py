@@ -334,7 +334,14 @@ def edit_medicine(medicine_id):
                 medicine_name=medicine.name,
             )
         )
-        return redirect(url_for("medicine_detail", medicine_id=medicine.id))
+
+        # フォームからローカル年月を取得
+        selected_month = form.local_month.data
+        selected_month = selected_month.replace(" ", "").replace("+", "")
+
+        return redirect(
+            url_for("medicine_detail", medicine_id=medicine.id, month=selected_month)
+        )
     elif request.method == "GET":
         # フォームに既存データ投入
         form.name.data = medicine.name

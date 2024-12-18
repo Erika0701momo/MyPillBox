@@ -18,17 +18,26 @@ import sqlalchemy as sa
 from app.models import User, Medicine, DailyLog, DailyLogDetail
 from urllib.parse import urlsplit
 from flask_paginate import Pagination, get_page_parameter
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from flask_babel import _, get_locale
 from flask import g
 from app.helpers import unit_labels, format_unit, format_dose_unit
+from werkzeug.exceptions import default_exceptions
 
 
 @app.before_request
 def before_request():
     # 場所と選択された言語を取得
     g.locale = str(get_locale())
+
+
+# エラーコードをurlに打ち込むとそのエラーページを表示
+@app.get("/<int:code>")
+def error_page(code):
+    if code not in [k for k in default_exceptions.keys()]:
+        code = 500
+    abort(code)
 
 
 @app.route("/")

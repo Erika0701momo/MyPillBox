@@ -7,8 +7,24 @@
            alt="Avatar">
     </p>
     <h2 class="mb-4">{{ _("ようこそ、%(username)sさん！", username=current_user.username) }}</h2>
-    <p>{{ _("現在服用中のお薬：%(medicine_kinds)s種類", medicine_kinds=medicine_kinds) }}</p>
-    <p>{{ _("記録してきた日数：%(days)s日", days=days) }}</p>
+    {% if g.locale == "ja" or medicine_kinds > 1 %}
+      <p>{{ _("現在服用中のお薬：%(medicine_kinds)s種類", medicine_kinds=medicine_kinds) }}</p>
+    {% else %}
+      {% if medicine_kinds == 0 %}
+        <p>Currently taking: No meds</p>
+      {% elif medicine_kinds == 1 %}
+        <p>Currently taking: 1 kind of med</p>
+      {% endif %}
+    {% endif %}
+    {% if g.locale == "ja" or days > 1 %}
+      <p>{{ _("記録してきた日数：%(days)s日", days=days) }}</p>
+    {% else %}
+      {% if days == 0 %}
+        <p>Number of days recorded: No day</p>
+      {% elif days == 1 %}
+        <p>Number of days recorded: {{ days }} day</p>
+      {% endif %}
+    {% endif %}
     <p>
       <a href="{{ url_for('edit_username') }}">{{ _("ユーザー名の変更") }}</a>
     </p>

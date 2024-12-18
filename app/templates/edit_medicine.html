@@ -57,7 +57,8 @@
     <div class="row mb-3">
       <div class="col-5 col-lg-2">{{ form.submit(class="btn btn-custom w-100") }}</div>
       <div class="col-5 col-lg-2">
-        <a href="{{ url_for('medicine_detail', medicine_id=medicine.id) }}"
+        <a id="back-to-detail-link-{{ medicine.id }}"
+           href="{{ url_for('medicine_detail', medicine_id=medicine.id) }}"
            class="btn btn-secondary w-100">{{ _("キャンセル") }}</a>
       </div>
     </div>
@@ -70,10 +71,13 @@
       const now = new Date();
       const year = now.getFullYear();
       const month = String(now.getMonth() + 1).padStart(2, "0");
-      const localMonth = `${year}- ${month}`;
+      const localMonth = `${year}-${month}`;
 
       // ローカル年月を隠しフィールドに設定
       document.getElementById("local_month").value = localMonth;
+      // キャンセルボタンリンクにローカル年月を設定
+      const cancel = document.querySelector('[id^="back-to-detail-link-"]');
+      cancel.href = `${cancel.href}?month=${localMonth}`;
     })
 
 

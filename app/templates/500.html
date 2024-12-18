@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
   <h1 class="text-center mb-3 error">500</h1>
-  <p class="text-center">内部でエラーが発生しました　すみません！</p>
+  <p class="text-center">{{ _("内部でエラーが発生しました　すみません！") }}</p>
   <p class="text-center">
-    <a href="{{ url_for('index') }}" class="btn btn-custom">ホームへ戻る</a>
+    <a href="{{ url_for('index') }}" class="btn btn-custom">{{ _("ホームへ戻る") }}</a>
   </p>
 {% endblock content %}

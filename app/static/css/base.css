@@ -1,0 +1,138 @@
+html, body {
+    height: 100%;
+}
+body {
+    background-color: #F1F3C2;
+    font-family: "Zen Maru Gothic", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    display: flex;
+    flex-direction: column;
+}
+.container {
+    flex: 1;
+}
+.navbar-dark .nav-link {
+    color: #fff !important;
+}
+.navbar-dark .nav-link:hover {
+    color: #65966d !important; /* #A1D6B2より少し濃い色 */
+}
+.navbar {
+    background-color: #A1D6B2;
+}
+.btn-custom {
+    background-color: #E8B86D;
+    font-weight: 500;
+}
+.btn-custom:hover {
+    background-color: #D9894A
+}
+.btn-back {
+    background-color: #CEDF9F;
+    font-weight: 500;
+    margin-right: .30rem;
+}
+.btn-back:hover {
+    background-color: #abbd7a;
+}
+.form-control:focus {
+    border-color: #ffc107;
+    box-shadow: inset 0.5px 0.5px 0.5px 0.5px #E8B86D, 0.5px 0.5px 0.5px 0.5px #E8B86D;
+}
+.bi-exclamation-triangle-fill {
+    vertical-align: baseline;
+    width: 1em;
+    height: 1em;
+}
+.error {
+    color: #65966d;
+    font-weight: bold;
+}
+.red {
+    color: red;
+}
+.star-rating {
+    width: 3em;
+    height: 3em;
+    filter: invert(99%) sepia(1%) saturate(0%) hue-rotate(161deg) brightness(101%) contrast(104%);
+    cursor: pointer;
+}
+.rating-checked {
+    filter: none!important;
+}
+input[type="checkbox"] {
+    transform: scale(1.7);
+}
+.star-display {
+    width: 1em;
+    height: 1em;
+    filter: invert(99%) sepia(1%) saturate(0%) hue-rotate(161deg) brightness(101%) contrast(104%);
+}
+.sort-select {
+    line-height: 1.2!important;
+}
+.sort-submit {
+    margin-right: .30rem;
+}
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.table-colored {
+    border: 3px #A1D6B2 solid;
+    
+}
+.table-colored td {
+    border-bottom: 1px #dee2e6 solid;
+}
+.table-input {
+    border: 3px #dee2e6 solid
+}
+.accordion-button {
+    font-weight: 500!important;
+}
+.dose-is-invalid {
+    background-image: none!important;
+    padding-right: 0!important;
+}
+.pagination {
+    --bs-pagination-active-bg: #569560;
+    --bs-pagination-color: #65966d;
+    --bs-pagination-hover-color: #156723;
+    --bs-pagination-active-border-color: #569560;
+
+}
+.pagination-page-info {
+    padding-left: .25rem;
+}
+.select-month {
+    height: 31px!important;
+}
+.graph-container, .graph-submit {
+    height: 31px;
+}
+.canvascontainer {
+    position: relative;
+    width: 100%;
+    height: auto;
+}
+.canvascontainer canvas {
+    background-color: #ffffff;
+    border-radius: 10px;
+    width: 100%;
+    height: 100%;
+}
+footer {
+    padding: 0.6rem 0;
+    text-align: center;
+    background-color: #cedf9f;
+    font-size: 0.9rem;
+}
+@media screen and (max-width: 430px) {
+    .canvascontainer {
+    aspect-ratio: 6 / 4;
+    }
+}

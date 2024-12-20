@@ -35,7 +35,7 @@ def before_request():
 # エラーコードをurlに打ち込むとそのエラーページを表示
 @app.get("/<int:code>")
 def error_page(code):
-    if code not in [k for k in default_exceptions.keys()]:
+    if code not in default_exceptions.keys():
         code = 500
     abort(code)
 
@@ -88,7 +88,7 @@ def login():
 @app.route("/logout")
 def logout():
     logout_user()
-    return redirect(url_for("index"))
+    return redirect(url_for("login"))
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -152,44 +152,35 @@ def medicines():
     form.active_sort.data = request.args.get("active_sort", "registerorder")
     form.not_active_sort.data = request.args.get("not_active_sort", "registerorder")
 
-    # 服用中のお薬のお薬を登録順で取得
+    # ソート条件を設定
+    active_order_by = (
+        Medicine.rating.desc()
+        if form.active_sort.data == "ratingorder"
+        else Medicine.id
+    )
+    not_active_order_by = (
+        Medicine.rating.desc()
+        if form.not_active_sort.data == "ratingorder"
+        else Medicine.id
+    )
+
+    # 服用中のお薬のお薬を取得
     active_query = (
         sa.select(Medicine)
         .join(Medicine.user)
         .where(Medicine.user == current_user, Medicine.is_active == True)
-        .order_by(Medicine.id)
+        .order_by(active_order_by)
     )
-    # 服用中でないお薬を登録順で取得
+    active_medicines = db.session.scalars(active_query).all()
+
+    # 服用中でないお薬を取得
     not_active_query = (
         sa.select(Medicine)
         .join(Medicine.user)
         .where(Medicine.user == current_user, Medicine.is_active == False)
-        .order_by(Medicine.id)
+        .order_by(not_active_order_by)
     )
-    # 服用中のお薬を星評価順で取得
-    rating_active_query = (
-        sa.select(Medicine)
-        .join(Medicine.user)
-        .where(Medicine.user == current_user, Medicine.is_active == True)
-        .order_by(Medicine.rating.desc())
-    )
-    # 服用中でないお薬を星評価順で取得
-    rating_not_active_query = (
-        sa.select(Medicine)
-        .join(Medicine.user)
-        .where(Medicine.user == current_user, Medicine.is_active == False)
-        .order_by(Medicine.rating.desc())
-    )
-
-    if form.active_sort.data == "ratingorder":
-        active_medicines = db.session.scalars(rating_active_query).all()
-    else:
-        active_medicines = db.session.scalars(active_query).all()
-
-    if form.not_active_sort.data == "ratingorder":
-        not_active_medicines = db.session.scalars(rating_not_active_query).all()
-    else:
-        not_active_medicines = db.session.scalars(not_active_query).all()
+    not_active_medicines = db.session.scalars(not_active_query).all()
 
     return render_template(
         "medicines.html",
@@ -243,7 +234,9 @@ def medicine_detail(medicine_id):
     chart_data = {"dates": [], "doses": [], "moods": [], "conditions": []}
     max_dose = 6
 
-    selected_month = request.args.get("month")
+    selected_month = request.args.get("month") or datetime.now().strftime(
+        format="%Y-%m"
+    )
     selectform.month.data = datetime.strptime(selected_month, "%Y-%m")
 
     # 月初と月末の日付を計算

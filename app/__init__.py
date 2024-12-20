@@ -25,6 +25,10 @@ login.login_view = "login"
 babel = Babel(app, locale_selector=get_locale)
 moment = Moment(app)
 
+from app.errors import bp as errors_bp
+
+app.register_blueprint(errors_bp)
+
 if not app.debug:
     # ログファイル作成
     if not os.path.exists("logs"):
@@ -43,4 +47,4 @@ if not app.debug:
     app.logger.setLevel(logging.INFO)
     app.logger.info("MyPillBox startup")
 
-from app import routes, models, errors
+from app import routes, models

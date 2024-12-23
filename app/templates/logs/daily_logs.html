@@ -8,7 +8,8 @@
   </div>
   <div class="row">
     <div class="col-5 col-lg-2 mb-5">
-      <a href="{{ url_for('create_daily_log') }}" class="btn btn-custom w-100">{{ _("記録する") }}</a>
+      <a href="{{ url_for('logs.create_daily_log') }}"
+         class="btn btn-custom w-100">{{ _("記録する") }}</a>
     </div>
   </div>
   <div class="row">
@@ -87,14 +88,14 @@
                     {% endif %}
                   </table>
                 </div>
-                <a href="{{ url_for('edit_daily_log', daily_log_id=daily_log.id) }}"
+                <a href="{{ url_for('logs.edit_daily_log', daily_log_id=daily_log.id) }}"
                    class="btn btn-custom btn-sm ms-4 mt-0 mb-3">{{ _("記録を編集") }}</a>
                 <button type="button"
                         class="btn btn-danger btn-sm mx-2 mt-0 mb-3"
                         data-bs-toggle="modal"
                         data-bs-target="#deletingModal"
                         data-date="{{ daily_log.date }}"
-                        data-url="{{ url_for('delete_daily_log', daily_log_id=daily_log.id) }}">
+                        data-url="{{ url_for('logs.delete_daily_log', daily_log_id=daily_log.id) }}">
                   {{ _("記録を削除") }}
                 </button>
               </div>

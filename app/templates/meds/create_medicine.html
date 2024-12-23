@@ -61,7 +61,8 @@
     <div class="row mb-3">
       <div class="col-5 col-lg-2">{{ form.submit(class="btn btn-custom w-100") }}</div>
       <div class="col-5 col-lg-2">
-        <a href="{{ url_for('medicines') }}" class="btn btn-secondary w-100">{{ _("キャンセル") }}</a>
+        <a href="{{ url_for('meds.medicines') }}"
+           class="btn btn-secondary w-100">{{ _("キャンセル") }}</a>
       </div>
     </div>
   </form>

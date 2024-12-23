@@ -81,7 +81,7 @@
             </div>
             {{ form.submit(class="w-100 btn btn-lg btn-custom") }}
             <hr class="my-4">
-            <small class="text-body-secondary">{{ _("新規登録していない場合は、") }}<a href="{{ url_for('register') }}">{{ _("こちら") }}</a>{{ _("から登録してください") }}</small>
+            <small class="text-body-secondary">{{ _("新規登録していない場合は、") }}<a href="{{ url_for('auth.register') }}">{{ _("こちら") }}</a>{{ _("から登録してください") }}</small>
           </form>
         </div>
       </div>

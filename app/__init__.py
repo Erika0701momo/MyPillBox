@@ -29,6 +29,22 @@ from app.errors import bp as errors_bp
 
 app.register_blueprint(errors_bp)
 
+from app.auth import bp as auth_bp
+
+app.register_blueprint(auth_bp, url_prefix="/auth")
+
+from app.users import bp as users_bp
+
+app.register_blueprint(users_bp, url_prefix="/users")
+
+from app.meds import bp as meds_bp
+
+app.register_blueprint(meds_bp, url_prefix="/meds")
+
+from app.logs import bp as logs_bp
+
+app.register_blueprint(logs_bp, url_prefix="/logs")
+
 if not app.debug:
     # ログファイル作成
     if not os.path.exists("logs"):

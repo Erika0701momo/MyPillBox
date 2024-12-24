@@ -3,6 +3,6 @@
   <h1 class="text-center mb-3 error">400</h1>
   <p class="text-center">{{ _("無効なリクエストです") }}</p>
   <p class="text-center">
-    <a href="{{ url_for('logout') }}">{{ _("こちら") }}</a>{{ _("からログアウトして、再ログインしてください") }}
+    <a href="{{ url_for('auth.logout') }}">{{ _("こちら") }}</a>{{ _("からログアウトして、再ログインしてください") }}
   </p>
 {% endblock content %}

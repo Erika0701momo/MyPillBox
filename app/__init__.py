@@ -21,9 +21,10 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_message = _l("このページにアクセスするにはログインしてください")
-login.login_view = "login"
+login.login_view = "auth.login"
 babel = Babel(app, locale_selector=get_locale)
 moment = Moment(app)
+
 
 from app.errors import bp as errors_bp
 
@@ -45,6 +46,11 @@ from app.logs import bp as logs_bp
 
 app.register_blueprint(logs_bp, url_prefix="/logs")
 
+from app.main import bp as main_bp
+
+app.register_blueprint(main_bp)
+
+
 if not app.debug:
     # ログファイル作成
     if not os.path.exists("logs"):
@@ -63,4 +69,4 @@ if not app.debug:
     app.logger.setLevel(logging.INFO)
     app.logger.info("MyPillBox startup")
 
-from app import routes, models
+from app import models

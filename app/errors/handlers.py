@@ -1,6 +1,15 @@
-from flask import render_template
-from app import app, db
+from flask import render_template, abort
+from app import db
 from app.errors import bp
+from werkzeug.exceptions import default_exceptions
+
+
+# エラーコードをurlに打ち込むとそのエラーページを表示
+@bp.get("/<int:code>")
+def error_page(code):
+    if code not in default_exceptions.keys():
+        code = 500
+    abort(code)
 
 
 @bp.app_errorhandler(400)

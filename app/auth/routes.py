@@ -13,7 +13,7 @@ from app.models import User
 def login():
     # ログインしている場合はインデックスへリダイレクト
     if current_user.is_authenticated:
-        return redirect(url_for("index"))
+        return redirect(url_for("main.index"))
 
     form = LoginForm()
 
@@ -26,7 +26,7 @@ def login():
         # ログイン前にアクセスしたページがあればそこへ遷移
         next_page = request.args.get("next")
         if not next_page or urlsplit(next_page).netloc != "":
-            next_page = url_for("index")
+            next_page = url_for("main.index")
         return redirect(next_page)
 
     return render_template("auth/login.html", form=form)
@@ -42,7 +42,7 @@ def logout():
 def register():
     # ログインしている場合はインデックスへリダイレクト
     if current_user.is_authenticated:
-        return redirect(url_for("index"))
+        return redirect(url_for("main.index"))
     form = RegisterForm()
     if form.validate_on_submit():
         user = User(username=form.username.data, email=form.email.data)

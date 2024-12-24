@@ -1,31 +1,21 @@
-from flask import render_template, flash, redirect, url_for, request, abort
-from app import app, db
+from flask import render_template
+from app import db
 from flask_login import current_user, login_required
 import sqlalchemy as sa
-from app.models import Medicine, DailyLog, DailyLogDetail
-from flask_paginate import Pagination, get_page_parameter
+from app.models import Medicine, DailyLog
 from flask_babel import _, get_locale
 from flask import g
-from app.helpers import format_unit, format_dose_unit
-from werkzeug.exceptions import default_exceptions
+from app.main import bp
 
 
-@app.before_request
+@bp.before_app_request
 def before_request():
     # 場所と選択された言語を取得
     g.locale = str(get_locale())
 
 
-# エラーコードをurlに打ち込むとそのエラーページを表示
-@app.get("/<int:code>")
-def error_page(code):
-    if code not in default_exceptions.keys():
-        code = 500
-    abort(code)
-
-
-@app.route("/")
-@app.route("/index")
+@bp.route("/")
+@bp.route("/index")
 @login_required
 def index():
     title = _("ホーム")

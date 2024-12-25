@@ -1,7 +1,10 @@
 import sqlalchemy as sa
 import sqlalchemy.orm as so
-from app import app, db, cli
+from app import create_app, db
 from app.models import User, Medicine, DailyLog, DailyLogDetail
+
+
+app = create_app()
 
 
 # flask shellで使うためのシェルコンテキストを設定

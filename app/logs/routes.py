@@ -1,5 +1,5 @@
-from flask import render_template, flash, redirect, url_for, request, abort
-from app import db, app
+from flask import render_template, flash, redirect, url_for, request, abort, current_app
+from app import db
 from app.logs import bp
 from app.logs.forms import EmptyForm, DailyLogForm, EditDailyLogForm
 from flask_login import current_user, login_required
@@ -20,7 +20,7 @@ def daily_logs():
 
     # クエリパラメータから現在のページ番号を取得
     page = request.args.get(get_page_parameter(), type=int, default=1)
-    per_page = app.config["LOGS_PER_PAGE"]
+    per_page = current_app.config["LOGS_PER_PAGE"]
 
     # 全体の件数を取得
     total_query = sa.select(sa.func.count(DailyLog.id)).where(

@@ -17,9 +17,9 @@ from app.helpers import unit_labels, format_unit, format_dose_unit
 from app.models import Medicine, DailyLog, DailyLogDetail
 
 
-@bp.route("/medicines", methods=["GET"])
+@bp.route("/", methods=["GET"])
 @login_required
-def medicines():
+def list():
     title = _("お薬管理")
 
     # フォーム設定
@@ -58,7 +58,7 @@ def medicines():
     not_active_medicines = db.session.scalars(not_active_query).all()
 
     return render_template(
-        "meds/medicines.html",
+        "meds/list.html",
         active_medicines=active_medicines,
         not_active_medicines=not_active_medicines,
         form=form,
@@ -66,9 +66,9 @@ def medicines():
     )
 
 
-@bp.route("/create_medicine", methods=["GET", "POST"])
+@bp.route("/create", methods=["GET", "POST"])
 @login_required
-def create_medicine():
+def create():
     title = _("お薬登録")
     form = CreateMedicineFrom()
 
@@ -87,14 +87,14 @@ def create_medicine():
         db.session.add(medicine)
         db.session.commit()
         flash(_("お薬「%(medicine_name)s」を登録しました", medicine_name=medicine.name))
-        return redirect(url_for("meds.medicines"))
+        return redirect(url_for("meds.list"))
 
-    return render_template("meds/create_medicine.html", form=form, title=title)
+    return render_template("meds/create.html", form=form, title=title)
 
 
-@bp.route("/medicine_detail/<int:medicine_id>", methods=["GET"])
+@bp.route("/<int:medicine_id>", methods=["GET"])
 @login_required
-def medicine_detail(medicine_id):
+def detail(medicine_id):
     title = _("お薬詳細")
     # モーダル削除ボタン用
     form = EmptyForm()
@@ -171,7 +171,7 @@ def medicine_detail(medicine_id):
     graph_taking_unit = format_unit(medicine.taking_unit, locale)
 
     return render_template(
-        "meds/medicine_detail.html",
+        "meds/detail.html",
         medicine=medicine,
         title=title,
         form=form,
@@ -185,9 +185,9 @@ def medicine_detail(medicine_id):
     )
 
 
-@bp.route("/edit_medicine/<int:medicine_id>", methods=["GET", "POST"])
+@bp.route("/<int:medicine_id>/edit", methods=["GET", "POST"])
 @login_required
-def edit_medicine(medicine_id):
+def edit(medicine_id):
     title = _("お薬編集")
     medicine = db.session.get(Medicine, medicine_id)
     if medicine is None or medicine.user_id != current_user.id:
@@ -217,9 +217,7 @@ def edit_medicine(medicine_id):
         selected_month = selected_month.replace(" ", "").replace("+", "")
 
         return redirect(
-            url_for(
-                "meds.medicine_detail", medicine_id=medicine.id, month=selected_month
-            )
+            url_for("meds.detail", medicine_id=medicine.id, month=selected_month)
         )
     elif request.method == "GET":
         # フォームに既存データ投入
@@ -236,14 +234,12 @@ def edit_medicine(medicine_id):
         form.rating.data = medicine.rating
         form.is_active.data = medicine.is_active
 
-    return render_template(
-        "meds/edit_medicine.html", medicine=medicine, form=form, title=title
-    )
+    return render_template("meds/edit.html", medicine=medicine, form=form, title=title)
 
 
-@bp.route("/delete_medicine/<int:medicine_id>", methods=["POST"])
+@bp.route("/<int:medicine_id>/delete", methods=["POST"])
 @login_required
-def delete_medicine(medicine_id):
+def delete(medicine_id):
     # モーダル削除ボタン用
     form = EmptyForm()
 
@@ -254,7 +250,7 @@ def delete_medicine(medicine_id):
         db.session.delete(medicine_to_delete)
         db.session.commit()
         flash(_("お薬「%(medicine)s」を削除しました", medicine=medicine_to_delete.name))
-        return redirect(url_for("meds.medicines"))
+        return redirect(url_for("meds.list"))
     else:
         flash(_("すみません、お薬削除に失敗しました"))
-        return redirect(url_for("meds.medicines"))
+        return redirect(url_for("meds.list"))

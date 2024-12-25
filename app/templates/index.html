@@ -26,10 +26,10 @@
       {% endif %}
     {% endif %}
     <p>
-      <a href="{{ url_for('users.edit_username') }}">{{ _("ユーザー名の変更") }}</a>
+      <a href="{{ url_for('users.edit') }}">{{ _("ユーザー名の変更") }}</a>
     </p>
     <p>
-      <a href="{{ url_for('users.delete_account') }}">{{ _("アカウント削除") }}</a>
+      <a href="{{ url_for('users.delete') }}">{{ _("アカウント削除") }}</a>
     </p>
   </div>
 {% endblock content %}

@@ -3,14 +3,14 @@
   <div class="col-12 col-lg-7 mb-3">
     <div class="mb-4 d-flex justify-content-between align-items-center">
       <h2>{{ _("お薬詳細") }}</h2>
-      <a href="{{ url_for('meds.medicines') }}" class="btn btn-sm btn-back">{{ _("お薬管理へ戻る") }}</a>
+      <a href="{{ url_for('meds.list') }}" class="btn btn-sm btn-back">{{ _("お薬管理へ戻る") }}</a>
     </div>
   </div>
   <div class="row">
     <div class="col-12 col-lg-7 mb-3">
       <div class="d-flex justify-content-between align-items-center graph-container mb-2">
         <h5 class="mb-0">{{ _("月ごとのグラフ") }}</h5>
-        <form action="{{ url_for('meds.medicine_detail', medicine_id=medicine.id) }}"
+        <form action="{{ url_for('meds.detail', medicine_id=medicine.id) }}"
               method="get"
               class="d-flex"
               novalidate>
@@ -29,7 +29,7 @@
       <div class="mb-1 d-flex justify-content-between align-items-center">
         <h5 class="mb-0">{{ _("お薬の情報") }}</h5>
         <div>
-          <a href="{{ url_for('meds.edit_medicine', medicine_id=medicine.id) }}"
+          <a href="{{ url_for('meds.edit', medicine_id=medicine.id) }}"
              class="btn btn-custom btn-sm">{{ _("お薬を編集") }}</a>
           <button type="button"
                   class="btn btn-danger btn-sm"
@@ -127,7 +127,7 @@
           {{ _("%(medicine_name)sを削除します。お薬を削除すると、日々の記録のデータからもお薬が削除されます。よろしいですか？", medicine_name=medicine.name) }}
         </div>
         <div class="modal-footer">
-          <form action="{{ url_for('meds.delete_medicine', medicine_id=medicine.id) }}"
+          <form action="{{ url_for('meds.delete', medicine_id=medicine.id) }}"
                 method="post">
             {{ form.hidden_tag() }}
             {{ form.submit(class="btn btn-danger") }}

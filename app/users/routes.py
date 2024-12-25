@@ -6,9 +6,9 @@ from app.users import bp
 from app.users.forms import EditUsernameForm, DeleteAccountForm
 
 
-@bp.route("/edit_username", methods=["GET", "POST"])
+@bp.route("/edit", methods=["GET", "POST"])
 @login_required
-def edit_username():
+def edit():
     title = _("ユーザー名の変更")
     form = EditUsernameForm()
 
@@ -16,16 +16,16 @@ def edit_username():
         current_user.username = form.username.data
         db.session.commit()
         flash(_("ユーザー名を変更しました"))
-        return redirect(url_for("users.edit_username"))
+        return redirect(url_for("users.edit"))
     elif request.method == "GET":
         form.username.data = current_user.username
 
-    return render_template("users/edit_username.html", form=form, title=title)
+    return render_template("users/edit.html", form=form, title=title)
 
 
-@bp.route("/delete_account", methods=["GET", "POST"])
+@bp.route("/delete", methods=["GET", "POST"])
 @login_required
-def delete_account():
+def delete():
     title = _("アカウント削除")
     form = DeleteAccountForm()
 
@@ -37,4 +37,4 @@ def delete_account():
         flash(_("アカウントが削除されました。ご利用ありがとうございました。"))
         return redirect(url_for("auth.login"))
 
-    return render_template("users/delete_account.html", form=form, title=title)
+    return render_template("users/delete.html", form=form, title=title)

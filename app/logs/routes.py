@@ -11,9 +11,9 @@ from flask import g
 from app.helpers import format_unit, format_dose_unit
 
 
-@bp.route("/daily_logs")
+@bp.route("/")
 @login_required
-def daily_logs():
+def list():
     title = _("日々の記録")
     # モーダル削除ボタン用
     form = EmptyForm()
@@ -57,7 +57,7 @@ def daily_logs():
     )
 
     return render_template(
-        "logs/daily_logs.html",
+        "logs/list.html",
         daily_logs=daily_logs,
         form=form,
         pagination=pagination,
@@ -65,9 +65,9 @@ def daily_logs():
     )
 
 
-@bp.route("/create_daily_log", methods=["GET", "POST"])
+@bp.route("/create", methods=["GET", "POST"])
 @login_required
-def create_daily_log():
+def create():
     title = _("日々の記録登録")
     form = DailyLogForm()
 
@@ -125,10 +125,10 @@ def create_daily_log():
             formatted_date = new_daily_log.date.strftime("%m/%d/%Y")
 
         flash(_("%(date)sの記録を登録しました", date=formatted_date))
-        return redirect(url_for("logs.daily_logs"))
+        return redirect(url_for("logs.list"))
 
     return render_template(
-        "logs/create_daily_log.html",
+        "logs/create.html",
         form=form,
         medicines=active_medicines,
         title=title,
@@ -136,9 +136,9 @@ def create_daily_log():
     )
 
 
-@bp.route("/edit_daily_log/<int:daily_log_id>", methods=["GET", "POST"])
+@bp.route("/<int:daily_log_id>/edit", methods=["GET", "POST"])
 @login_required
-def edit_daily_log(daily_log_id):
+def edit(daily_log_id):
     title = _("日々の記録編集")
 
     daily_log = db.session.get(DailyLog, daily_log_id)
@@ -205,7 +205,7 @@ def edit_daily_log(daily_log_id):
             formatted_date = daily_log.date.strftime("%m/%d/%Y")
 
         flash(_("%(date)sの記録を更新しました", date=formatted_date))
-        return redirect(url_for("logs.daily_logs"))
+        return redirect(url_for("logs.list"))
     elif request.method == "GET":
         # フォームに既存データ投入
         form.mood.data = daily_log.mood
@@ -225,7 +225,7 @@ def edit_daily_log(daily_log_id):
                 detail_entry = form.added_meds_details.append_entry({"dose": None})
 
     return render_template(
-        "logs/edit_daily_log.html",
+        "logs/edit.html",
         daily_log=daily_log,
         medicines=medicines_to_add,
         log_unit_labels=formatted_units_for_log,
@@ -235,9 +235,9 @@ def edit_daily_log(daily_log_id):
     )
 
 
-@bp.route("/delete_daily_log/<int:daily_log_id>", methods=["POST"])
+@bp.route("/<int:daily_log_id>/delete", methods=["POST"])
 @login_required
-def delete_daily_log(daily_log_id):
+def delete(daily_log_id):
     # モーダル削除ボタン用
     form = EmptyForm()
 
@@ -257,7 +257,7 @@ def delete_daily_log(daily_log_id):
             formatted_date = daily_log_to_delete.date.strftime("%m/%d/%Y")
 
         flash(_("%(date)sの記録を削除しました", date=formatted_date))
-        return redirect(url_for("logs.daily_logs"))
+        return redirect(url_for("logs.list"))
     else:
         flash(_("すみません、記録削除に失敗しました"))
-        return redirect(url_for("logs.daily_logs"))
+        return redirect(url_for("logs.list"))

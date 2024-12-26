@@ -10,34 +10,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap"
           rel="stylesheet">
-    <style>
-        body {
-            background-color: #F1F3C2;
-            font-family: "Zen Maru Gothic", serif;
-            font-weight: 500;
-            font-style: normal;
-        }
-        .display-4 {
-            color: #A1D6B2 !important;
-        }
-        .btn-custom {
-            background-color: #E8B86D;
-            font-weight: 500;
-        }
-        .btn-custom:hover {
-            background-color: #D9894A
-        }
-        .form-control:focus {
-            border-color: #ffc107;
-            box-shadow: inset 0.5px 0.5px 0.5px 0.5px #E8B86D, 0.5px 0.5px 0.5px 0.5px #E8B86D;
-        }
-        .bi-capsule-pill {
-          width: 1em;
-          height: 1em;
-          vertical-align: middle;
-          color: #A1D6B2;
-        }
-    </style>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/login.css') }}">
   </head>
   <body>
     <div class="container col-xl-10 col-xxl-8 px-4 py-5">

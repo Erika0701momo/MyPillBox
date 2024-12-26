@@ -15,7 +15,6 @@
                 method="get"
                 class="d-flex align-items-center"
                 novalidate>
-            {{ form.hidden_tag() }}
             <small class="me-1">{{ form.active_sort.label(class="text-nowrap sort-label") }}</small>
             {{ form.active_sort(class="form-select sort-select") }}
             <input type="hidden"
@@ -68,7 +67,6 @@
                 method="get"
                 class="d-flex align-items-center"
                 novalidate>
-            {{ form.hidden_tag() }}
             <small class="me-1">{{ form.not_active_sort.label(class="text-nowrap sort-label") }}</small>
             {{ form.not_active_sort(class="form-select sort-select") }}
             <input type="hidden" name="active_sort" value="{{ form.active_sort.data }}">

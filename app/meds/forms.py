@@ -148,4 +148,3 @@ class EmptyForm(FlaskForm):
 
 class SelectMonthForm(FlaskForm):
     month = MonthField(format="%Y-%m")
-    submit = SubmitField(_l("決定"))

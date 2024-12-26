@@ -114,6 +114,11 @@ input[type="checkbox"] {
 .graph-container, .graph-submit {
     height: 31px;
 }
+.graph-submit {
+    line-height: 31px;
+    padding: 0 10px;
+    white-space: nowrap;
+}
 .canvascontainer {
     position: relative;
     width: 100%;

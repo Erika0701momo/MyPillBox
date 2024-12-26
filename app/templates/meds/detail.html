@@ -12,11 +12,10 @@
         <h5 class="mb-0">{{ _("月ごとのグラフ") }}</h5>
         <form action="{{ url_for('meds.detail', medicine_id=medicine.id) }}"
               method="get"
-              class="d-flex"
+              class="d-flex align-items-center"
               novalidate>
-          {{ selectform.hidden_tag() }}
           {{ selectform.month(class="form-control select-month me-1") }}
-          {{ selectform.submit(class="btn btn-custom btn-sm graph-submit") }}
+          <button type="submit" class="btn btn-custom btn-sm graph-submit">{{ _("決定") }}</button>
         </form>
       </div>
       <div class="canvascontainer">

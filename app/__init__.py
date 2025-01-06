@@ -1,4 +1,4 @@
-from flask import Flask, request, current_app
+from flask import Flask, request, current_app, g
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -8,6 +8,8 @@ from logging.handlers import RotatingFileHandler
 import os
 from flask_babel import Babel, lazy_gettext as _l
 from flask_moment import Moment
+from flask_talisman import Talisman
+import secrets
 
 
 # クライアントの言語を取得してマッチする言語を見つける
@@ -22,6 +24,16 @@ login.login_message = _l("このページにアクセスするにはログイン
 login.login_view = "auth.login"
 babel = Babel()
 moment = Moment()
+talisman = Talisman()
+
+# 必要なリソースを許可するようにCSPを設定
+csp = {
+    "default-src": ["'self'"],
+    "img-src": ["'self'", "https://www.gravatar.com", "data:"],
+    "style-src": ["'self'", "https://fonts.googleapis.com", "'unsafe-inline'"],
+    "font-src": ["'self'", "https://fonts.gstatic.com"],
+    "script-src": ["'self'", "https://cdnjs.cloudflare.com"],
+}
 
 
 # アプリケーションファクトリーを定義
@@ -29,11 +41,23 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
+    @app.before_request
+    def set_nonce():
+        g.nonce = secrets.token_urlsafe(16)  # 一時的な識別子を生成
+
+    # after_requestフックでCSPヘッダを設定
+    @app.after_request
+    def set_csp_nonce(response):
+        csp_header = f"script-src 'self' https://cdnjs.cloudflare.com 'nonce-{g.nonce}'"
+        response.headers["Content-Security-Policy"] = csp_header
+        return response
+
     db.init_app(app)
     migrate.init_app(app, db)
     login.init_app(app)
     moment.init_app(app)
     babel.init_app(app, locale_selector=get_locale)
+    talisman.init_app(app, force_https=False)
 
     from app.errors import bp as errors_bp
 

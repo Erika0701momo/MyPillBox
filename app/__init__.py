@@ -41,23 +41,32 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    @app.before_request
-    def set_nonce():
-        g.nonce = secrets.token_urlsafe(16)  # 一時的な識別子を生成
+    # @app.before_request
+    # def set_nonce():
+    #     g.nonce = secrets.token_urlsafe(16)  # 一時的な識別子を生成
 
-    # after_requestフックでCSPヘッダを設定
-    @app.after_request
-    def set_csp_nonce(response):
-        csp_header = f"script-src 'self' https://cdnjs.cloudflare.com 'nonce-{g.nonce}'"
-        response.headers["Content-Security-Policy"] = csp_header
-        return response
+    # @app.after_request
+    # def set_csp_nonce(response):
+    #     csp_header = (
+    #         f"script-src 'self' https://cdnjs.cloudflare.com 'nonce-{g.nonce}'; "
+    #         "style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; "
+    #         "img-src 'self' https://www.gravatar.com data:; "
+    #         "font-src 'self' https://fonts.gstatic.com;"
+    #     )
+    #     response.headers["Content-Security-Policy"] = csp_header
+    #     return response
 
     db.init_app(app)
     migrate.init_app(app, db)
     login.init_app(app)
     moment.init_app(app)
     babel.init_app(app, locale_selector=get_locale)
-    talisman.init_app(app, force_https=False)
+    talisman.init_app(
+        app,
+        content_security_policy=csp,
+        content_security_policy_nonce_in=["script-src"],
+        force_https=False,
+    )
 
     from app.errors import bp as errors_bp
 

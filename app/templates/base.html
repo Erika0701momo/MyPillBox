@@ -86,9 +86,12 @@
       </p>
     </footer>
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
-    <script nonce="{{ g.nonce }}"
-            src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"></script>
-    <script nonce="{{ g.nonce }}">moment.locale("{{ g.locale }}");</script>
+    {{ moment.include_moment(no_js=True) }}
+    <script nonce="{{ csp_nonce() }}"
+            src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+            integrity="sha384-Uz1UHyakAAz121kPY0Nx6ZGzYeUTy9zAtcpdwVmFCEwiTGPA2K6zSGgkKJEQfMhK"
+            crossorigin="anonymous"></script>
+    <script nonce="{{ csp_nonce() }}">moment.lang('{{ g.locale }}');</script>
     {% block script %}
     {% endblock script %}
   </body>

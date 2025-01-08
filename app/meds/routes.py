@@ -170,6 +170,11 @@ def detail(medicine_id):
         taking_unit = taking_unit.title()
     graph_taking_unit = format_unit(medicine.taking_unit, locale)
 
+    if locale == "ja":
+        start_date = medicine.taking_start_date.strftime("%Y/%m/%d")
+    else:
+        start_date = medicine.taking_start_date.strftime("%m/%d/%Y")
+
     return render_template(
         "meds/detail.html",
         medicine=medicine,
@@ -182,6 +187,7 @@ def detail(medicine_id):
         taking_unit=taking_unit,
         graph_taking_unit=graph_taking_unit,
         chart_labels=chart_labels,
+        start_date=start_date,
     )
 
 

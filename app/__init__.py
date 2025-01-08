@@ -9,7 +9,6 @@ import os
 from flask_babel import Babel, lazy_gettext as _l
 from flask_moment import Moment
 from flask_talisman import Talisman
-import secrets
 
 
 # クライアントの言語を取得してマッチする言語を見つける
@@ -32,7 +31,7 @@ csp = {
     "img-src": ["'self'", "https://www.gravatar.com", "data:"],
     "style-src": ["'self'", "https://fonts.googleapis.com", "'unsafe-inline'"],
     "font-src": ["'self'", "https://fonts.gstatic.com"],
-    "script-src": ["'self'", "https://cdnjs.cloudflare.com"],
+    "script-src": ["'self'"],
 }
 
 
@@ -40,21 +39,6 @@ csp = {
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
-
-    # @app.before_request
-    # def set_nonce():
-    #     g.nonce = secrets.token_urlsafe(16)  # 一時的な識別子を生成
-
-    # @app.after_request
-    # def set_csp_nonce(response):
-    #     csp_header = (
-    #         f"script-src 'self' https://cdnjs.cloudflare.com 'nonce-{g.nonce}'; "
-    #         "style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; "
-    #         "img-src 'self' https://www.gravatar.com data:; "
-    #         "font-src 'self' https://fonts.gstatic.com;"
-    #     )
-    #     response.headers["Content-Security-Policy"] = csp_header
-    #     return response
 
     db.init_app(app)
     migrate.init_app(app, db)
@@ -64,7 +48,6 @@ def create_app(config_class=Config):
     talisman.init_app(
         app,
         content_security_policy=csp,
-        content_security_policy_nonce_in=["script-src"],
         force_https=False,
     )
 

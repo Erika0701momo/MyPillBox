@@ -47,6 +47,12 @@ def list():
                 detail.dose, detail.medicine.taking_unit
             )
 
+    for log in daily_logs:
+        if g.locale == "ja":
+            log.date = log.date.strftime("%Y/%m/%d")
+        else:
+            log.date = log.date.strftime("%m/%d/%Y")
+
     pagination = Pagination(
         page=page,
         per_page=per_page,
@@ -181,6 +187,11 @@ def edit(daily_log_id):
     else:
         formatted_units_for_meds = {}
 
+    if locale == "ja":
+        formatted_date = daily_log.date.strftime("%Y/%m/%d")
+    else:
+        formatted_date = daily_log.date.strftime("%m/%d/%Y")
+
     if form.validate_on_submit():
         # DailyLogの更新
         daily_log.mood = form.mood.data
@@ -198,11 +209,6 @@ def edit(daily_log_id):
                 )
                 db.session.add(new_detail)
         db.session.commit()
-
-        if locale == "ja":
-            formatted_date = daily_log.date.strftime("%Y/%m/%d")
-        else:
-            formatted_date = daily_log.date.strftime("%m/%d/%Y")
 
         flash(_("%(date)sの記録を更新しました", date=formatted_date))
         return redirect(url_for("logs.list"))
@@ -232,6 +238,7 @@ def edit(daily_log_id):
         meds_unit_labels=formatted_units_for_meds,
         form=form,
         title=title,
+        date=formatted_date,
     )
 
 

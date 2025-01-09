@@ -196,3 +196,4 @@ export/
 .vscode/
 settings.json
 mypillbox.log*
+app.db

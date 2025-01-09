@@ -48,7 +48,6 @@ def create_app(config_class=Config):
     talisman.init_app(
         app,
         content_security_policy=csp,
-        force_https=False,
     )
 
     from app.errors import bp as errors_bp

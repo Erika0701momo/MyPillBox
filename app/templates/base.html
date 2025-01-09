@@ -86,8 +86,7 @@
       </p>
     </footer>
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
-    {{ moment.include_moment(no_js=True) }}
-    <script src="{{ url_for('static', filename='js/moment-with-locales.min.js') }}"></script>
+    {{ moment.include_moment() }}
     {{ moment.lang(g.locale) }}
     {% block script %}
     {% endblock script %}

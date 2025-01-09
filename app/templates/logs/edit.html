@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-  <h2 class="mb-3">{{ date }}{{ _("の記録編集") }}</h2>
+  <h2 class="mb-3">{{ moment(daily_log.date).format("L") }}{{ _("の記録編集") }}</h2>
   <small class="d-block mb-3"><span class="red">※</span>{{ _("は必須入力です") }}</small>
   <form action="" method="post" novalidate>
     {{ form.hidden_tag() }}

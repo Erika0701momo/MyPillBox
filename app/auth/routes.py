@@ -21,7 +21,7 @@ def login():
         user = db.session.scalar(sa.select(User).where(User.email == form.email.data))
         if user is None or not user.check_password(form.password.data):
             flash(_("メールアドレスまたはパスワードが違います"))
-            return redirect(url_for("login"))
+            return redirect(url_for("auth.login"))
         login_user(user)
         # ログイン前にアクセスしたページがあればそこへ遷移
         next_page = request.args.get("next")

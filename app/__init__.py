@@ -31,7 +31,7 @@ csp = {
     "img-src": ["'self'", "https://www.gravatar.com", "data:"],
     "style-src": ["'self'", "https://fonts.googleapis.com", "'unsafe-inline'"],
     "font-src": ["'self'", "https://fonts.gstatic.com"],
-    "script-src": ["'self'"],
+    "script-src": ["'self'", "https://cdnjs.cloudflare.com", "'unsafe-inline'"],
 }
 
 

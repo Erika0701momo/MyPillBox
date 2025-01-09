@@ -47,12 +47,6 @@ def list():
                 detail.dose, detail.medicine.taking_unit
             )
 
-    for log in daily_logs:
-        if g.locale == "ja":
-            log.date = log.date.strftime("%Y/%m/%d")
-        else:
-            log.date = log.date.strftime("%m/%d/%Y")
-
     pagination = Pagination(
         page=page,
         per_page=per_page,
@@ -238,7 +232,6 @@ def edit(daily_log_id):
         meds_unit_labels=formatted_units_for_meds,
         form=form,
         title=title,
-        date=formatted_date,
     )
 
 

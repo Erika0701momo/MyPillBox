@@ -22,6 +22,9 @@ MyPillBoxは、星評価機能やグラフ表示機能、ログ機能などで�
   - Flaskの主な拡張機能
     - Flask-Babel 4.0.0
     - Flask-Moment 1.0.6
+    - Flask-Migrate 4.0.7
+    - Flask-WTF 1.2.1
+    - WTForms 3.1.2
   - データベース
     - Flask-SQLAlchemy(SQLAlchemyのORM機能を使用) 3.1.1
     - SQLite(開発時)

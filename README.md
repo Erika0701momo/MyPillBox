@@ -19,6 +19,7 @@ MyPillBoxは、星評価機能やグラフ表示機能、ログ機能などで�
 - バックエンド
   - Python 3.12
   - Flask 3.0.3
+  - WTForms 3.1.2
   - Flaskの主な拡張機能
     - Flask-Babel 4.0.0
     - Flask-Moment 1.0.6

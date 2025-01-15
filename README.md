@@ -24,6 +24,7 @@ MyPillBoxは、星評価機能やグラフ表示機能、ログ機能などで�
     - Flask-Moment 1.0.6
     - Flask-Migrate 4.0.7
     - Flask-WTF 1.2.1
+    - flask-paginate 2024.4.12
   - データベース
     - Flask-SQLAlchemy(SQLAlchemyのORM機能を使用) 3.1.1
     - SQLite(開発時)
@@ -61,6 +62,19 @@ MyPillBoxは、星評価機能やグラフ表示機能、ログ機能などで�
 ![ホーム画面](https://github.com/user-attachments/assets/9836dc56-307e-49eb-9518-512bb61535de)
 ## 見やすさ、お薬並び替え
 お薬管理のお薬一覧表示で、星評価を一目で分かるように表示いたしました。また、お薬を登録順または星評価順で並び替えられるようにし、お薬を飲み始めた順番や評価が高いお薬を把握できるようにしました。
+![mypillbox-d648eb00e786 herokuapp com_meds__active_sort=ratingorder not_active_sort=registerorder](https://github.com/user-attachments/assets/703bad45-b437-4768-a28c-ce07a8a51b82)
+## グラフ表示
+各お薬の詳細画面で、日々の記録データを使った月ごとの気分・体調・服用量のグラフを設置し、服用量によって気分や体調が変動しているのか、服用量がどのような影響を及ぼしているのか一目で分かるようにしました。
+![mypillbox-d648eb00e786 herokuapp com_meds_1_month=2025-01](https://github.com/user-attachments/assets/7e614609-e287-4c23-9005-a88aea7af07d)
+## ページネーション
+日々の記録画面の日々の記録一覧表示で、flask-paginateを使用し、記録一覧にアクセスしやすくしました。
+![mypillbox-d648eb00e786 herokuapp com_logs_](https://github.com/user-attachments/assets/66b78912-8d0d-4f1b-b10a-6a88c99661b5)
+## お薬、日々の記録の気分と体調の星評価
+物事を評価する際一般的に広く使われている星評価を使用することで、お薬と日々の記録の気分と体調の評価をユーザーにとって直感的に分かりやすく評価できるようにしました。実装にはJavaScriptを使用しました。
+以下の画像は日々の記録の登録画面です。
+![mypillbox-d648eb00e786 herokuapp com_logs_](https://github.com/user-attachments/assets/66b78912-8d0d-4f1b-b10a-6a88c99661b5)
+
+
 
 
 

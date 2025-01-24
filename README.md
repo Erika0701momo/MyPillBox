@@ -20,21 +20,15 @@ MyPillBoxは、星評価機能やグラフ表示機能、ログ機能などで�
   - Python 3.12
   - Flask 3.0.3
   - WTForms 3.1.2
-  - Flaskの主な拡張機能
-    - Flask-Babel 4.0.0
-    - Flask-Moment 1.0.6
-    - Flask-Migrate 4.0.7
-    - Flask-WTF 1.2.1
-    - flask-paginate 2024.4.12
   - データベース
     - Flask-SQLAlchemy(SQLAlchemyのORM機能を使用) 3.1.1
-    - SQLite(開発時)
-    - Heroku Postgres(デプロイ時)
+# 開発環境
+- Python 3.12
+- データベース
+  - SQLite(開発時)
+  - Heroku Postgres(デプロイ時)
 - インフラ
   - Heroku
-# 開発環境
-- Windows 10 pro ver.22H2
-- VSCode
 # 開発期間
 約3ヵ月
 # 機能一覧
